@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Noto+Serif:ital,wght@0,400;0,700;1,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "background": "#fcf9f3",
+              "outline": "#7e7665",
+              "surface-tint": "#376847",
+              "surface-variant": "#e5e2dc",
+              "inverse-on-surface": "#f3f0ea",
+              "secondary-fixed-dim": "#dbb9fd",
+              "on-primary-container": "#16492a",
+              "surface-container-high": "#ebe8e2",
+              "on-secondary-container": "#624681",
+              "tertiary": "#755b00",
+              "error": "#ba1a1a",
+              "surface-dim": "#dcdad4",
+              "surface-container-low": "#f6f3ed",
+              "on-background": "#1c1c18",
+              "on-tertiary-fixed": "#241a00",
+              "secondary-fixed": "#efdbff",
+              "on-tertiary": "#ffffff",
+              "surface-container-lowest": "#ffffff",
+              "on-error": "#ffffff",
+              "on-error-container": "#93000a",
+              "secondary": "#6f518e",
+              "tertiary-fixed": "#ffe08f",
+              "surface-container-highest": "#e5e2dc",
+              "on-secondary-fixed": "#280b46",
+              "inverse-surface": "#31312d",
+              "on-primary": "#ffffff",
+              "primary-container": "#83b890",
+              "error-container": "#ffdad6",
+              "primary-fixed-dim": "#9dd3aa",
+              "tertiary-container": "#c9a84c",
+              "on-secondary": "#ffffff",
+              "inverse-primary": "#9dd3aa",
+              "on-surface": "#1c1c18",
+              "surface-container": "#f0eee8",
+              "surface-bright": "#fcf9f3",
+              "on-tertiary-container": "#503d00",
+              "on-primary-fixed": "#00210e",
+              "on-tertiary-fixed-variant": "#584400",
+              "surface": "#fcf9f3",
+              "primary-fixed": "#b9efc5",
+              "tertiary-fixed-dim": "#e6c364",
+              "on-primary-fixed-variant": "#1e5031",
+              "on-secondary-fixed-variant": "#563a74",
+              "secondary-container": "#dbb9fd",
+              "primary": "#376847",
+              "outline-variant": "#d0c5b2",
+              "on-surface-variant": "#4d4637"
+            },
+            fontFamily: {
+              "headline": ["Noto Serif"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .drop-cap::first-letter {
+        font-family: 'Noto Serif', serif;
+        float: left;
+        font-size: 4rem;
+        line-height: 0.8;
+        padding-top: 4px;
+        padding-right: 8px;
+        color: #376847;
+        font-weight: 700;
+      }
+      .scroll-hide::-webkit-scrollbar {
+        display: none;
+      }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface font-body selection:bg-primary-container/30">
+<!-- Top Navigation Bar (Based on TopAppBar Shared Component) -->
+<header class="sticky top-0 z-40 bg-background/80 backdrop-blur-xl">
+<div class="flex flex-col w-full px-6 py-4 max-w-screen-xl mx-auto">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-4">
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-high transition-colors active:scale-95 duration-200">
+<span class="material-symbols-outlined text-primary">chevron_left</span>
+</button>
+<div class="flex flex-col items-center">
+<h1 class="font-headline text-lg font-bold tracking-tight text-on-surface">Thursday, June 27</h1>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-high transition-colors active:scale-95 duration-200">
+<span class="material-symbols-outlined text-primary">chevron_right</span>
+</button>
+</div>
+<div class="flex items-center gap-1 bg-surface-container-low rounded-full px-1 py-1">
+<button class="px-3 py-1 text-xs font-bold text-on-surface-variant hover:bg-surface-container-high rounded-full transition-colors">A-</button>
+<button class="px-3 py-1 text-xs font-bold text-on-surface-variant hover:bg-surface-container-high rounded-full transition-colors">A+</button>
+</div>
+</div>
+<div class="mt-4 flex items-center gap-2 justify-center">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+<span class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant">St. Cyril of Alexandria, Bishop &amp; Doctor</span>
+</div>
+</div>
+<!-- Separation Line -->
+<div class="bg-surface-container-low h-[1px] w-full"></div>
+<!-- Sticky Anchor Chips -->
+<div class="px-6 py-3 flex gap-2 overflow-x-auto scroll-hide">
+<a class="whitespace-nowrap px-4 py-2 rounded-full bg-primary text-white text-xs font-medium font-label shadow-sm" href="#first-reading">First Reading</a>
+<a class="whitespace-nowrap px-4 py-2 rounded-full bg-surface-container-high text-on-surface-variant text-xs font-medium font-label" href="#psalm">Psalm</a>
+<a class="whitespace-nowrap px-4 py-2 rounded-full bg-surface-container-high text-on-surface-variant text-xs font-medium font-label" href="#gospel">Gospel</a>
+</div>
+</header>
+<main class="max-w-screen-xl mx-auto px-6 pt-8 pb-32">
+<!-- First Reading Section -->
+<section class="mb-16" id="first-reading">
+<div class="flex justify-between items-end mb-6">
+<span class="font-label text-[11px] font-bold tracking-[0.2em] text-primary uppercase">First Reading</span>
+<span class="font-body text-xs text-on-surface-variant italic">2 Kings 24:8-17</span>
+</div>
+<div class="prose prose-stone max-w-none">
+<p class="drop-cap font-headline text-[18px] leading-[1.8] text-on-surface text-justify">
+                    Jehoiachin was eighteen years old when he began to reign, and he reigned in Jerusalem three months. His mother’s name was Nehushta, the daughter of Elnathan of Jerusalem. He did evil in the sight of the LORD, just as his forefathers had done. At that time the officials of Nebuchadnezzar, king of Babylon, attacked Jerusalem, and the city came under siege. Nebuchadnezzar, king of Babylon, himself arrived at the city while his servants were besieging it.
+                </p>
+<p class="font-headline text-[18px] leading-[1.8] text-on-surface text-justify mt-6">
+                    Then Jehoiachin, king of Judah, together with his mother, his ministers, his officers, and his functionaries, surrendered to the king of Babylon, who, in the eighth year of his reign, took him captive.
+                </p>
+</div>
+</section>
+<!-- Responsorial Psalm Section -->
+<section class="mb-16 py-10 px-8 bg-surface-container-low rounded-2xl" id="psalm">
+<div class="text-center mb-8">
+<span class="font-label text-[11px] font-bold tracking-[0.2em] text-primary uppercase block mb-2">Responsorial Psalm</span>
+<span class="font-body text-xs text-on-surface-variant">Psalm 79:1b-2, 3-5, 8, 9</span>
+</div>
+<div class="space-y-8 font-headline text-[17px] leading-relaxed text-on-surface">
+<div class="flex flex-col items-center text-center">
+<span class="text-primary font-bold mb-2">R/</span>
+<span class="font-bold">For the glory of your name, O Lord, deliver us.</span>
+</div>
+<div class="space-y-4">
+<div class="flex gap-4">
+<span class="text-primary font-bold italic shrink-0">V/</span>
+<p>O God, the nations have come into your inheritance; they have defiled your holy temple, they have laid Jerusalem in ruins.</p>
+</div>
+<div class="flex gap-4">
+<span class="text-primary font-bold italic shrink-0">V/</span>
+<p>They have given the corpses of your servants as food to the birds of heaven, the flesh of your faithful ones to the beasts of the earth.</p>
+</div>
+</div>
+<div class="flex flex-col items-center text-center pt-4">
+<span class="text-primary font-bold mb-2">R/</span>
+<span class="font-bold">For the glory of your name, O Lord, deliver us.</span>
+</div>
+</div>
+</section>
+<!-- Gospel Section -->
+<section class="mb-16" id="gospel">
+<div class="flex justify-between items-end mb-6">
+<span class="font-label text-[11px] font-bold tracking-[0.2em] text-primary uppercase">Gospel</span>
+<span class="font-body text-xs text-on-surface-variant italic">Matt 7:21-29</span>
+</div>
+<div class="mb-10 text-center">
+<p class="font-headline italic text-on-surface-variant text-lg">
+                    Alleluia, alleluia. Whoever loves me will keep my word, and my Father will love him and we will come to him.
+                </p>
+<p class="font-label text-xs font-bold text-primary mt-2">Alleluia</p>
+</div>
+<div class="prose prose-stone max-w-none">
+<p class="drop-cap font-headline text-[18px] leading-[1.8] text-on-surface text-justify">
+                    Jesus said to his disciples: "Not everyone who says to me, 'Lord, Lord,' will enter the Kingdom of heaven, but only the one who does the will of my Father in heaven. Many will say to me on that day, 'Lord, Lord, did we not prophesy in your name? Did we not drive out demons in your name? Did we not do mighty deeds in your name?' Then I will declare to them solemnly, 'I never knew you. Depart from me, you evildoers.'"
+                </p>
+</div>
+</section>
+<!-- Offline Status -->
+<div class="flex justify-center items-center gap-2 py-8 opacity-60">
+<span class="material-symbols-outlined text-[16px]">menu_book</span>
+<span class="text-[11px] font-label font-medium">Offline • Updated Today</span>
+</div>
+</main>
+<!-- Floating Actions -->
+<div class="fixed bottom-28 right-6 flex flex-col gap-3 z-30">
+<button class="w-12 h-12 flex items-center justify-center rounded-full bg-white shadow-[0_8px_24px_rgba(28,28,24,0.12)] text-primary hover:bg-surface-container-high transition-all active:scale-90">
+<span class="material-symbols-outlined">bookmark</span>
+</button>
+<button class="w-12 h-12 flex items-center justify-center rounded-full bg-white shadow-[0_8px_24px_rgba(28,28,24,0.12)] text-primary hover:bg-surface-container-high transition-all active:scale-90">
+<span class="material-symbols-outlined">share</span>
+</button>
+</div>
+<!-- Bottom Navigation (Shared Component) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-2 bg-[#fcf9f3]/80 dark:bg-stone-950/80 backdrop-blur-xl shadow-[0_-12px_32px_rgba(28,28,24,0.05)] rounded-t-2xl">
+<a class="flex flex-col items-center justify-center text-[#1c1c18]/60 px-3 py-1.5 hover:text-[#376847] active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined mb-1">home</span>
+<span class="font-sans text-[11px] font-medium">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-[#376847] text-white rounded-xl px-3 py-1.5 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 1;">book_5</span>
+<span class="font-sans text-[11px] font-medium">Readings</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#1c1c18]/60 px-3 py-1.5 hover:text-[#376847] active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined mb-1">church</span>
+<span class="font-sans text-[11px] font-medium">Office</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#1c1c18]/60 px-3 py-1.5 hover:text-[#376847] active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined mb-1">groups</span>
+<span class="font-sans text-[11px] font-medium">Parish</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#1c1c18]/60 px-3 py-1.5 hover:text-[#376847] active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined mb-1">more_horiz</span>
+<span class="font-sans text-[11px] font-medium">More</span>
+</a>
+</nav>
+</body></html>

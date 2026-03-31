@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Mass Booking - St. Kizito Parish</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;700&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "outline": "#7e7665",
+              "on-tertiary": "#ffffff",
+              "surface-variant": "#e5e2dc",
+              "on-secondary-fixed": "#280b46",
+              "error-container": "#ffdad6",
+              "surface-dim": "#dcdad4",
+              "on-secondary-fixed-variant": "#563a74",
+              "tertiary-fixed-dim": "#e6c364",
+              "on-surface": "#1c1c18",
+              "secondary": "#6f518e",
+              "on-tertiary-container": "#503d00",
+              "surface-container": "#f0eee8",
+              "tertiary-fixed": "#ffe08f",
+              "secondary-fixed-dim": "#dbb9fd",
+              "on-error": "#ffffff",
+              "on-primary-container": "#16492a",
+              "surface-bright": "#fcf9f3",
+              "primary-container": "#83b890",
+              "inverse-surface": "#31312d",
+              "error": "#ba1a1a",
+              "primary": "#376847",
+              "on-secondary": "#ffffff",
+              "inverse-primary": "#9dd3aa",
+              "tertiary": "#755b00",
+              "on-primary": "#ffffff",
+              "inverse-on-surface": "#f3f0ea",
+              "primary-fixed": "#b9efc5",
+              "on-primary-fixed": "#00210e",
+              "surface-container-low": "#f6f3ed",
+              "on-tertiary-fixed": "#241a00",
+              "on-tertiary-fixed-variant": "#584400",
+              "surface-container-highest": "#e5e2dc",
+              "on-primary-fixed-variant": "#1e5031",
+              "on-background": "#1c1c18",
+              "primary-fixed-dim": "#9dd3aa",
+              "outline-variant": "#d0c5b2",
+              "surface-container-lowest": "#ffffff",
+              "secondary-container": "#dbb9fd",
+              "surface-container-high": "#ebe8e2",
+              "surface": "#fcf9f3",
+              "on-error-container": "#93000a",
+              "tertiary-container": "#c9a84c",
+              "background": "#fcf9f3",
+              "on-secondary-container": "#624681",
+              "secondary-fixed": "#efdbff",
+              "on-surface-variant": "#4d4637",
+              "surface-tint": "#376847"
+            },
+            fontFamily: {
+              "headline": ["Noto Serif"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface font-body text-on-surface selection:bg-primary-container selection:text-on-primary-container min-h-screen">
+<!-- TopAppBar Mapping -->
+<header class="sticky top-0 z-50 bg-[#fcf9f3] dark:bg-stone-950 transition-colors">
+<div class="flex flex-col w-full px-6 py-4 max-w-screen-xl mx-auto">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-4">
+<button class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-[#ebe8e2] dark:hover:bg-stone-800 transition-colors active:scale-95 duration-200">
+<span class="material-symbols-outlined text-[#376847] dark:text-emerald-500">arrow_back</span>
+</button>
+<h1 class="font-serif text-2xl font-bold tracking-tight text-[#376847] dark:text-emerald-500">Book a Mass</h1>
+</div>
+<div class="flex items-center gap-2">
+<span class="font-sans text-xs uppercase tracking-widest text-on-surface-variant">Step 1 of 2</span>
+</div>
+</div>
+</div>
+<div class="bg-[#f6f3ed] dark:bg-stone-900 h-[1px] w-full"></div>
+</header>
+<main class="max-w-screen-md mx-auto px-6 pt-8 pb-32">
+<div class="space-y-10">
+<!-- Hero Imagery / Context -->
+<section class="relative h-48 rounded-xl overflow-hidden bg-surface-container-high group">
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10"></div>
+<div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1548625361-160607198236?q=80&amp;w=2000')] bg-cover bg-center" data-alt="Interior of a serene catholic church with light filtering through stained glass windows onto wooden pews and stone columns"></div>
+<div class="absolute bottom-6 left-6 z-20">
+<p class="font-headline text-white text-xl font-bold">Spiritual Offering</p>
+<p class="text-white/80 text-sm font-body">Request a Mass for your intentions or loved ones.</p>
+</div>
+</section>
+<!-- Form Content -->
+<section class="space-y-8">
+<!-- Intention Input -->
+<div class="space-y-3">
+<label class="font-sans text-xs uppercase tracking-widest text-primary font-semibold">Your Mass Intention</label>
+<div class="relative">
+<textarea class="w-full bg-surface-container-lowest border-none rounded-xl p-4 text-on-surface ring-1 ring-inset ring-outline-variant focus:ring-2 focus:ring-primary focus:outline-none placeholder:text-on-surface-variant/50 transition-all" placeholder="Example: For the soul of John Doe / Thanksgiving for a successful surgery..." rows="3"></textarea>
+</div>
+</div>
+<!-- Date Selection -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="space-y-3">
+<label class="font-sans text-xs uppercase tracking-widest text-primary font-semibold">Start Date</label>
+<div class="flex items-center gap-3 bg-surface-container-lowest ring-1 ring-inset ring-outline-variant rounded-xl p-3 focus-within:ring-2 focus-within:ring-primary transition-all">
+<span class="material-symbols-outlined text-outline">calendar_today</span>
+<input class="bg-transparent border-none p-0 focus:ring-0 w-full text-on-surface" type="date"/>
+</div>
+</div>
+<div class="space-y-3">
+<label class="font-sans text-xs uppercase tracking-widest text-primary font-semibold">End Date (Optional)</label>
+<div class="flex items-center gap-3 bg-surface-container-lowest ring-1 ring-inset ring-outline-variant rounded-xl p-3 focus-within:ring-2 focus-within:ring-primary transition-all">
+<span class="material-symbols-outlined text-outline">event_repeat</span>
+<input class="bg-transparent border-none p-0 focus:ring-0 w-full text-on-surface" type="date"/>
+</div>
+</div>
+</div>
+<!-- Mass Time Pills -->
+<div class="space-y-4">
+<label class="font-sans text-xs uppercase tracking-widest text-primary font-semibold">Preferred Mass Time</label>
+<div class="flex flex-wrap gap-3">
+<button class="px-5 py-2.5 rounded-full border border-primary bg-primary text-white font-medium text-sm transition-all shadow-sm active:scale-95">
+                            Morning Mass (6:30 AM)
+                        </button>
+<button class="px-5 py-2.5 rounded-full border border-outline-variant bg-surface-container-lowest text-on-surface-variant font-medium text-sm hover:bg-surface-container-high transition-all active:scale-95">
+                            Evening Mass (6:00 PM)
+                        </button>
+<button class="px-5 py-2.5 rounded-full border border-outline-variant bg-surface-container-lowest text-on-surface-variant font-medium text-sm hover:bg-surface-container-high transition-all active:scale-95">
+                            Sunday Service
+                        </button>
+</div>
+</div>
+<!-- Amount Chips -->
+<div class="space-y-4">
+<div class="flex justify-between items-end">
+<label class="font-sans text-xs uppercase tracking-widest text-primary font-semibold">Stipend Amount</label>
+<span class="text-xs text-on-surface-variant">Min: ₦500</span>
+</div>
+<div class="flex gap-3 overflow-x-auto hide-scrollbar pb-2">
+<button class="flex-none px-6 py-3 rounded-xl bg-surface-container-high text-on-surface font-semibold border border-transparent hover:border-primary transition-all">
+                            ₦500
+                        </button>
+<button class="flex-none px-6 py-3 rounded-xl bg-surface-container-high text-on-surface font-semibold border border-transparent hover:border-primary transition-all">
+                            ₦1,000
+                        </button>
+<button class="flex-none px-6 py-3 rounded-xl bg-primary text-white font-semibold ring-4 ring-primary-container/20 transition-all">
+                            ₦2,000
+                        </button>
+<button class="flex-none px-6 py-3 rounded-xl bg-surface-container-high text-on-surface font-semibold border border-transparent hover:border-primary transition-all">
+                            ₦3,000
+                        </button>
+<div class="flex-none flex items-center bg-surface-container-lowest border border-dashed border-outline-variant rounded-xl px-4">
+<span class="text-xs text-outline pr-2">Custom:</span>
+<input class="w-16 bg-transparent border-none p-0 text-sm font-semibold focus:ring-0" placeholder="Other" type="number"/>
+</div>
+</div>
+</div>
+</section>
+<!-- Liturgical Quote Anchor -->
+<div class="bg-surface-container-low p-6 rounded-xl border-l-4 border-primary">
+<p class="font-headline italic text-on-surface-variant text-base leading-relaxed">
+                    "The celebration of Holy Mass is as valuable as the death of Jesus on the cross."
+                </p>
+<p class="mt-2 text-xs uppercase tracking-widest text-primary font-bold">— St. Thomas Aquinas</p>
+</div>
+</div>
+</main>
+<!-- Bottom Action Button Shell -->
+<div class="fixed bottom-0 left-0 w-full z-50 p-6 bg-surface/80 backdrop-blur-xl">
+<div class="max-w-screen-md mx-auto">
+<button class="w-full bg-primary text-white py-4 rounded-xl font-bold text-lg shadow-lg hover:brightness-110 active:scale-[0.98] transition-all flex items-center justify-center gap-2">
+                Continue
+                <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+<p class="text-center mt-3 text-[10px] text-on-surface-variant uppercase tracking-tighter opacity-60">Your contribution supports the parish mission &amp; clergy</p>
+</div>
+</div>
+</body></html>

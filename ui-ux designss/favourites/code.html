@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Favourites - St. Kizito Parish</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Noto+Serif:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "outline": "#7e7665",
+              "on-tertiary": "#ffffff",
+              "surface-variant": "#e5e2dc",
+              "on-secondary-fixed": "#280b46",
+              "error-container": "#ffdad6",
+              "surface-dim": "#dcdad4",
+              "on-secondary-fixed-variant": "#563a74",
+              "tertiary-fixed-dim": "#e6c364",
+              "on-surface": "#1c1c18",
+              "secondary": "#6f518e",
+              "on-tertiary-container": "#503d00",
+              "surface-container": "#f0eee8",
+              "tertiary-fixed": "#ffe08f",
+              "secondary-fixed-dim": "#dbb9fd",
+              "on-error": "#ffffff",
+              "on-primary-container": "#16492a",
+              "surface-bright": "#fcf9f3",
+              "primary-container": "#83b890",
+              "inverse-surface": "#31312d",
+              "error": "#ba1a1a",
+              "primary": "#376847",
+              "on-secondary": "#ffffff",
+              "inverse-primary": "#9dd3aa",
+              "tertiary": "#755b00",
+              "on-primary": "#ffffff",
+              "inverse-on-surface": "#f3f0ea",
+              "primary-fixed": "#b9efc5",
+              "on-primary-fixed": "#00210e",
+              "surface-container-low": "#f6f3ed",
+              "on-tertiary-fixed": "#241a00",
+              "on-tertiary-fixed-variant": "#584400",
+              "surface-container-highest": "#e5e2dc",
+              "on-primary-fixed-variant": "#1e5031",
+              "on-background": "#1c1c18",
+              "primary-fixed-dim": "#9dd3aa",
+              "outline-variant": "#d0c5b2",
+              "surface-container-lowest": "#ffffff",
+              "secondary-container": "#dbb9fd",
+              "surface-container-high": "#ebe8e2",
+              "surface": "#fcf9f3",
+              "on-error-container": "#93000a",
+              "tertiary-container": "#c9a84c",
+              "background": "#fcf9f3",
+              "on-secondary-container": "#624681",
+              "secondary-fixed": "#efdbff",
+              "on-surface-variant": "#4d4637",
+              "surface-tint": "#376847"
+            },
+            fontFamily: {
+              "headline": ["Noto Serif"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .scrolling-touch { -webkit-overflow-scrolling: touch; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body min-h-screen selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopAppBar -->
+<header class="bg-[#fcf9f3] dark:bg-stone-950 sticky top-0 z-40">
+<div class="flex flex-col w-full px-6 py-4 max-w-screen-xl mx-auto">
+<div class="flex items-center justify-between w-full">
+<div class="flex items-center gap-4">
+<button class="text-[#376847] dark:text-emerald-500 hover:bg-[#ebe8e2] dark:hover:bg-stone-800 transition-colors p-2 rounded-full active:scale-95 duration-200">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<h1 class="font-serif text-2xl font-bold tracking-tight text-[#376847] dark:text-emerald-500">Favourites</h1>
+</div>
+<button class="text-[#376847] dark:text-emerald-500 hover:bg-[#ebe8e2] dark:hover:bg-stone-800 transition-colors p-2 rounded-full active:scale-95 duration-200">
+<span class="material-symbols-outlined">calendar_month</span>
+</button>
+</div>
+</div>
+<div class="bg-[#f6f3ed] dark:bg-stone-900 h-[1px] w-full"></div>
+</header>
+<main class="max-w-screen-xl mx-auto px-6 pt-6 pb-32">
+<!-- Segmented Control Tabs -->
+<div class="flex p-1 bg-surface-container-low rounded-2xl mb-8 w-full max-w-md mx-auto">
+<button class="flex-1 py-2 text-sm font-medium rounded-xl bg-primary text-on-primary shadow-sm transition-all">Readings</button>
+<button class="flex-1 py-2 text-sm font-medium rounded-xl text-on-surface-variant hover:bg-surface-container-high transition-all">Verses</button>
+<button class="flex-1 py-2 text-sm font-medium rounded-xl text-on-surface-variant hover:bg-surface-container-high transition-all">Prayers</button>
+</div>
+<!-- Favourites List (Asymmetric Editorial Layout) -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-10">
+<!-- Main Content Area -->
+<div class="md:col-span-8 space-y-6">
+<!-- Card 1 -->
+<div class="relative group overflow-hidden rounded-xl bg-surface-container-low hover:bg-surface-container-high transition-all duration-300">
+<div class="absolute inset-y-0 right-0 w-20 bg-error flex items-center justify-center translate-x-full group-hover:translate-x-0 transition-transform duration-300 cursor-pointer">
+<span class="material-symbols-outlined text-white">delete</span>
+</div>
+<div class="p-6 transition-transform duration-300 group-hover:-translate-x-20">
+<div class="flex justify-between items-start mb-3">
+<span class="font-sans text-xs uppercase tracking-widest text-primary font-bold">Gospel</span>
+<span class="text-[11px] text-on-surface-variant/60">Saved 2 days ago</span>
+</div>
+<h2 class="font-serif text-xl font-bold mb-3 text-on-surface">The Parable of the Sower</h2>
+<p class="text-on-surface-variant leading-relaxed line-clamp-2 text-sm italic border-l-4 border-primary/20 pl-4 mb-4">
+                            "A farmer went out to sow his seed. As he was scattering the seed, some fell along the path..."
+                        </p>
+<div class="flex items-center gap-2 text-xs font-medium text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px]">book_5</span>
+                            Matthew 13:1-23
+                        </div>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="relative group overflow-hidden rounded-xl bg-surface-container-low hover:bg-surface-container-high transition-all duration-300">
+<div class="absolute inset-y-0 right-0 w-20 bg-error flex items-center justify-center translate-x-full group-hover:translate-x-0 transition-transform duration-300 cursor-pointer">
+<span class="material-symbols-outlined text-white">delete</span>
+</div>
+<div class="p-6 transition-transform duration-300 group-hover:-translate-x-20">
+<div class="flex justify-between items-start mb-3">
+<span class="font-sans text-xs uppercase tracking-widest text-secondary font-bold">First Reading</span>
+<span class="text-[11px] text-on-surface-variant/60">Saved 1 week ago</span>
+</div>
+<h2 class="font-serif text-xl font-bold mb-3 text-on-surface">The Call of Jeremiah</h2>
+<p class="text-on-surface-variant leading-relaxed line-clamp-2 text-sm italic border-l-4 border-secondary/20 pl-4 mb-4">
+                            "Before I formed you in the womb I knew you, before you were born I set you apart..."
+                        </p>
+<div class="flex items-center gap-2 text-xs font-medium text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px]">book_5</span>
+                            Jeremiah 1:4-10
+                        </div>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="relative group overflow-hidden rounded-xl bg-surface-container-low hover:bg-surface-container-high transition-all duration-300">
+<div class="absolute inset-y-0 right-0 w-20 bg-error flex items-center justify-center translate-x-full group-hover:translate-x-0 transition-transform duration-300 cursor-pointer">
+<span class="material-symbols-outlined text-white">delete</span>
+</div>
+<div class="p-6 transition-transform duration-300 group-hover:-translate-x-20">
+<div class="flex justify-between items-start mb-3">
+<span class="font-sans text-xs uppercase tracking-widest text-tertiary font-bold">Psalm</span>
+<span class="text-[11px] text-on-surface-variant/60">Saved Oct 12, 2023</span>
+</div>
+<h2 class="font-serif text-xl font-bold mb-3 text-on-surface">The Good Shepherd</h2>
+<p class="text-on-surface-variant leading-relaxed line-clamp-2 text-sm italic border-l-4 border-tertiary/20 pl-4 mb-4">
+                            "The Lord is my shepherd, I lack nothing. He makes me lie down in green pastures..."
+                        </p>
+<div class="flex items-center gap-2 text-xs font-medium text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px]">book_5</span>
+                            Psalm 23
+                        </div>
+</div>
+</div>
+</div>
+<!-- Sidebar / Featured Preview -->
+<div class="md:col-span-4 hidden md:block">
+<div class="sticky top-32 p-8 rounded-2xl bg-surface-container-highest/50 border-t-4 border-primary">
+<h3 class="font-serif text-lg font-bold mb-4">Quick Collection</h3>
+<p class="text-sm text-on-surface-variant mb-6 leading-relaxed">
+                        You have 12 items saved across all categories. Use these for your daily meditation and reflection.
+                    </p>
+<div class="space-y-4">
+<div class="flex items-center justify-between p-3 rounded-lg bg-surface-container-low">
+<span class="text-sm font-medium">Readings</span>
+<span class="bg-primary text-on-primary text-[10px] px-2 py-0.5 rounded-full">8</span>
+</div>
+<div class="flex items-center justify-between p-3 rounded-lg bg-surface-container-low">
+<span class="text-sm font-medium">Verses</span>
+<span class="bg-secondary text-on-secondary text-[10px] px-2 py-0.5 rounded-full">3</span>
+</div>
+<div class="flex items-center justify-between p-3 rounded-lg bg-surface-container-low">
+<span class="text-sm font-medium">Prayers</span>
+<span class="bg-tertiary text-on-tertiary text-[10px] px-2 py-0.5 rounded-full">1</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Empty State (Hidden for demonstration of list, but styled as requested) -->
+<div class="hidden flex-col items-center justify-center py-24 px-6 text-center">
+<div class="w-64 h-64 mb-8 bg-surface-container-low rounded-full flex items-center justify-center relative">
+<div class="absolute inset-0 bg-primary/5 rounded-full blur-3xl animate-pulse"></div>
+<img alt="Sacred text illustration" class="w-48 h-48 object-cover rounded-full shadow-2xl grayscale hover:grayscale-0 transition-all duration-700" data-alt="Minimalist artistic close-up of an open antique bible with soft warm morning light hitting the textured paper pages" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBL4qfz8XpPfxmL4cNZE-VkHvKn98aOohzmdnxBz9C0VNyT6NLxHvtz8oGuEu7WOUQpsEBmrol_aDfZlglfXAox_xC0kZqkNJLi_Jo8NMBv3NMYSPNW-hMmKAHeZ_sPenUitc4qELuVsu09XMK7W1mlOhEkDoZAGk6IEzZIWbQT2UgSdy_zaVI5g6Beia0uD1tnIlaAsS8KQdG-5obzIPtiWlQq6aW93nfw2V4s7-0eeAksMgHKJwTYQZ0ed_8KO28lTH39Aul4X4Oq"/>
+</div>
+<h3 class="font-serif text-2xl font-bold text-on-surface mb-2">No Favourites Yet</h3>
+<p class="text-on-surface-variant max-w-sm mx-auto mb-10 leading-relaxed">
+                Start building your spiritual library by saving readings, verses, and prayers that resonate with your heart.
+            </p>
+<button class="px-8 py-3 bg-primary text-on-primary rounded-full font-medium shadow-lg hover:shadow-xl transition-all active:scale-95">
+                Browse Readings
+            </button>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-2 bg-[#fcf9f3]/80 dark:bg-stone-950/80 backdrop-blur-xl shadow-[0_-12px_32px_rgba(28,28,24,0.05)] rounded-t-2xl">
+<a class="flex flex-col items-center justify-center text-[#1c1c18]/60 dark:text-stone-500 px-3 py-1.5 hover:text-[#376847] dark:hover:text-emerald-400 transition-transform active:scale-90" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-sans text-[11px] font-medium Inter">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-[#376847] text-white rounded-xl px-3 py-1.5 transition-transform active:scale-90" href="#">
+<span class="material-symbols-outlined" data-icon="book_5">book_5</span>
+<span class="font-sans text-[11px] font-medium Inter">Readings</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#1c1c18]/60 dark:text-stone-500 px-3 py-1.5 hover:text-[#376847] dark:hover:text-emerald-400 transition-transform active:scale-90" href="#">
+<span class="material-symbols-outlined" data-icon="church">church</span>
+<span class="font-sans text-[11px] font-medium Inter">Office</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#1c1c18]/60 dark:text-stone-500 px-3 py-1.5 hover:text-[#376847] dark:hover:text-emerald-400 transition-transform active:scale-90" href="#">
+<span class="material-symbols-outlined" data-icon="groups">groups</span>
+<span class="font-sans text-[11px] font-medium Inter">Parish</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#1c1c18]/60 dark:text-stone-500 px-3 py-1.5 hover:text-[#376847] dark:hover:text-emerald-400 transition-transform active:scale-90" href="#">
+<span class="material-symbols-outlined" data-icon="more_horiz">more_horiz</span>
+<span class="font-sans text-[11px] font-medium Inter">More</span>
+</a>
+</nav>
+</body></html>

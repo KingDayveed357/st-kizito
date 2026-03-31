@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Mass Booking Success - St. Kizito Parish</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;700&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "outline": "#7e7665",
+              "on-tertiary": "#ffffff",
+              "surface-variant": "#e5e2dc",
+              "on-secondary-fixed": "#280b46",
+              "error-container": "#ffdad6",
+              "surface-dim": "#dcdad4",
+              "on-secondary-fixed-variant": "#563a74",
+              "tertiary-fixed-dim": "#e6c364",
+              "on-surface": "#1c1c18",
+              "secondary": "#6f518e",
+              "on-tertiary-container": "#503d00",
+              "surface-container": "#f0eee8",
+              "tertiary-fixed": "#ffe08f",
+              "secondary-fixed-dim": "#dbb9fd",
+              "on-error": "#ffffff",
+              "on-primary-container": "#16492a",
+              "surface-bright": "#fcf9f3",
+              "primary-container": "#83b890",
+              "inverse-surface": "#31312d",
+              "error": "#ba1a1a",
+              "primary": "#376847",
+              "on-secondary": "#ffffff",
+              "inverse-primary": "#9dd3aa",
+              "tertiary": "#755b00",
+              "on-primary": "#ffffff",
+              "inverse-on-surface": "#f3f0ea",
+              "primary-fixed": "#b9efc5",
+              "on-primary-fixed": "#00210e",
+              "surface-container-low": "#f6f3ed",
+              "on-tertiary-fixed": "#241a00",
+              "on-tertiary-fixed-variant": "#584400",
+              "surface-container-highest": "#e5e2dc",
+              "on-primary-fixed-variant": "#1e5031",
+              "on-background": "#1c1c18",
+              "primary-fixed-dim": "#9dd3aa",
+              "outline-variant": "#d0c5b2",
+              "surface-container-lowest": "#ffffff",
+              "secondary-container": "#dbb9fd",
+              "surface-container-high": "#ebe8e2",
+              "surface": "#fcf9f3",
+              "on-error-container": "#93000a",
+              "tertiary-container": "#c9a84c",
+              "background": "#fcf9f3",
+              "on-secondary-container": "#624681",
+              "secondary-fixed": "#efdbff",
+              "on-surface-variant": "#4d4637",
+              "surface-tint": "#376847"
+            },
+            fontFamily: {
+              "headline": ["Noto Serif"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>.material-symbols-outlined {
+    font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+    display: inline-block;
+    line-height: 1
+    }
+/* Custom pulsing for religious symbol */
+@keyframes liturgical-pulse {
+    0% {
+        transform: scale(1);
+        opacity: 0.8;
+        } 50% {
+        transform: scale(1.05);
+        opacity: 1;
+        filter: drop-shadow(0 0 15px #c9a84c);
+        } 100% {
+        transform: scale(1);
+        opacity: 0.8;
+        }
+    }
+.pulse-symbol {
+    animation: liturgical-pulse 3s infinite ease-in-out
+    }
+.paper-texture {
+    background-image: url(https://lh3.googleusercontent.com/aida-public/AB6AXuD5vrSz02njaZLEQXwAV4EHdX5wIyjFY6c8QEPe8RfzbwYv8tEACZtTmuS8qHHoow00SCv4uohuO4_ihjNXaCnaN11dosXN4QdeXuU3iP86IgOZ3OpbzZJ8ydyc1ntaLYLqlo-N7Xd84W95L7KYpdaKjhIWAiprbVW7PgjzCWNhwyLbAZ1KderPfk4vw-kuxkUdxOOxuKfUewUslzZuBZrxddDSqTc8MtuGGZZDrkT34Omdnj4hG9cwR_8nuFtCYb1VYIKagqjlffwl)
+    }</style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body selection:bg-primary-container selection:text-on-primary-container min-h-screen flex flex-col">
+<!-- TopAppBar Fragment (Transactional State) -->
+<header class="bg-[#fcf9f3] dark:bg-stone-950 flex flex-col w-full px-6 py-4 max-w-screen-xl mx-auto sticky top-0 z-50">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-4">
+<button class="text-[#376847] dark:text-emerald-500 hover:bg-[#ebe8e2] dark:hover:bg-stone-800 p-2 rounded-full transition-colors active:scale-95 duration-200">
+<span class="material-symbols-outlined" data-icon="close">close</span>
+</button>
+<h1 class="font-serif text-[#376847] dark:text-emerald-500 font-bold text-xl tracking-tight">St. Kizito Parish</h1>
+</div>
+<div class="hidden md:flex items-center gap-6">
+<span class="font-sans text-xs uppercase tracking-widest text-on-surface-variant">Step 4 of 4</span>
+</div>
+</div>
+<div class="bg-[#f6f3ed] dark:bg-stone-900 h-[1px] w-full mt-4"></div>
+</header>
+<main class="flex-grow flex flex-col items-center justify-center px-6 py-12">
+<div class="max-w-md w-full text-center space-y-12">
+<!-- Success Icon Section -->
+<div class="relative flex flex-col items-center">
+<div class="pulse-symbol w-24 h-24 bg-tertiary-container/20 rounded-full flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-6xl text-tertiary" data-icon="dove" style="font-variation-settings: 'FILL' 1;">raven</span>
+</div>
+<h2 class="font-headline text-3xl font-bold tracking-tight text-on-surface leading-tight">Mass Booked Successfully</h2>
+<p class="font-sans text-on-surface-variant mt-2">Your intention has been offered and added to the parish calendar.</p>
+</div>
+<!-- Summary Card: Tonal Layering -->
+<div class="bg-surface-container-low rounded-xl p-8 space-y-6 text-left paper-texture relative overflow-hidden">
+<!-- Decorative left accent -->
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-primary"></div>
+<h3 class="font-sans text-xs uppercase tracking-widest text-primary font-bold">Booking Summary</h3>
+<div class="space-y-4">
+<div class="flex justify-between items-start">
+<div>
+<p class="text-xs text-on-surface-variant font-medium uppercase tracking-wider">Date &amp; Time</p>
+<p class="font-headline text-lg text-on-surface">Sunday, 24th Oct 2024</p>
+<p class="font-sans text-sm text-on-surface-variant">08:00 AM — Morning Mass</p>
+</div>
+<span class="material-symbols-outlined text-outline-variant" data-icon="calendar_today">calendar_today</span>
+</div>
+<div class="flex justify-between items-start">
+<div>
+<p class="text-xs text-on-surface-variant font-medium uppercase tracking-wider">Intention For</p>
+<p class="font-headline text-lg text-on-surface">The Soul of Mary Magdalene</p>
+</div>
+<span class="material-symbols-outlined text-outline-variant" data-icon="person">person</span>
+</div>
+<div class="pt-4 mt-4 border-t border-outline-variant/20 flex justify-between items-center">
+<div>
+<p class="text-xs text-on-surface-variant font-medium uppercase tracking-wider">Offering Amount</p>
+<p class="font-headline text-2xl font-bold text-primary">$25.00</p>
+</div>
+<div class="bg-primary/10 px-3 py-1 rounded-full">
+<span class="text-[10px] font-bold text-primary uppercase tracking-tighter">Paid via Card</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="flex flex-col gap-4">
+<button class="w-full bg-primary text-on-primary font-sans font-semibold py-4 rounded-xl shadow-[0_12px_32px_rgba(55,104,71,0.15)] hover:opacity-90 transition-all active:scale-95 duration-200">
+                    Book Another Mass
+                </button>
+<button class="w-full bg-surface-container-high text-primary font-sans font-semibold py-4 rounded-xl hover:bg-surface-variant transition-all active:scale-95 duration-200">
+                    Back to Home
+                </button>
+</div>
+<!-- Confirmation ID -->
+<p class="font-sans text-[11px] text-on-surface-variant/60 uppercase tracking-widest">
+                Confirmation ID: #BK-7729-SKP
+            </p>
+</div>
+</main>
+<!-- Content-Focused Success Screen: Navigation Suppressed per Rule -->
+<!-- Secondary Information Area -->
+<section class="max-w-screen-xl mx-auto w-full px-6 pb-20 grid grid-cols-1 md:grid-cols-2 gap-8 mt-12">
+<div class="bg-surface-container-lowest p-6 rounded-xl space-y-4">
+<span class="material-symbols-outlined text-tertiary" data-icon="mail">mail</span>
+<h4 class="font-headline text-lg font-bold">Email Confirmation</h4>
+<p class="text-sm text-on-surface-variant leading-relaxed">
+                A receipt and booking details have been sent to <span class="text-on-surface font-medium underline decoration-primary/30">joseph.k@example.com</span>. You can also find this in your parish profile under "My Intentions".
+            </p>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl space-y-4">
+<span class="material-symbols-outlined text-primary" data-icon="volunteer_activism">volunteer_activism</span>
+<h4 class="font-headline text-lg font-bold">The Offering's Impact</h4>
+<p class="text-sm text-on-surface-variant leading-relaxed">
+                Your mass stipend supports our parish missions and the welfare of our clergy. We thank you for your generous contribution to St. Kizito Parish.
+            </p>
+</div>
+</section>
+<!-- Footer Quote (Editorial Design Element) -->
+<footer class="py-12 border-t border-surface-container-high text-center">
+<div class="max-w-xl mx-auto px-6">
+<div class="bg-surface-container-low p-8 rounded-xl relative">
+<div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-surface px-4">
+<span class="material-symbols-outlined text-outline-variant" data-icon="format_quote" style="font-variation-settings: 'FILL' 1;">format_quote</span>
+</div>
+<p class="font-headline text-xl italic text-on-surface-variant leading-relaxed">
+                    "The Holy Mass is the most perfect form of prayer."
+                </p>
+<p class="font-sans text-xs uppercase tracking-[0.2em] text-primary font-bold mt-4">
+                    — Pope Paul VI
+                </p>
+</div>
+</div>
+</footer>
+</body></html>

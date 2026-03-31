@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>St. Kizito Parish - Divine Office</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "outline": "#7e7665",
+              "on-tertiary": "#ffffff",
+              "surface-variant": "#e5e2dc",
+              "on-secondary-fixed": "#280b46",
+              "error-container": "#ffdad6",
+              "surface-dim": "#dcdad4",
+              "on-secondary-fixed-variant": "#563a74",
+              "tertiary-fixed-dim": "#e6c364",
+              "on-surface": "#1c1c18",
+              "secondary": "#6f518e",
+              "on-tertiary-container": "#503d00",
+              "surface-container": "#f0eee8",
+              "tertiary-fixed": "#ffe08f",
+              "secondary-fixed-dim": "#dbb9fd",
+              "on-error": "#ffffff",
+              "on-primary-container": "#16492a",
+              "surface-bright": "#fcf9f3",
+              "primary-container": "#83b890",
+              "inverse-surface": "#31312d",
+              "error": "#ba1a1a",
+              "primary": "#376847",
+              "on-secondary": "#ffffff",
+              "inverse-primary": "#9dd3aa",
+              "tertiary": "#755b00",
+              "on-primary": "#ffffff",
+              "inverse-on-surface": "#f3f0ea",
+              "primary-fixed": "#b9efc5",
+              "on-primary-fixed": "#00210e",
+              "surface-container-low": "#f6f3ed",
+              "on-tertiary-fixed": "#241a00",
+              "on-tertiary-fixed-variant": "#584400",
+              "surface-container-highest": "#e5e2dc",
+              "on-primary-fixed-variant": "#1e5031",
+              "on-background": "#1c1c18",
+              "primary-fixed-dim": "#9dd3aa",
+              "outline-variant": "#d0c5b2",
+              "surface-container-lowest": "#ffffff",
+              "secondary-container": "#dbb9fd",
+              "surface-container-high": "#ebe8e2",
+              "surface": "#fcf9f3",
+              "on-error-container": "#93000a",
+              "tertiary-container": "#c9a84c",
+              "background": "#fcf9f3",
+              "on-secondary-container": "#624681",
+              "secondary-fixed": "#efdbff",
+              "on-surface-variant": "#4d4637",
+              "surface-tint": "#376847"
+            },
+            fontFamily: {
+              "headline": ["Noto Serif", "serif"],
+              "body": ["Inter", "sans-serif"],
+              "label": ["Inter", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .prayer-card-active {
+            box-shadow: 0 0 20px rgba(55, 104, 71, 0.12);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopAppBar -->
+<header class="sticky top-0 z-40 bg-surface/80 backdrop-blur-xl">
+<div class="flex flex-col w-full px-6 py-4 max-w-screen-xl mx-auto">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-4">
+<button class="p-2 -ml-2 text-primary hover:bg-surface-container-high rounded-full transition-colors active:scale-95 duration-200">
+<span class="material-symbols-outlined" data-icon="menu">menu</span>
+</button>
+<h1 class="font-headline text-2xl font-bold tracking-tight text-primary">St. Kizito Parish</h1>
+</div>
+<button class="p-2 text-primary hover:bg-surface-container-high rounded-full transition-colors active:scale-95 duration-200">
+<span class="material-symbols-outlined" data-icon="calendar_month">calendar_month</span>
+</button>
+</div>
+<div class="bg-surface-container-low h-[1px] w-full mt-4"></div>
+</div>
+</header>
+<main class="max-w-screen-xl mx-auto px-6 pt-8 pb-32">
+<!-- Header Section -->
+<header class="mb-12">
+<span class="font-label text-xs uppercase tracking-widest text-on-surface-variant mb-2 block">Liturgy of the Hours</span>
+<h2 class="font-headline text-4xl font-bold text-on-surface">Divine Office</h2>
+<div class="mt-6 p-6 rounded-2xl bg-surface-container-low flex items-center gap-6">
+<div class="h-16 w-16 rounded-full bg-primary-container/20 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-3xl" data-icon="wb_twilight">wb_twilight</span>
+</div>
+<div>
+<h3 class="font-headline text-xl font-bold text-on-surface">Morning Prayer</h3>
+<p class="text-on-surface-variant text-sm mt-1 italic">"O Lord, open my lips, and my mouth shall declare your praise."</p>
+</div>
+</div>
+</header>
+<!-- Prayer Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<!-- Morning Prayer (Lauds) - Active Highlight -->
+<button class="text-left group relative p-6 bg-surface-container-lowest rounded-2xl border-l-4 border-primary prayer-card-active transition-all duration-200 active:scale-95 hover:bg-surface-container-low">
+<div class="flex justify-between items-start mb-6">
+<div class="p-3 bg-primary-container/10 rounded-xl text-primary group-hover:bg-primary group-hover:text-on-primary transition-colors">
+<span class="material-symbols-outlined text-2xl" data-icon="sunny">sunny</span>
+</div>
+<span class="text-[11px] font-medium bg-primary-container text-on-primary-container px-2 py-0.5 rounded-full">CURRENT</span>
+</div>
+<h4 class="font-headline text-xl font-bold text-on-surface mb-1">Morning Prayer (Lauds)</h4>
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-sm" data-icon="schedule">schedule</span>
+<span class="font-label text-xs uppercase tracking-wider">~8 min</span>
+</div>
+</button>
+<!-- Midday Prayer (Terce) -->
+<button class="text-left group relative p-6 bg-surface-container-lowest rounded-2xl border-l-4 border-outline-variant transition-all duration-200 active:scale-95 hover:bg-surface-container-low">
+<div class="flex justify-between items-start mb-6">
+<div class="p-3 bg-surface-container-high rounded-xl text-on-surface-variant group-hover:bg-primary group-hover:text-on-primary transition-colors">
+<span class="material-symbols-outlined text-2xl" data-icon="light_mode">light_mode</span>
+</div>
+</div>
+<h4 class="font-headline text-xl font-bold text-on-surface mb-1">Midday Prayer (Terce)</h4>
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-sm" data-icon="schedule">schedule</span>
+<span class="font-label text-xs uppercase tracking-wider">~8 min</span>
+</div>
+</button>
+<!-- Evening Prayer (Vespers) -->
+<button class="text-left group relative p-6 bg-surface-container-lowest rounded-2xl border-l-4 border-outline-variant transition-all duration-200 active:scale-95 hover:bg-surface-container-low">
+<div class="flex justify-between items-start mb-6">
+<div class="p-3 bg-surface-container-high rounded-xl text-on-surface-variant group-hover:bg-primary group-hover:text-on-primary transition-colors">
+<span class="material-symbols-outlined text-2xl" data-icon="wb_twilight">wb_twilight</span>
+</div>
+</div>
+<h4 class="font-headline text-xl font-bold text-on-surface mb-1">Evening Prayer (Vespers)</h4>
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-sm" data-icon="schedule">schedule</span>
+<span class="font-label text-xs uppercase tracking-wider">~8 min</span>
+</div>
+</button>
+<!-- Night Prayer (Compline) -->
+<button class="text-left group relative p-6 bg-surface-container-lowest rounded-2xl border-l-4 border-outline-variant transition-all duration-200 active:scale-95 hover:bg-surface-container-low">
+<div class="flex justify-between items-start mb-6">
+<div class="p-3 bg-surface-container-high rounded-xl text-on-surface-variant group-hover:bg-primary group-hover:text-on-primary transition-colors">
+<span class="material-symbols-outlined text-2xl" data-icon="bedtime">bedtime</span>
+</div>
+</div>
+<h4 class="font-headline text-xl font-bold text-on-surface mb-1">Night Prayer (Compline)</h4>
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-sm" data-icon="schedule">schedule</span>
+<span class="font-label text-xs uppercase tracking-wider">~8 min</span>
+</div>
+</button>
+<!-- The Apostles' Creed -->
+<button class="text-left group relative p-6 bg-surface-container-lowest rounded-2xl border-l-4 border-secondary transition-all duration-200 active:scale-95 hover:bg-surface-container-low">
+<div class="flex justify-between items-start mb-6">
+<div class="p-3 bg-secondary-container/20 rounded-xl text-secondary group-hover:bg-secondary group-hover:text-on-secondary transition-colors">
+<span class="material-symbols-outlined text-2xl" data-icon="auto_stories">auto_stories</span>
+</div>
+</div>
+<h4 class="font-headline text-xl font-bold text-on-surface mb-1">The Apostles' Creed</h4>
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-sm" data-icon="schedule">schedule</span>
+<span class="font-label text-xs uppercase tracking-wider">~8 min</span>
+</div>
+</button>
+<!-- Litany of the Blessed Virgin Mary -->
+<button class="text-left group relative p-6 bg-surface-container-lowest rounded-2xl border-l-4 border-tertiary transition-all duration-200 active:scale-95 hover:bg-surface-container-low">
+<div class="flex justify-between items-start mb-6">
+<div class="p-3 bg-tertiary-container/20 rounded-xl text-tertiary group-hover:bg-tertiary group-hover:text-on-tertiary transition-colors">
+<span class="material-symbols-outlined text-2xl" data-icon="local_florist">local_florist</span>
+</div>
+</div>
+<h4 class="font-headline text-xl font-bold text-on-surface mb-1">Litany of the B.V.M</h4>
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-sm" data-icon="schedule">schedule</span>
+<span class="font-label text-xs uppercase tracking-wider">~8 min</span>
+</div>
+</button>
+</div>
+<!-- Featured Reflection Section -->
+<section class="mt-16 bg-surface-container rounded-2xl overflow-hidden flex flex-col md:flex-row shadow-sm">
+<div class="w-full md:w-1/2 h-64 md:h-auto bg-cover bg-center" data-alt="interior of a quiet dark chapel with soft candlelight reflecting on wooden pews and stone walls" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDzIzSNdcftEoyvXrVovF6dJjqFCxZvvYjCrY30VQX4fCkhoFimjeYudA0UGO6C0DdFkk2Nf1n_a7h6IZcCUHF109TdiM2r_BMX95kyTTKsq6UaLJxgRoCfX-wFgxZq8v4Mk3nLCOxEQOPy5OzJMrf2lY4nbAJmUJqgpR8_FuAkREM9A3SRdJrH2mvFWxVKPMPpOBy2zDcRqkH51RT2ApozwuomJcaMNPTjbPBq1U8AqWUtRrJQFg4tKL7T-4fo0j8FNfSqrJneobfH')"></div>
+<div class="p-8 md:p-12 flex flex-col justify-center">
+<div class="bg-primary/10 text-primary px-3 py-1 rounded-full w-fit text-xs font-bold mb-4">DAILY MANNA</div>
+<h3 class="font-headline text-2xl font-bold text-on-surface mb-4">Meditation of the Day</h3>
+<p class="text-on-surface-variant leading-relaxed mb-6 italic">"The Divine Office is the voice of the Church, of the whole Mystical Body, publicly praising God."</p>
+<button class="bg-primary text-on-primary px-6 py-3 rounded-xl font-semibold self-start hover:shadow-lg transition-all active:scale-95">Read Reflection</button>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-2 bg-[#fcf9f3]/80 backdrop-blur-xl shadow-[0_-12px_32px_rgba(28,28,24,0.05)] rounded-t-2xl">
+<a class="flex flex-col items-center justify-center text-[#1c1c18]/60 px-3 py-1.5 hover:text-[#376847] transition-colors active:scale-90" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-sans text-[11px] font-medium">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#1c1c18]/60 px-3 py-1.5 hover:text-[#376847] transition-colors active:scale-90" href="#">
+<span class="material-symbols-outlined" data-icon="book_5">book_5</span>
+<span class="font-sans text-[11px] font-medium">Readings</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-[#376847] text-white rounded-xl px-3 py-1.5 active:scale-90" href="#">
+<span class="material-symbols-outlined" data-icon="church">church</span>
+<span class="font-sans text-[11px] font-medium">Office</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#1c1c18]/60 px-3 py-1.5 hover:text-[#376847] transition-colors active:scale-90" href="#">
+<span class="material-symbols-outlined" data-icon="groups">groups</span>
+<span class="font-sans text-[11px] font-medium">Parish</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#1c1c18]/60 px-3 py-1.5 hover:text-[#376847] transition-colors active:scale-90" href="#">
+<span class="material-symbols-outlined" data-icon="more_horiz">more_horiz</span>
+<span class="font-sans text-[11px] font-medium">More</span>
+</a>
+</nav>
+</body></html>

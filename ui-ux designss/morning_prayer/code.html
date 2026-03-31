@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Noto+Serif:ital,wght@0,400;0,700;1,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "outline": "#7e7665",
+                        "on-tertiary": "#ffffff",
+                        "surface-variant": "#e5e2dc",
+                        "on-secondary-fixed": "#280b46",
+                        "error-container": "#ffdad6",
+                        "surface-dim": "#dcdad4",
+                        "on-secondary-fixed-variant": "#563a74",
+                        "tertiary-fixed-dim": "#e6c364",
+                        "on-surface": "#1c1c18",
+                        "secondary": "#6f518e",
+                        "on-tertiary-container": "#503d00",
+                        "surface-container": "#f0eee8",
+                        "tertiary-fixed": "#ffe08f",
+                        "secondary-fixed-dim": "#dbb9fd",
+                        "on-error": "#ffffff",
+                        "on-primary-container": "#16492a",
+                        "surface-bright": "#fcf9f3",
+                        "primary-container": "#83b890",
+                        "inverse-surface": "#31312d",
+                        "error": "#ba1a1a",
+                        "primary": "#376847",
+                        "on-secondary": "#ffffff",
+                        "inverse-primary": "#9dd3aa",
+                        "tertiary": "#755b00",
+                        "on-primary": "#ffffff",
+                        "inverse-on-surface": "#f3f0ea",
+                        "primary-fixed": "#b9efc5",
+                        "on-primary-fixed": "#00210e",
+                        "surface-container-low": "#f6f3ed",
+                        "on-tertiary-fixed": "#241a00",
+                        "on-tertiary-fixed-variant": "#584400",
+                        "surface-container-highest": "#e5e2dc",
+                        "on-primary-fixed-variant": "#1e5031",
+                        "on-background": "#1c1c18",
+                        "primary-fixed-dim": "#9dd3aa",
+                        "outline-variant": "#d0c5b2",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-container": "#dbb9fd",
+                        "surface-container-high": "#ebe8e2",
+                        "surface": "#fcf9f3",
+                        "on-error-container": "#93000a",
+                        "tertiary-container": "#c9a84c",
+                        "background": "#fcf9f3",
+                        "on-secondary-container": "#624681",
+                        "secondary-fixed": "#efdbff",
+                        "on-surface-variant": "#4d4637",
+                        "surface-tint": "#376847"
+                    },
+                    fontFamily: {
+                        "headline": ["Noto Serif"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .drop-cap::first-letter {
+            float: left;
+            font-family: 'Noto Serif', serif;
+            font-size: 3.5rem;
+            line-height: 1;
+            padding-right: 0.5rem;
+            color: #376847;
+            font-weight: 700;
+        }
+        .reading-mode-active {
+            opacity: 0.3;
+            transition: opacity 0.3s ease;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body selection:bg-primary-container selection:text-on-primary-container">
+<!-- Top Navigation Bar -->
+<header class="sticky top-0 z-50 bg-surface/80 backdrop-blur-xl border-none">
+<div class="flex flex-col w-full px-6 py-4 max-w-screen-xl mx-auto">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-4">
+<button class="p-2 -ml-2 hover:bg-surface-container-high rounded-full transition-colors active:scale-95 duration-200">
+<span class="material-symbols-outlined text-primary">arrow_back</span>
+</button>
+<div>
+<h1 class="font-headline text-2xl font-bold tracking-tight text-primary">Morning Prayer</h1>
+<p class="font-sans text-[10px] uppercase tracking-[0.2em] text-on-surface-variant font-medium">Lauds • Thursday, Week 2</p>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-2 hover:bg-surface-container-high rounded-lg transition-colors flex items-center gap-1">
+<span class="text-xs font-bold font-sans">A-</span>
+<span class="text-sm font-bold font-sans">A+</span>
+</button>
+<button class="p-2 hover:bg-surface-container-high rounded-lg transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant">volume_off</span>
+</button>
+<button class="p-2 hover:bg-surface-container-high rounded-lg transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant">bookmark</span>
+</button>
+</div>
+</div>
+<!-- Separation Logic: tonal shift instead of border -->
+<div class="bg-surface-container-low h-[1px] w-full mt-4"></div>
+</div>
+</header>
+<main class="max-w-2xl mx-auto px-6 pt-8 pb-32">
+<!-- Opening Verse -->
+<section class="mb-12">
+<span class="font-sans text-[10px] uppercase tracking-widest text-primary font-bold mb-4 block">Opening Verse</span>
+<div class="space-y-4">
+<p class="font-headline text-xl leading-relaxed drop-cap italic">God, come to my assistance.</p>
+<p class="font-headline text-xl leading-relaxed">— Lord, make haste to help me.</p>
+<p class="font-headline text-lg text-on-surface-variant leading-relaxed">Glory to the Father, and to the Son, and to the Holy Spirit: as it was in the beginning, is now, and will be for ever. Amen. Alleluia.</p>
+</div>
+<div class="h-px w-12 bg-outline-variant/30 mt-8 mx-auto"></div>
+</section>
+<!-- Hymn -->
+<section class="mb-12">
+<span class="font-sans text-[10px] uppercase tracking-widest text-primary font-bold mb-4 block">Hymn</span>
+<div class="space-y-6">
+<p class="font-headline text-lg leading-loose drop-cap">Lord of all hopefulness, Lord of all joy, Whose trust, ever childlike, no cares could destroy, Be there at our waking, and give us, we pray, Your bliss in our hearts, Lord, at the break of the day.</p>
+</div>
+<div class="h-px w-12 bg-outline-variant/30 mt-8 mx-auto"></div>
+</section>
+<!-- Psalmody -->
+<section class="mb-12">
+<span class="font-sans text-[10px] uppercase tracking-widest text-primary font-bold mb-4 block">Psalmody</span>
+<div class="mb-8">
+<p class="font-sans text-xs italic text-secondary mb-2">Antiphon 1</p>
+<p class="font-headline text-lg font-bold text-primary">At daybreak, Lord, I offer my prayer to you.</p>
+</div>
+<div class="space-y-6">
+<h2 class="font-headline text-2xl font-bold mb-4">Psalm 63:2-9</h2>
+<p class="font-headline text-xl leading-relaxed drop-cap">O God, you are my God, for you I long; for you my soul is thirsting. My body pines for you like a dry, weary land without water.</p>
+<p class="font-headline text-xl leading-relaxed">So I gaze on you in the sanctuary to see your strength and your glory. For your love is better than life, my lips will speak your praise.</p>
+<p class="font-headline text-xl leading-relaxed">So I will bless you all my life, in your name I will lift up my hands. My soul shall be filled as with a banquet, my mouth shall praise you with joy.</p>
+</div>
+<div class="h-px w-12 bg-outline-variant/30 mt-8 mx-auto"></div>
+</section>
+<!-- Reading -->
+<section class="mb-12 bg-surface-container-low p-8 rounded-xl">
+<span class="font-sans text-[10px] uppercase tracking-widest text-primary font-bold mb-4 block">Short Reading</span>
+<p class="font-sans text-xs font-bold mb-4 text-on-surface-variant">ROMANS 13:11-12</p>
+<p class="font-headline text-xl leading-relaxed drop-cap">It is now the hour for you to wake from sleep, for our salvation is closer than when we first accepted the faith. The night is far spent; the day is at hand. Let us then cast off deeds of darkness and put on the armor of light.</p>
+</section>
+<!-- Gospel Canticle -->
+<section class="mb-12">
+<span class="font-sans text-[10px] uppercase tracking-widest text-primary font-bold mb-4 block">Gospel Canticle</span>
+<div class="mb-6">
+<p class="font-sans text-xs italic text-secondary mb-2">Antiphon</p>
+<p class="font-headline text-lg font-bold text-primary">In the tender compassion of our God, the dawn from on high shall break upon us.</p>
+</div>
+<div class="space-y-6">
+<h3 class="font-sans text-xs uppercase tracking-widest font-bold text-on-surface-variant">CANTICLE OF ZECHARIAH</h3>
+<p class="font-headline text-xl leading-relaxed drop-cap italic">Blessed be the Lord, the God of Israel; he has come to his people and set them free.</p>
+<p class="font-headline text-xl leading-relaxed">He has raised up for us a mighty savior, born of the house of his servant David.</p>
+<p class="font-headline text-xl leading-relaxed">Through his holy prophets he promised of old that he would save us from our enemies, from the hands of all who hate us.</p>
+</div>
+<div class="h-px w-12 bg-outline-variant/30 mt-8 mx-auto"></div>
+</section>
+<!-- Intercessions -->
+<section class="mb-12">
+<span class="font-sans text-[10px] uppercase tracking-widest text-primary font-bold mb-4 block">Intercessions</span>
+<p class="font-headline text-lg mb-6">Let us pray to God our Father, who sent the Holy Spirit to be the light of our hearts:</p>
+<div class="space-y-8 pl-4 border-l-2 border-primary-container">
+<div>
+<p class="font-headline text-lg drop-cap">Lord, fill us with your light.</p>
+<p class="font-headline text-lg text-on-surface-variant mt-2 italic">— We thank you for the gift of a new day, help us to live it for your glory.</p>
+</div>
+<div>
+<p class="font-headline text-lg drop-cap">May your wisdom guide our actions today.</p>
+<p class="font-headline text-lg text-on-surface-variant mt-2 italic">— That we may seek first your kingdom in all things.</p>
+</div>
+</div>
+<div class="h-px w-12 bg-outline-variant/30 mt-8 mx-auto"></div>
+</section>
+<!-- Lord's Prayer -->
+<section class="mb-12">
+<span class="font-sans text-[10px] uppercase tracking-widest text-primary font-bold mb-4 block text-center">The Lord's Prayer</span>
+<div class="text-center space-y-2">
+<p class="font-headline text-xl">Our Father, who art in heaven,</p>
+<p class="font-headline text-xl">hallowed be thy name;</p>
+<p class="font-headline text-xl">thy kingdom come,</p>
+<p class="font-headline text-xl">thy will be done</p>
+<p class="font-headline text-xl">on earth as it is in heaven.</p>
+<p class="font-headline text-xl">Give us this day our daily bread...</p>
+</div>
+<div class="h-px w-12 bg-outline-variant/30 mt-8 mx-auto"></div>
+</section>
+<!-- Concluding Prayer -->
+<section class="mb-24">
+<span class="font-sans text-[10px] uppercase tracking-widest text-primary font-bold mb-4 block">Concluding Prayer</span>
+<div class="space-y-6">
+<p class="font-headline text-xl leading-relaxed drop-cap">Lord, as a new day dawns, send the radiance of your light into our hearts. Banish all darkness of sin and guide us safely into your eternal presence.</p>
+<p class="font-headline text-xl leading-relaxed">We ask this through our Lord Jesus Christ, your Son, who lives and reigns with you and the Holy Spirit, one God, for ever and ever.</p>
+<p class="font-headline text-2xl font-bold text-primary text-center pt-8">Amen.</p>
+</div>
+</section>
+</main>
+<!-- Contextual "Reading Mode" Floating Controls -->
+<div class="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 flex items-center gap-4 px-6 py-3 bg-primary text-white rounded-full shadow-lg transition-transform active:scale-90">
+<button class="flex items-center gap-2">
+<span class="material-symbols-outlined">auto_stories</span>
+<span class="font-sans text-xs font-medium uppercase tracking-widest">Reading Mode</span>
+</button>
+<div class="w-px h-4 bg-white/20"></div>
+<button class="flex items-center">
+<span class="material-symbols-outlined">share</span>
+</button>
+</div>
+<!-- Navigation Shell (BottomNavBar) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-2 bg-surface/80 backdrop-blur-xl shadow-[0_-12px_32px_rgba(28,28,24,0.05)]">
+<!-- Home -->
+<a class="flex flex-col items-center justify-center text-on-surface/60 px-3 py-1.5 transition-transform active:scale-90 hover:text-primary" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-sans text-[11px] font-medium mt-1">Home</span>
+</a>
+<!-- Readings - Active -->
+<a class="flex flex-col items-center justify-center bg-primary text-white rounded-xl px-4 py-1.5 transition-transform active:scale-90" href="#">
+<span class="material-symbols-outlined" data-icon="book_5">book_5</span>
+<span class="font-sans text-[11px] font-medium mt-1">Readings</span>
+</a>
+<!-- Office -->
+<a class="flex flex-col items-center justify-center text-on-surface/60 px-3 py-1.5 transition-transform active:scale-90 hover:text-primary" href="#">
+<span class="material-symbols-outlined" data-icon="church">church</span>
+<span class="font-sans text-[11px] font-medium mt-1">Office</span>
+</a>
+<!-- Parish -->
+<a class="flex flex-col items-center justify-center text-on-surface/60 px-3 py-1.5 transition-transform active:scale-90 hover:text-primary" href="#">
+<span class="material-symbols-outlined" data-icon="groups">groups</span>
+<span class="font-sans text-[11px] font-medium mt-1">Parish</span>
+</a>
+<!-- More -->
+<a class="flex flex-col items-center justify-center text-on-surface/60 px-3 py-1.5 transition-transform active:scale-90 hover:text-primary" href="#">
+<span class="material-symbols-outlined" data-icon="more_horiz">more_horiz</span>
+<span class="font-sans text-[11px] font-medium mt-1">More</span>
+</a>
+</nav>
+<!-- Progress Indicator "The Candle" -->
+<div class="fixed top-0 left-0 w-full h-[3px] z-[60]">
+<div class="h-full bg-tertiary-container shadow-[0_0_8px_rgba(201,168,76,0.5)] transition-all duration-300" style="width: 35%;"></div>
+</div>
+</body></html>

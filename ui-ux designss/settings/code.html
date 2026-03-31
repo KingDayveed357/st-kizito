@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;700&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "outline": "#7e7665",
+              "on-tertiary": "#ffffff",
+              "surface-variant": "#e5e2dc",
+              "on-secondary-fixed": "#280b46",
+              "error-container": "#ffdad6",
+              "surface-dim": "#dcdad4",
+              "on-secondary-fixed-variant": "#563a74",
+              "tertiary-fixed-dim": "#e6c364",
+              "on-surface": "#1c1c18",
+              "secondary": "#6f518e",
+              "on-tertiary-container": "#503d00",
+              "surface-container": "#f0eee8",
+              "tertiary-fixed": "#ffe08f",
+              "secondary-fixed-dim": "#dbb9fd",
+              "on-error": "#ffffff",
+              "on-primary-container": "#16492a",
+              "surface-bright": "#fcf9f3",
+              "primary-container": "#83b890",
+              "inverse-surface": "#31312d",
+              "error": "#ba1a1a",
+              "primary": "#376847",
+              "on-secondary": "#ffffff",
+              "inverse-primary": "#9dd3aa",
+              "tertiary": "#755b00",
+              "on-primary": "#ffffff",
+              "inverse-on-surface": "#f3f0ea",
+              "primary-fixed": "#b9efc5",
+              "on-primary-fixed": "#00210e",
+              "surface-container-low": "#f6f3ed",
+              "on-tertiary-fixed": "#241a00",
+              "on-tertiary-fixed-variant": "#584400",
+              "surface-container-highest": "#e5e2dc",
+              "on-primary-fixed-variant": "#1e5031",
+              "on-background": "#1c1c18",
+              "primary-fixed-dim": "#9dd3aa",
+              "outline-variant": "#d0c5b2",
+              "surface-container-lowest": "#ffffff",
+              "secondary-container": "#dbb9fd",
+              "surface-container-high": "#ebe8e2",
+              "surface": "#fcf9f3",
+              "on-error-container": "#93000a",
+              "tertiary-container": "#c9a84c",
+              "background": "#fcf9f3",
+              "on-secondary-container": "#624681",
+              "secondary-fixed": "#efdbff",
+              "on-surface-variant": "#4d4637",
+              "surface-tint": "#376847"
+            },
+            fontFamily: {
+              "headline": ["Noto Serif"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body min-h-screen pb-32">
+<!-- Top App Bar -->
+<header class="bg-[#fcf9f3] dark:bg-stone-950 flex flex-col w-full px-6 py-4 max-w-screen-xl mx-auto sticky top-0 z-50">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-4">
+<button class="p-2 hover:bg-[#ebe8e2] dark:hover:bg-stone-800 transition-colors rounded-full active:scale-95 duration-200">
+<span class="material-symbols-outlined text-[#376847] dark:text-emerald-500">arrow_back</span>
+</button>
+<h1 class="font-serif text-2xl font-bold tracking-tight text-[#376847] dark:text-emerald-500">Settings</h1>
+</div>
+<div class="flex items-center gap-2">
+<span class="font-sans text-xs uppercase tracking-widest text-on-surface-variant">Profile</span>
+<div class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container font-bold text-xs">SK</div>
+</div>
+</div>
+<div class="bg-[#f6f3ed] dark:bg-stone-900 h-[1px] w-full mt-4"></div>
+</header>
+<main class="max-w-2xl mx-auto px-6 py-8 space-y-12">
+<!-- Appearance Section -->
+<section>
+<div class="flex flex-col mb-6">
+<span class="font-sans text-xs uppercase tracking-widest text-primary font-bold mb-1">Visual Identity</span>
+<h2 class="font-serif text-xl font-bold text-on-surface">Appearance</h2>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+<!-- Light Theme -->
+<button class="group flex flex-col gap-3 text-left focus:outline-none">
+<div class="relative aspect-[3/4] w-full bg-white rounded-xl border-4 border-primary shadow-sm overflow-hidden ring-2 ring-primary/20">
+<div class="absolute inset-x-2 top-2 h-2 bg-surface-container rounded-full w-2/3"></div>
+<div class="absolute inset-x-2 top-6 h-12 bg-surface-container-low rounded-lg space-y-1 p-1">
+<div class="h-1 w-full bg-outline-variant rounded-full"></div>
+<div class="h-1 w-3/4 bg-outline-variant rounded-full"></div>
+</div>
+<div class="absolute bottom-2 inset-x-2 flex justify-between">
+<div class="h-4 w-4 rounded-full bg-primary"></div>
+<div class="h-4 w-8 rounded-md bg-surface-container-high"></div>
+</div>
+</div>
+<span class="text-xs font-medium px-1 text-primary">Light</span>
+</button>
+<!-- Dark Theme -->
+<button class="group flex flex-col gap-3 text-left focus:outline-none">
+<div class="relative aspect-[3/4] w-full bg-stone-950 rounded-xl border border-outline-variant/20 overflow-hidden hover:bg-stone-900 transition-colors">
+<div class="absolute inset-x-2 top-2 h-2 bg-stone-800 rounded-full w-2/3"></div>
+<div class="absolute inset-x-2 top-6 h-12 bg-stone-900 rounded-lg space-y-1 p-1">
+<div class="h-1 w-full bg-stone-700 rounded-full"></div>
+<div class="h-1 w-3/4 bg-stone-700 rounded-full"></div>
+</div>
+<div class="absolute bottom-2 inset-x-2 flex justify-between">
+<div class="h-4 w-4 rounded-full bg-emerald-600"></div>
+<div class="h-4 w-8 rounded-md bg-stone-800"></div>
+</div>
+</div>
+<span class="text-xs font-medium px-1 text-on-surface-variant">Dark</span>
+</button>
+<!-- Sepia Theme -->
+<button class="group flex flex-col gap-3 text-left focus:outline-none">
+<div class="relative aspect-[3/4] w-full bg-[#f4ecd8] rounded-xl border border-outline-variant/20 overflow-hidden hover:opacity-90 transition-opacity">
+<div class="absolute inset-x-2 top-2 h-2 bg-[#e5dbc0] rounded-full w-2/3"></div>
+<div class="absolute inset-x-2 top-6 h-12 bg-[#e5dbc0] rounded-lg space-y-1 p-1">
+<div class="h-1 w-full bg-[#c5b99a] rounded-full"></div>
+<div class="h-1 w-3/4 bg-[#c5b99a] rounded-full"></div>
+</div>
+<div class="absolute bottom-2 inset-x-2 flex justify-between">
+<div class="h-4 w-4 rounded-full bg-[#8c6d46]"></div>
+<div class="h-4 w-8 rounded-md bg-[#d8cca9]"></div>
+</div>
+</div>
+<span class="text-xs font-medium px-1 text-on-surface-variant">Sepia</span>
+</button>
+<!-- High Contrast Theme -->
+<button class="group flex flex-col gap-3 text-left focus:outline-none">
+<div class="relative aspect-[3/4] w-full bg-black rounded-xl border-2 border-white overflow-hidden hover:opacity-90 transition-opacity">
+<div class="absolute inset-x-2 top-2 h-2 bg-white rounded-full w-2/3"></div>
+<div class="absolute inset-x-2 top-6 h-12 bg-black border border-white rounded-lg space-y-1 p-1">
+<div class="h-1 w-full bg-white rounded-full"></div>
+<div class="h-1 w-3/4 bg-white rounded-full"></div>
+</div>
+<div class="absolute bottom-2 inset-x-2 flex justify-between">
+<div class="h-4 w-4 rounded-full bg-yellow-400"></div>
+<div class="h-4 w-8 rounded-md bg-white"></div>
+</div>
+</div>
+<span class="text-xs font-medium px-1 text-on-surface-variant">High Contrast</span>
+</button>
+</div>
+</section>
+<!-- Reading Preferences Section -->
+<section class="space-y-8">
+<div class="flex flex-col">
+<span class="font-sans text-xs uppercase tracking-widest text-primary font-bold mb-1">Typography</span>
+<h2 class="font-serif text-xl font-bold text-on-surface">Reading Preferences</h2>
+</div>
+<div class="bg-surface-container-low rounded-2xl p-6 space-y-8">
+<!-- Text Size Slider -->
+<div class="space-y-4">
+<div class="flex justify-between items-center">
+<label class="text-sm font-semibold text-on-surface-variant">Text Size</label>
+<span class="text-xs font-medium bg-surface-container-high px-2 py-1 rounded-md">Medium (16px)</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="text-xs font-medium text-on-surface-variant">A</span>
+<div class="relative w-full flex items-center">
+<div class="absolute h-1 w-full bg-outline-variant rounded-full"></div>
+<div class="absolute h-1 w-1/2 bg-primary rounded-full"></div>
+<div class="absolute left-1/2 -translate-x-1/2 w-6 h-6 bg-primary rounded-full shadow-lg border-4 border-surface-container-low cursor-pointer"></div>
+</div>
+<span class="text-xl font-medium text-on-surface-variant">A</span>
+</div>
+</div>
+<!-- Line Spacing -->
+<div class="space-y-4">
+<label class="text-sm font-semibold text-on-surface-variant block">Line Spacing</label>
+<div class="flex gap-2">
+<button class="flex-1 py-3 px-4 rounded-xl bg-primary text-white font-medium text-sm flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm">format_line_spacing</span>
+                            Compact
+                        </button>
+<button class="flex-1 py-3 px-4 rounded-xl bg-surface-container-high text-on-surface-variant font-medium text-sm flex items-center justify-center gap-2 hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined text-sm">reorder</span>
+                            Standard
+                        </button>
+<button class="flex-1 py-3 px-4 rounded-xl bg-surface-container-high text-on-surface-variant font-medium text-sm flex items-center justify-center gap-2 hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined text-sm">segment</span>
+                            Relaxed
+                        </button>
+</div>
+</div>
+</div>
+</section>
+<!-- Notifications Section -->
+<section class="space-y-6">
+<div class="flex flex-col">
+<span class="font-sans text-xs uppercase tracking-widest text-primary font-bold mb-1">Alerts</span>
+<h2 class="font-serif text-xl font-bold text-on-surface">Notifications</h2>
+</div>
+<div class="space-y-2">
+<!-- Time Picker -->
+<div class="flex items-center justify-between p-4 bg-surface rounded-xl hover:bg-surface-container-low transition-colors group">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-tertiary-container/20 flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined">schedule</span>
+</div>
+<div class="flex flex-col">
+<span class="text-sm font-bold text-on-surface">Daily Reflection Reminder</span>
+<span class="text-xs text-on-surface-variant">Receive a nudge for your daily prayers</span>
+</div>
+</div>
+<button class="px-4 py-2 bg-surface-container-high rounded-lg text-sm font-bold text-primary">07:30 AM</button>
+</div>
+<!-- Toggle Items -->
+<div class="flex items-center justify-between p-4 bg-surface rounded-xl hover:bg-surface-container-low transition-colors">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-primary-container/20 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">church</span>
+</div>
+<div class="flex flex-col">
+<span class="text-sm font-bold text-on-surface">Mass Updates</span>
+<span class="text-xs text-on-surface-variant">Changes to liturgy or special mass times</span>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-outline-variant peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+<div class="flex items-center justify-between p-4 bg-surface rounded-xl hover:bg-surface-container-low transition-colors">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-secondary-container/20 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined">campaign</span>
+</div>
+<div class="flex flex-col">
+<span class="text-sm font-bold text-on-surface">Parish Announcements</span>
+<span class="text-xs text-on-surface-variant">Events, bulletins, and community news</span>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-outline-variant peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+</div>
+</section>
+<!-- About Section -->
+<section class="space-y-6">
+<div class="flex flex-col">
+<span class="font-sans text-xs uppercase tracking-widest text-primary font-bold mb-1">Information</span>
+<h2 class="font-serif text-xl font-bold text-on-surface">About</h2>
+</div>
+<div class="bg-surface-container-lowest rounded-2xl overflow-hidden border border-outline-variant/10">
+<button class="w-full flex items-center justify-between p-5 hover:bg-surface-container-low transition-colors text-left group">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors">history_edu</span>
+<span class="text-sm font-medium">Parish History</span>
+</div>
+<span class="material-symbols-outlined text-outline-variant">chevron_right</span>
+</button>
+<div class="h-[1px] bg-outline-variant/10 mx-5"></div>
+<button class="w-full flex items-center justify-between p-5 hover:bg-surface-container-low transition-colors text-left group">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors">star</span>
+<span class="text-sm font-medium">Rate the App</span>
+</div>
+<span class="material-symbols-outlined text-outline-variant">chevron_right</span>
+</button>
+<div class="h-[1px] bg-outline-variant/10 mx-5"></div>
+<button class="w-full flex items-center justify-between p-5 hover:bg-surface-container-low transition-colors text-left group">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors">share</span>
+<span class="text-sm font-medium">Share with Friends</span>
+</div>
+<span class="material-symbols-outlined text-outline-variant">chevron_right</span>
+</button>
+</div>
+<div class="pt-8 text-center space-y-2">
+<p class="text-xs text-on-surface-variant font-medium">St. Kizito Parish App • Version 2.4.0</p>
+<p class="text-[10px] text-outline uppercase tracking-widest">Built for the community of faith</p>
+</div>
+</section>
+</main>
+<!-- Navigation Drawer (Side) - Hidden on mobile, visible for context if needed -->
+<aside class="hidden fixed top-0 left-0 h-full w-80 bg-[#fcf9f3] dark:bg-stone-950 shadow-2xl z-[60] flex flex-col p-8 transition-transform -translate-x-full" id="nav-drawer">
+<div class="mb-12">
+<h2 class="text-[#376847] font-serif font-bold text-2xl">Parish Life</h2>
+</div>
+<nav class="flex flex-col gap-2">
+<a class="flex items-center gap-4 p-4 rounded-xl text-[#1c1c18] dark:text-stone-300 hover:bg-[#ebe8e2] dark:hover:bg-stone-800 transition-colors" href="#">
+<span class="material-symbols-outlined">campaign</span>
+<span class="font-sans font-medium">Announcements</span>
+</a>
+<a class="flex items-center gap-4 p-4 rounded-xl text-[#1c1c18] dark:text-stone-300 hover:bg-[#ebe8e2] dark:hover:bg-stone-800 transition-colors" href="#">
+<span class="material-symbols-outlined">event</span>
+<span class="font-sans font-medium">Events</span>
+</a>
+<a class="flex items-center gap-4 p-4 rounded-xl text-[#1c1c18] dark:text-stone-300 hover:bg-[#ebe8e2] dark:hover:bg-stone-800 transition-colors" href="#">
+<span class="material-symbols-outlined">grid_view</span>
+<span class="font-sans font-medium">Gallery</span>
+</a>
+<a class="flex items-center gap-4 p-4 rounded-xl text-[#1c1c18] dark:text-stone-300 hover:bg-[#ebe8e2] dark:hover:bg-stone-800 transition-colors" href="#">
+<span class="material-symbols-outlined">card_giftcard</span>
+<span class="font-sans font-medium">Donations</span>
+</a>
+<a class="flex items-center gap-4 p-4 rounded-xl bg-[#f6f3ed] dark:bg-stone-900 text-[#376847] font-bold" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-sans font-medium">Settings</span>
+</a>
+</nav>
+</aside>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-2 bg-[#fcf9f3]/80 dark:bg-stone-950/80 backdrop-blur-xl shadow-[0_-12px_32px_rgba(28,28,24,0.05)] rounded-t-2xl md:hidden">
+<a class="flex flex-col items-center justify-center text-[#1c1c18]/60 dark:text-stone-500 px-3 py-1.5 transition-transform active:scale-90 tap-highlight-none hover:text-[#376847]" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-sans text-[11px] font-medium">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#1c1c18]/60 dark:text-stone-500 px-3 py-1.5 transition-transform active:scale-90 tap-highlight-none hover:text-[#376847]" href="#">
+<span class="material-symbols-outlined">book_5</span>
+<span class="font-sans text-[11px] font-medium">Readings</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#1c1c18]/60 dark:text-stone-500 px-3 py-1.5 transition-transform active:scale-90 tap-highlight-none hover:text-[#376847]" href="#">
+<span class="material-symbols-outlined">church</span>
+<span class="font-sans text-[11px] font-medium">Office</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#1c1c18]/60 dark:text-stone-500 px-3 py-1.5 transition-transform active:scale-90 tap-highlight-none hover:text-[#376847]" href="#">
+<span class="material-symbols-outlined">groups</span>
+<span class="font-sans text-[11px] font-medium">Parish</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-[#376847] text-white rounded-xl px-3 py-1.5 transition-transform active:scale-90 tap-highlight-none" href="#">
+<span class="material-symbols-outlined">more_horiz</span>
+<span class="font-sans text-[11px] font-medium">More</span>
+</a>
+</nav>
+</body></html>

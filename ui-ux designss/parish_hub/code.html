@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>St. Kizito Parish Hub</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Noto+Serif:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "outline": "#7e7665",
+                        "on-tertiary": "#ffffff",
+                        "surface-variant": "#e5e2dc",
+                        "on-secondary-fixed": "#280b46",
+                        "error-container": "#ffdad6",
+                        "surface-dim": "#dcdad4",
+                        "on-secondary-fixed-variant": "#563a74",
+                        "tertiary-fixed-dim": "#e6c364",
+                        "on-surface": "#1c1c18",
+                        "secondary": "#6f518e",
+                        "on-tertiary-container": "#503d00",
+                        "surface-container": "#f0eee8",
+                        "tertiary-fixed": "#ffe08f",
+                        "secondary-fixed-dim": "#dbb9fd",
+                        "on-error": "#ffffff",
+                        "on-primary-container": "#16492a",
+                        "surface-bright": "#fcf9f3",
+                        "primary-container": "#83b890",
+                        "inverse-surface": "#31312d",
+                        "error": "#ba1a1a",
+                        "primary": "#376847",
+                        "on-secondary": "#ffffff",
+                        "inverse-primary": "#9dd3aa",
+                        "tertiary": "#755b00",
+                        "on-primary": "#ffffff",
+                        "inverse-on-surface": "#f3f0ea",
+                        "primary-fixed": "#b9efc5",
+                        "on-primary-fixed": "#00210e",
+                        "surface-container-low": "#f6f3ed",
+                        "on-tertiary-fixed": "#241a00",
+                        "on-tertiary-fixed-variant": "#584400",
+                        "surface-container-highest": "#e5e2dc",
+                        "on-primary-fixed-variant": "#1e5031",
+                        "on-background": "#1c1c18",
+                        "primary-fixed-dim": "#9dd3aa",
+                        "outline-variant": "#d0c5b2",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-container": "#dbb9fd",
+                        "surface-container-high": "#ebe8e2",
+                        "surface": "#fcf9f3",
+                        "on-error-container": "#93000a",
+                        "tertiary-container": "#c9a84c",
+                        "background": "#fcf9f3",
+                        "on-secondary-container": "#624681",
+                        "secondary-fixed": "#efdbff",
+                        "on-surface-variant": "#4d4637",
+                        "surface-tint": "#376847"
+                    },
+                    fontFamily: {
+                        "headline": ["Noto Serif"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body selection:bg-primary-container selection:text-on-primary-container">
+<!-- Top Navigation Bar (Shared Component Strategy) -->
+<header class="bg-[#fcf9f3] sticky top-0 z-50">
+<div class="flex flex-col w-full px-6 py-4 max-w-screen-xl mx-auto">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-[#376847] cursor-pointer">menu</span>
+<h1 class="font-headline text-2xl font-bold tracking-tight text-[#376847]">St. Kizito Parish</h1>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-[#376847] cursor-pointer">calendar_month</span>
+</div>
+</div>
+<!-- Custom Tab Navigation for Parish Hub -->
+<nav class="flex gap-8 mt-6 overflow-x-auto hide-scrollbar border-b border-transparent">
+<button class="pb-2 border-b-2 border-primary text-primary font-semibold whitespace-nowrap">Announcements</button>
+<button class="pb-2 text-on-surface-variant hover:text-primary transition-colors whitespace-nowrap">Events</button>
+<button class="pb-2 text-on-surface-variant hover:text-primary transition-colors whitespace-nowrap">Mass Times</button>
+<button class="pb-2 text-on-surface-variant hover:text-primary transition-colors whitespace-nowrap">Gallery</button>
+</nav>
+</div>
+<div class="bg-[#f6f3ed] h-[1px] w-full"></div>
+</header>
+<main class="max-w-screen-xl mx-auto px-6 py-8 pb-32">
+<!-- Next Mass Highlight (Sacred Quote Style) -->
+<section class="mb-12">
+<div class="bg-surface-container-lowest p-6 rounded-xl border-l-4 border-primary shadow-sm flex items-center justify-between">
+<div>
+<span class="font-label text-xs uppercase tracking-widest text-secondary font-bold">Upcoming Liturgy</span>
+<h2 class="font-headline text-xl mt-1">Evening Benediction &amp; Vespers</h2>
+<p class="text-on-surface-variant text-sm mt-1">Starts in 45 minutes • Main Sanctuary</p>
+</div>
+<div class="bg-primary text-on-primary p-3 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">notifications_active</span>
+</div>
+</div>
+</section>
+<!-- Announcements Section (List of Cards) -->
+<section class="mb-16">
+<div class="flex justify-between items-end mb-6">
+<h3 class="font-headline text-3xl font-bold">Latest Announcements</h3>
+<span class="text-primary font-medium text-sm flex items-center gap-1 cursor-pointer">View Archive <span class="material-symbols-outlined text-sm">arrow_forward</span></span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<!-- Pinned Announcement -->
+<article class="bg-surface-container-low p-6 rounded-xl relative group cursor-pointer transition-transform duration-200 active:scale-95">
+<div class="absolute top-4 right-4 flex gap-2">
+<span class="bg-tertiary-container text-on-tertiary-container text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Pinned</span>
+<span class="bg-surface-container-high text-on-surface-variant text-[10px] px-2 py-0.5 rounded-full font-medium">12 OCT</span>
+</div>
+<div class="mb-4 text-primary">
+<span class="material-symbols-outlined text-3xl">campaign</span>
+</div>
+<h4 class="font-headline text-xl font-bold mb-2">Annual Harvest Thanksgiving &amp; Bazaar</h4>
+<p class="text-on-surface-variant line-clamp-2 text-sm leading-relaxed mb-4">Join us for our biggest community celebration of the year. We are currently accepting donations of non-perishables and craft items for the stalls.</p>
+<div class="flex items-center gap-2 mt-auto">
+<div class="w-6 h-6 rounded-full bg-primary-container flex items-center justify-center text-[10px] text-on-primary-container font-bold">SK</div>
+<span class="text-xs font-medium text-on-surface">Parish Office</span>
+</div>
+</article>
+<!-- Regular Announcement -->
+<article class="bg-surface-container-low p-6 rounded-xl group cursor-pointer transition-transform duration-200 active:scale-95">
+<div class="flex justify-between items-start mb-4">
+<div class="text-secondary">
+<span class="material-symbols-outlined text-3xl">volunteer_activism</span>
+</div>
+<span class="bg-surface-container-high text-on-surface-variant text-[10px] px-2 py-0.5 rounded-full font-medium uppercase">10 OCT</span>
+</div>
+<h4 class="font-headline text-xl font-bold mb-2">Youth Ministry Outreach Program</h4>
+<p class="text-on-surface-variant line-clamp-2 text-sm leading-relaxed mb-4">Registration is now open for the winter outreach trip to the local shelter. Limited spots available for volunteers aged 15-25.</p>
+<div class="flex items-center gap-2 mt-auto">
+<div class="w-6 h-6 rounded-full bg-secondary-container flex items-center justify-center text-[10px] text-on-secondary-container font-bold">YM</div>
+<span class="text-xs font-medium text-on-surface">Youth Coordinator</span>
+</div>
+</article>
+</div>
+</section>
+<!-- Events Section (Date Block Style) -->
+<section class="mb-16">
+<h3 class="font-headline text-3xl font-bold mb-8">Upcoming Events</h3>
+<div class="space-y-6">
+<!-- Event 1 -->
+<div class="flex gap-6 group cursor-pointer">
+<div class="flex-shrink-0 w-16 h-20 bg-surface-container-high rounded-xl flex flex-col items-center justify-center border-b-4 border-primary transition-colors group-hover:bg-primary group-hover:text-on-primary">
+<span class="text-2xl font-bold leading-none">15</span>
+<span class="text-[10px] uppercase font-bold tracking-widest mt-1">OCT</span>
+</div>
+<div class="flex-grow pb-6 border-b border-surface-container-high group-last:border-0">
+<h4 class="font-headline text-xl font-bold text-on-surface group-hover:text-primary transition-colors">Rosary Month Evening Prayer</h4>
+<p class="text-on-surface-variant text-sm mt-1">6:30 PM • Lady Chapel</p>
+<p class="text-on-surface-variant text-sm mt-2 line-clamp-1 italic">"The Rosary is the most beautiful and the most rich in graces of all prayers." — Pope Saint Pius X</p>
+</div>
+</div>
+<!-- Event 2 -->
+<div class="flex gap-6 group cursor-pointer">
+<div class="flex-shrink-0 w-16 h-20 bg-surface-container-high rounded-xl flex flex-col items-center justify-center border-b-4 border-secondary transition-colors group-hover:bg-secondary group-hover:text-on-primary">
+<span class="text-2xl font-bold leading-none">22</span>
+<span class="text-[10px] uppercase font-bold tracking-widest mt-1">OCT</span>
+</div>
+<div class="flex-grow pb-6 border-b border-surface-container-high group-last:border-0">
+<h4 class="font-headline text-xl font-bold text-on-surface group-hover:text-secondary transition-colors">Marriage Encounter Workshop</h4>
+<p class="text-on-surface-variant text-sm mt-1">9:00 AM - 4:00 PM • Parish Hall</p>
+<p class="text-on-surface-variant text-sm mt-2 line-clamp-1">A transformative day for couples to deepen their communication and spiritual bond.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Mass Times (Table Style) -->
+<section class="mb-16">
+<h3 class="font-headline text-3xl font-bold mb-8">Weekly Mass Schedule</h3>
+<div class="overflow-hidden bg-surface-container-lowest rounded-2xl shadow-sm">
+<table class="w-full text-left">
+<thead class="bg-surface-container text-on-surface-variant font-label text-[11px] uppercase tracking-widest">
+<tr>
+<th class="px-6 py-4">Day</th>
+<th class="px-6 py-4">Morning</th>
+<th class="px-6 py-4">Evening</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container">
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="px-6 py-4 font-medium">Monday — Friday</td>
+<td class="px-6 py-4">06:30 AM</td>
+<td class="px-6 py-4">06:00 PM</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors bg-primary/5">
+<td class="px-6 py-4 font-bold text-primary flex items-center gap-2">Saturday <span class="material-symbols-outlined text-xs">star</span></td>
+<td class="px-6 py-4">07:00 AM</td>
+<td class="px-6 py-4">05:30 PM <span class="text-[10px] text-on-surface-variant opacity-70">(Vigil)</span></td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="px-6 py-4 font-bold">Sunday</td>
+<td class="px-6 py-4">
+<div class="flex flex-col">
+<span>07:30 AM (English)</span>
+<span>09:30 AM (Swahili)</span>
+</div>
+</td>
+<td class="px-6 py-4">11:30 AM (Youth)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<!-- Gallery Section (Masonry Grid) -->
+<section class="mb-16">
+<div class="flex justify-between items-center mb-8">
+<h3 class="font-headline text-3xl font-bold">Parish Gallery</h3>
+<button class="text-primary font-medium flex items-center gap-1">See All <span class="material-symbols-outlined text-sm">grid_view</span></button>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+<div class="space-y-4">
+<div class="rounded-xl overflow-hidden aspect-[3/4] bg-surface-container-high">
+<img class="w-full h-full object-cover transition-transform duration-500 hover:scale-110" data-alt="Interior of a classic cathedral with sun streaming through stained glass windows illuminating the wooden pews and altar." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAL3GAx7lK56NYkPv4ShKabsSixYEmYi6xbIFL31kUs-hHW1h1SJhcDabic-cvXSAkdumYR27edv7udjlT3VFh7cd-dmqVGwVKPnzTHW6n5MwgMTMu3DsWxWIpdlFmghtHC6WyyEusi_QCGX7X4PJQdephk4c14CM46VU2GlyLOazvZoaauuy2me3L62a9IjBeBYqP40sZK4VzprL8u_FNqKYmZrRBZgkE-5GaMoHqFUPXPSy_CUYI22ofs_UGgIqIDVQptoHQBcE9d"/>
+</div>
+<div class="rounded-xl overflow-hidden aspect-square bg-surface-container-high">
+<img class="w-full h-full object-cover transition-transform duration-500 hover:scale-110" data-alt="Detailed close up of a lit candle flame in a dark spiritual setting with soft bokeh lights in background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCPhoyHIz5HTgiOiluU2qxMJZFhuX_XY11htrQj7pMQOpErJoEVaqRAmnZF0oCgcQbyLsxnsI1--nedb7tUqjzEEgCWZxUI84ZTefmsnIq5weap7B8BxqrQTDgikE6TU6rpfxNXPAeMEBzyuLksHSpYzfoqXs6uRCbSF-cxa1lijrRIOQ5CHt9CuprpmVSoZ7V7r0d6MAuuntVYsoNqVOQYKsuK9gOoXtCrjd5Hrk0fW9uNBASfivLb_NpZABiWTlm2Ai9TxjRmV1T5"/>
+</div>
+</div>
+<div class="space-y-4">
+<div class="rounded-xl overflow-hidden aspect-square bg-surface-container-high">
+<img class="w-full h-full object-cover transition-transform duration-500 hover:scale-110" data-alt="Community of people gathered outside a modern church building sharing food and conversation after a morning service." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCGjyej9oN6dxs-qkkME4ZVk_ZxZAPkv2B5gXorAjdPhKGxHu20jnCnLIVbAsTIlSTVXspCYHLf_9XsrE5QmjzgnvLJIu8BZyd1ZC63xmkruL3PL7z8iHdjBVsQV9zjm6WkBKuxC5SWjNSfrYgYIfB0xNDQzYWtmH4cRumiVuj5plIIzQIW86yryVAUqhIx0PN70lis1yzAvJgEXhHO22pw7xtgP5kWx_FvC7FkqwWJuS5V88wWqlauA_J7mk9QYFgZ3g0YzE3r7Ueq"/>
+</div>
+<div class="rounded-xl overflow-hidden aspect-[4/5] bg-surface-container-high">
+<img class="w-full h-full object-cover transition-transform duration-500 hover:scale-110" data-alt="Ancient religious book with leather binding open on a wooden lectern in a dimly lit library or church." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDMjcYhH-d5jXGDcz6EgLmt9jAjzarJzWDec6XUQb1gf93GWm_nwOUu_38KlcPfj_-PoEBecpCQEXttGBThPuSU168Mpma93t81TRbBchypOGE0PTnaJdEwWTY1V9rJGlPNC054bmOQOZv7W8xRs2TQP2IrzvFa4lT4mQaJEwJwyyPSmCbyfpvZZlAleYOG4yQUw_TAKfMV7N_eLMOki7Pu7jDxigL3aazutGw7qR77y2UMLOvmRctG591d96ndQJRtwXayeupwpOGt"/>
+</div>
+</div>
+<div class="hidden md:block space-y-4">
+<div class="rounded-xl overflow-hidden aspect-[3/2] bg-surface-container-high">
+<img class="w-full h-full object-cover transition-transform duration-500 hover:scale-110" data-alt="Choir members in robes singing joyfully in a high-ceilinged stone sanctuary with warm golden lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCoEr0nUqEdHxuIYOq8o-sJI6G8_OBH0jVo58_qOXHBOreORQWlmgl3imDBxzqnVBnMlMeo729iZ3FsvkjLjgFMa9YVFjfao3YBeRuA_3m0cak1FKJ2uQVQMzxUx7UIyBXbPzMDJREEtkE1l6xxaR_iL31P0iRbDnE6U6HM577WAhI9TsIQn21K7V9Vg6sxyzxBpIayqK5kYrBAFdy6D1LY288_zlu-7_wFLqWAINShFXniYE5MI8jSoRhRz7ZSDJZmrGSkgiIh1U8n"/>
+</div>
+<div class="rounded-xl overflow-hidden aspect-square bg-surface-container-high">
+<img class="w-full h-full object-cover transition-transform duration-500 hover:scale-110" data-alt="Close up of ornate religious architectural detail on the exterior of a gothic style building against a blue sky." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCvHA0D1ODsA70JmgJhno-BpltwGDZajlbYs-MiYr2o8Cc87X4i96zDrn3CDhGkxyP2xitlVRPtFpXf1KDalbsoq2L8uWGhCZbyrnw3p_WmpoN35tBAGAyK98R0-jwshuYCgC20jI0yK6duQlqKBv_N8ksdcoJPqAvw3BrqpUL7IHKIR7gQ4B9e81HSwmKNBzku9Iue5NbTFlrOndSYSPU3L60YeukmoMAeJaf2uiv4ksWZ2EI2sKeFpv6yoRWhpS7x5KRzdwkfnDVP"/>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation Bar (Shared Component Strategy) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-2 bg-[#fcf9f3]/80 backdrop-blur-xl shadow-[0_-12px_32px_rgba(28,28,24,0.05)] rounded-t-2xl">
+<a class="flex flex-col items-center justify-center text-[#1c1c18]/60 px-3 py-1.5 hover:text-[#376847]" href="#">
+<span class="material-symbols-outlined mb-1">home</span>
+<span class="font-sans text-[11px] font-medium uppercase tracking-widest">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#1c1c18]/60 px-3 py-1.5 hover:text-[#376847]" href="#">
+<span class="material-symbols-outlined mb-1">book_5</span>
+<span class="font-sans text-[11px] font-medium uppercase tracking-widest">Readings</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#1c1c18]/60 px-3 py-1.5 hover:text-[#376847]" href="#">
+<span class="material-symbols-outlined mb-1">church</span>
+<span class="font-sans text-[11px] font-medium uppercase tracking-widest">Office</span>
+</a>
+<!-- Active Tab: Parish -->
+<a class="flex flex-col items-center justify-center bg-[#376847] text-white rounded-xl px-4 py-2 transition-transform active:scale-90" href="#">
+<span class="material-symbols-outlined mb-0.5" style="font-variation-settings: 'FILL' 1;">groups</span>
+<span class="font-sans text-[11px] font-medium uppercase tracking-widest">Parish</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#1c1c18]/60 px-3 py-1.5 hover:text-[#376847]" href="#">
+<span class="material-symbols-outlined mb-1">more_horiz</span>
+<span class="font-sans text-[11px] font-medium uppercase tracking-widest">More</span>
+</a>
+</nav>
+</body></html>
