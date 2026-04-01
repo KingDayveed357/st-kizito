@@ -8,14 +8,18 @@ import { LiturgicalBadge } from '../../src/components/liturgical/LiturgicalBadge
 import { Button } from '../../src/components/ui/Button';
 import { Chip } from '../../src/components/ui/Chip';
 import { ScriptureQuote } from '../../src/components/liturgical/ScriptureQuote';
-import { AnnouncementCard } from '../../src/components/parish/AnnouncementCard';
-import { EventCard } from '../../src/components/parish/EventCard';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
+import { useAppStore } from '../../src/store/useAppStore';
+import { getCalendar, getDatePresentation, getReadings, getTodayIso } from '../../src/services/liturgicalData';
 
 export default function HomeScreen() {
     const { colors, allColors } = useTheme();
     const router = useRouter();
+    const { selectedDate, setSource } = useAppStore();
+    const effectiveDate = getCalendar(selectedDate) ? selectedDate : getTodayIso();
+    const presentation = getDatePresentation(effectiveDate);
+    const readings = getReadings(effectiveDate);
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
@@ -23,40 +27,48 @@ export default function HomeScreen() {
                 centerElement={
                     <View className="items-center">
                         <Text style={{ color: allColors.liturgical.ordinaryTime }} className="font-serif font-bold text-center text-lg leading-snug mx-4">
-                            Thursday of the Twelfth{'\n'}Week in Ordinary Time
+                            {readings?.feastName ?? 'Daily Readings'}
                         </Text>
                         <Text style={{ color: colors.textSecondary }} className="font-sans font-bold text-[8px] uppercase tracking-widest mt-2">
-                            JUNE 27, 2024 • LECTIONARY 374
+                            {presentation?.shortMeta ?? effectiveDate}
                         </Text>
                     </View>
                 }
                 rightElement={
-                    <TouchableOpacity onPress={() => router.push('/calendar')} className="p-2 mr-2">
+                    <TouchableOpacity
+                        onPress={() => {
+                            setSource('readings');
+                            router.push('/calendar');
+                        }}
+                        className="p-2 mr-2"
+                    >
                         <Ionicons name="calendar-outline" size={24} color={allColors.liturgical.ordinaryTime} />
                     </TouchableOpacity>
                 }
             />
 
             <ScrollView className="flex-1 px-screen pt-4" showsVerticalScrollIndicator={false}>
-                {/* Today's Reading Card */}
                 <Card accentColor={allColors.liturgical.ordinaryTime} className="mb-8" elevated>
                     <View className="flex-row justify-between items-start mb-4">
                         <Text style={{ color: allColors.liturgical.ordinaryTime }} className="font-sans font-bold text-[10px] tracking-widest uppercase">
                             FIRST READING
                         </Text>
-                        <LiturgicalBadge label="Ordinary Time" color="green" />
+                        <LiturgicalBadge label={readings?.liturgicalSeason === 'lent' ? 'Lent' : readings?.liturgicalSeason === 'easter' ? 'Easter' : 'Ordinary Time'} color="green" />
                     </View>
 
                     <Text style={{ color: colors.textPrimary }} className="font-serif italic font-bold text-[22px] leading-[28px] mb-4">
-                        "The word of the Lord came to me: Son of man, prophesy against the prophets..."
+                        "{readings?.firstReading.text.slice(0, 92) ?? 'Daily reading unavailable.'}"
                     </Text>
 
                     <Text style={{ color: colors.textSecondary }} className="font-sans text-[14px] leading-[20px] mb-6">
-                        Thus says the Lord GOD: Woe to the foolish prophets who follow their own spirit and have seen nothing! Your...
+                        {readings?.firstReading.reference ?? 'Reference unavailable'}
                     </Text>
 
                     <Button
-                        onPress={() => router.push('/readings')}
+                        onPress={() => {
+                            setSource('readings');
+                            router.push('/readings');
+                        }}
                         rightIcon={<Ionicons name="arrow-forward" size={16} color="#FFFFFF" />}
                         size="md"
                         className="w-full"
@@ -65,23 +77,26 @@ export default function HomeScreen() {
                     </Button>
                 </Card>
 
-                {/* Quick Access */}
                 <Text style={{ color: colors.textPrimary }} className="font-sans font-bold text-[10px] tracking-widest uppercase mb-4">
                     LITURGICAL ACTIONS
                 </Text>
                 <ScrollView horizontal showsHorizontalScrollIndicator={false} className="mb-8 flex-row pr-screen">
-                    <Chip label="Divine Office" onPress={() => router.push('/divine-office')} />
+                    <Chip
+                        label="Divine Office"
+                        onPress={() => {
+                            setSource('divineOffice');
+                            router.push('/divine-office');
+                        }}
+                    />
                     <Chip label="Mass Time" onPress={() => router.push('/parish')} />
                     <Chip label="Mass Intentions" onPress={() => { }} />
                 </ScrollView>
 
-                {/* Daily Verse */}
                 <ScriptureQuote
-                    text="I can do all things through Christ who strengthens me."
-                    reference="PHILIPPIANS 4:13"
+                    text={readings?.gospel.text.slice(0, 120) ?? 'Daily Gospel unavailable.'}
+                    reference={readings?.gospel.reference?.toUpperCase() ?? 'GOSPEL'}
                 />
 
-                {/* Parish Pulse */}
                 <Text style={{ color: colors.textPrimary }} className="font-sans font-bold text-[10px] tracking-widest uppercase mt-4 mb-4">
                     PARISH PULSE
                 </Text>

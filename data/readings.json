@@ -1,0 +1,5088 @@
+{
+  "__meta": {
+    "generatedAt": "2026-03-31T22:55:12.181Z",
+    "locale": "en-US",
+    "notes": [
+      "Sunday and solemnity readings use Sunday cycle A/B/C.",
+      "Ordinary Time weekdays use weekday cycle I/II, which is the Roman Rite norm.",
+      "Lent, Advent, Christmas, Holy Week, Easter Octave, and many solemnities use proper readings rather than rotating Sunday or weekday cycles."
+    ],
+    "schemaVersion": 1
+  },
+  "10thSundayInOrdinaryTimeC": {
+    "C": {
+      "first": "1 Kgs 17:17-24",
+      "gospel": "Luke 7:11-17",
+      "psalm": "Ps 30:2+4, 5-6, 11-12a+13b",
+      "second": "Gal 1:11-19"
+    },
+    "season": null,
+    "title": "10thSundayInOrdinaryTimeC",
+    "type": "sunday"
+  },
+  "11thSundayInOrdinaryTimeC": {
+    "C": {
+      "first": "2 Sam 12:7-10, 13",
+      "gospel": "Luke 7:36—8:3",
+      "psalm": "Ps 32:1-2, 5, 7, 11",
+      "second": "Gal 2:16, 19-21"
+    },
+    "season": null,
+    "title": "11thSundayInOrdinaryTimeC",
+    "type": "sunday"
+  },
+  "12thSundayInOrdinaryTimeC": {
+    "C": {
+      "first": "Zech 12:10-11; 13:1",
+      "gospel": "Luke 9:18-24",
+      "psalm": "Ps 63:2, 3-4, 5-6, 8-9",
+      "second": "Gal 3:26-29"
+    },
+    "season": null,
+    "title": "12thSundayInOrdinaryTimeC",
+    "type": "sunday"
+  },
+  "13thSundayInOrdinaryTimeC": {
+    "C": {
+      "first": "1 Kgs 19:16b, 19-21",
+      "gospel": "Luke 9:51-62",
+      "psalm": "Ps 16:1-2a+5, 7-8, 9-10, 11",
+      "second": "Gal 5:1, 13-18"
+    },
+    "season": null,
+    "title": "13thSundayInOrdinaryTimeC",
+    "type": "sunday"
+  },
+  "24thSundayInOrdinaryTimeC": {
+    "C": {
+      "first": "Exod 32:7-11, 13-14",
+      "gospel": "Luke 15:1-32",
+      "psalm": "Ps 51:3-4, 12-13, 17+19",
+      "second": "1 Tim 1:12-17"
+    },
+    "season": null,
+    "title": "24thSundayInOrdinaryTimeC",
+    "type": "sunday"
+  },
+  "31stSundayInOrdinaryTimeC": {
+    "C": {
+      "first": "Wis 11:22—12:2",
+      "gospel": "Luke 19:1-10",
+      "psalm": "Ps 145:1-2, 8-9, 10-11, 13b-14",
+      "second": "2 Thess 1:11—2:2"
+    },
+    "season": null,
+    "title": "31stSundayInOrdinaryTimeC",
+    "type": "sunday"
+  },
+  "32ndSundayInOrdinaryTimeC": {
+    "C": {
+      "first": "2 Macc 7:1-2, 9-14",
+      "gospel": "Luke 20:27-38",
+      "psalm": "Ps 17:1, 5-6, 8+15",
+      "second": "2 Thess 2:16—3:5"
+    },
+    "season": null,
+    "title": "32ndSundayInOrdinaryTimeC",
+    "type": "sunday"
+  },
+  "4thSundayInOrdinaryTimeC": {
+    "C": {
+      "first": "Jer 1:4-5, 17-19",
+      "gospel": "Luke 4:21-30",
+      "psalm": "Ps 71:1-2, 3-4, 5-6, 15+17",
+      "second": "1 Cor 12:31—13:13"
+    },
+    "season": null,
+    "title": "4thSundayInOrdinaryTimeC",
+    "type": "sunday"
+  },
+  "6thDayInTheOctaveOfChristmas": {
+    "proper": {
+      "first": "1 John 2:12-17",
+      "gospel": "Luke 2:36-40",
+      "psalm": "Psalm 96:7-8a, 8b-9, 10"
+    },
+    "season": "Christmas",
+    "title": "6th day in the Octave of Christmas",
+    "type": "proper"
+  },
+  "7thSundayInOrdinaryTimeB": {
+    "B": {
+      "first": "Isa 43:18-19, 21-22, 24b-25",
+      "gospel": "Mark 2:1-12",
+      "psalm": "Ps 41:2-3, 4-5, 13-14",
+      "second": "2 Cor 1:18-22"
+    },
+    "season": null,
+    "title": "7thSundayInOrdinaryTimeB",
+    "type": "sunday"
+  },
+  "8thSundayInOrdinaryTimeB": {
+    "B": {
+      "first": "Hos 2:16b, 17b, 21-22",
+      "gospel": "Mark 2:18-22",
+      "psalm": "Ps 103:1-2, 3-4, 8+10, 12-13",
+      "second": "2 Cor 3:1b-6"
+    },
+    "season": null,
+    "title": "8thSundayInOrdinaryTimeB",
+    "type": "sunday"
+  },
+  "9thSundayInOrdinaryTimeB": {
+    "B": {
+      "first": "Deut 5:12-15",
+      "gospel": "Mark 2:23—3:6",
+      "psalm": "Ps 81:3-4, 5-6, 7-8, 10-11",
+      "second": "2 Cor 4:6-11"
+    },
+    "season": null,
+    "title": "9thSundayInOrdinaryTimeB",
+    "type": "sunday"
+  },
+  "9thSundayInOrdinaryTimeC": {
+    "C": {
+      "first": "1 Kgs 8:41-43",
+      "gospel": "Luke 7:1-10",
+      "psalm": "Ps 117:1-2",
+      "second": "Gal 1:1-2, 6-10"
+    },
+    "season": null,
+    "title": "9thSundayInOrdinaryTimeC",
+    "type": "sunday"
+  },
+  "Advent_Dec17": {
+    "proper": {
+      "first": "Genesis 49:2, 8-10",
+      "gospel": "Matthew 1:1-17",
+      "psalm": "Psalm 72:1-2, 3-4ab, 7-8, 17"
+    },
+    "season": "Advent",
+    "title": "Thursday of the 3rd week of Advent",
+    "type": "proper"
+  },
+  "Advent_Dec18": {
+    "proper": {
+      "first": "Jeremiah 23:5-8",
+      "gospel": "Matthew 1:18-25",
+      "psalm": "Psalm 72:1-2, 12-13, 18-19"
+    },
+    "season": "Advent",
+    "title": "Friday of the 3rd week of Advent",
+    "type": "proper"
+  },
+  "Advent_Dec19": {
+    "proper": {
+      "first": "Judges 13:2-7, 24-25a",
+      "gospel": "Luke 1:5-25",
+      "psalm": "Psalm 71:3-4a, 5-6ab, 16-17"
+    },
+    "season": "Advent",
+    "title": "Saturday of the 3rd week of Advent",
+    "type": "proper"
+  },
+  "Advent_Dec20": {
+    "B": {
+      "first": "2 Samuel 7:1-5, 8b-12, 14a, 16",
+      "gospel": "Luke 1:26-38",
+      "psalm": "Psalm 89:2-3, 4-5, 27, 29",
+      "second": "Romans 16:25-27"
+    },
+    "season": "Advent",
+    "title": "4th Sunday of Advent",
+    "type": "sunday"
+  },
+  "Advent_Dec21": {
+    "A": {
+      "first": "Isaiah 7:10-14",
+      "gospel": "Matthew 1:18-24",
+      "psalm": "Psalm 24:1-2, 3-4, 5-6",
+      "second": "Romans 1:1-7"
+    },
+    "proper": {
+      "first": "Song of Songs 2:8-14",
+      "gospel": "Luke 1:39-45",
+      "psalm": "Psalm 33:2-3, 11-12, 20-21"
+    },
+    "season": "Advent",
+    "title": "Peter Canisius",
+    "type": "sunday"
+  },
+  "Advent_Dec22": {
+    "proper": {
+      "first": "1 Samuel 1:24-28",
+      "gospel": "Luke 1:46-56",
+      "psalm": "1 Samuel 2:1, 4-5, 6-7, 8abcd"
+    },
+    "season": "Advent",
+    "title": "Tuesday of the 4th week of Advent",
+    "type": "proper"
+  },
+  "Advent_Dec23": {
+    "proper": {
+      "first": "Malachi 3:1-4, 23-24",
+      "gospel": "Luke 1:57-66",
+      "psalm": "Psalm 25:4-5ab, 8-9, 10 and 14"
+    },
+    "season": "Advent",
+    "title": "John of Kanty",
+    "type": "proper"
+  },
+  "Advent_Dec24": {
+    "proper": {
+      "first": "2 Samuel 7:1-5, 8b-12, 14a, 16",
+      "gospel": "Luke 1:67-79",
+      "psalm": "Psalm 89:2-3, 4-5, 27 and 29"
+    },
+    "season": "Advent",
+    "title": "Thursday of the 4th week of Advent",
+    "type": "proper"
+  },
+  "Advent_Week1_Friday": {
+    "proper": {
+      "first": "Isaiah 29:17-24",
+      "gospel": "Matthew 9:27-31",
+      "psalm": "Psalm 27:1, 4, 13-14"
+    },
+    "season": "Advent",
+    "title": "Saint John Damascene, Priest and Doctor",
+    "type": "proper"
+  },
+  "Advent_Week1_Saturday": {
+    "proper": {
+      "first": "Isaiah 30:19-21, 23-26",
+      "gospel": "Matthew 9:35–10:1, 5a, 6-8",
+      "psalm": "Psalm 147:1-2, 3-4, 5-6"
+    },
+    "season": "Advent",
+    "title": "Nicholas",
+    "type": "proper"
+  },
+  "Advent_Week1_Sunday": {
+    "A": {
+      "first": "Isaiah 2:1-5",
+      "gospel": "Matthew 24:37-44",
+      "psalm": "Psalm 122:1-2, 3-4, 4-5, 6-7, 8-9",
+      "second": "Romans 13:11-14"
+    },
+    "B": {
+      "first": "Isa 63:16b-17, 19b; 64:2-7",
+      "gospel": "Mark 13:33-37",
+      "psalm": "Ps 80:2-3, 15-16, 18-19",
+      "second": "1 Cor 1:3-9"
+    },
+    "C": {
+      "first": "Jer 33:14-16",
+      "gospel": "Luke 21:25-28, 34-36",
+      "psalm": "Ps 25:4-5, 8-9, 10+14",
+      "second": "1 Thess 3:12–4:2"
+    },
+    "season": "Advent",
+    "title": "Andrew",
+    "type": "sunday"
+  },
+  "Advent_Week1_Thursday": {
+    "proper": {
+      "first": "Isaiah 26:1-6",
+      "gospel": "Matthew 7:21, 24-27",
+      "psalm": "Psalm 118:1 and 8-9, 19-21, 25-27a"
+    },
+    "season": "Advent",
+    "title": "John Damascene",
+    "type": "proper"
+  },
+  "Advent_Week1_Tuesday": {
+    "proper": {
+      "first": "Isaiah 11:1-10",
+      "gospel": "Luke 10:21-24",
+      "psalm": "Psalm 72:1-2, 7-8, 12-13, 17"
+    },
+    "season": "Advent",
+    "title": "Tuesday of the 1st week of Advent",
+    "type": "proper"
+  },
+  "Advent_Week1_Wednesday": {
+    "proper": {
+      "first": "Isaiah 25:6-10a",
+      "gospel": "Matthew 15:29-37",
+      "psalm": "Psalm 23:1-3a, 3b-4, 5, 6"
+    },
+    "season": "Advent",
+    "title": "Francis Xavier",
+    "type": "proper"
+  },
+  "Advent_Week2_Friday": {
+    "proper": {
+      "first": "Isaiah 48:17-19",
+      "gospel": "Matthew 11:16-19",
+      "psalm": "Psalm 1:1-2, 3, 4 and 6"
+    },
+    "season": "Advent",
+    "title": "Saint Damasus I, Pope",
+    "type": "proper"
+  },
+  "Advent_Week2_Monday": {
+    "proper": {
+      "first": "Isaiah 35:1-10",
+      "gospel": "Luke 5:17-26",
+      "psalm": "Psalm 85:9ab and 10, 11-12, 13-14"
+    },
+    "season": "Advent",
+    "title": "Saint Ambrose, Bishop and Doctor",
+    "type": "proper"
+  },
+  "Advent_Week2_Saturday": {
+    "proper": {
+      "first": "Zechariah 2:14-17",
+      "gospel": "Luke 1:26-38",
+      "psalm": "Judith 13:18bcde, 19"
+    },
+    "season": "Advent",
+    "title": "Lucy",
+    "type": "proper"
+  },
+  "Advent_Week2_Sunday": {
+    "A": {
+      "first": "Isaiah 11:1-10",
+      "gospel": "Matthew 3:1-12",
+      "psalm": "Psalm 72:1-2, 7-8, 12-13, 17",
+      "second": "Romans 15:4-9"
+    },
+    "B": {
+      "first": "Isa 40:1-5, 9-11",
+      "gospel": "Mark 1:1-8",
+      "psalm": "Ps 85:9ab+10, 11-12, 13-14",
+      "second": "2 Pet 3:8-14"
+    },
+    "C": {
+      "first": "Bar 5:1-9",
+      "gospel": "Luke 3:1-6",
+      "psalm": "Ps 126:1-2a, 2b-3, 4-5, 6",
+      "second": "Phil 1:4-6, 8-11"
+    },
+    "season": "Advent",
+    "title": "Ambrose",
+    "type": "sunday"
+  },
+  "Advent_Week2_Thursday": {
+    "proper": {
+      "first": "Isaiah 41:13-20",
+      "gospel": "Matthew 11:11-15",
+      "psalm": "Psalm 145:1 and 9, 10-11, 12-13ab"
+    },
+    "season": "Advent",
+    "title": "Damasus I",
+    "type": "proper"
+  },
+  "Advent_Week2_Tuesday": {
+    "proper": {
+      "first": "Isaiah 40:1-11",
+      "gospel": "Matthew 18:12-14",
+      "psalm": "Psalm 96:1-2, 3 and 10ac, 11-12, 13"
+    },
+    "season": "Advent",
+    "title": "Juan Diego",
+    "type": "proper"
+  },
+  "Advent_Week2_Wednesday": {
+    "proper": {
+      "first": "Isaiah 40:25-31",
+      "gospel": "Matthew 11:28-30",
+      "psalm": "Psalm 103:1-2, 3-4, 8 and 10"
+    },
+    "season": "Advent",
+    "title": "Saint Juan Diego Cuauhtlatoatzin",
+    "type": "proper"
+  },
+  "Advent_Week3_Monday": {
+    "proper": {
+      "first": "Numbers 24:2-7, 15-17a",
+      "gospel": "Matthew 21:23-27",
+      "psalm": "Psalm 25:4-5ab, 6 and 7bc, 8-9"
+    },
+    "season": "Advent",
+    "title": "Saint John of the Cross, Priest and Doctor",
+    "type": "proper"
+  },
+  "Advent_Week3_Sunday": {
+    "A": {
+      "first": "Isaiah 35:1-6a, 10",
+      "gospel": "Matthew 11:2-11",
+      "psalm": "Psalm 146:6-7, 8-9, 9-10",
+      "second": "James 5:7-10"
+    },
+    "B": {
+      "first": "Isa 61:1-2a, 10-11",
+      "gospel": "John 1:6-8, 19-28",
+      "psalm": "Luke 1:46-48, 49-50, 53-54",
+      "second": "1 Thess 5:16-24"
+    },
+    "C": {
+      "first": "Zeph 3:14-18a",
+      "gospel": "Luke 3:10-18",
+      "psalm": "Isa 12:2-3, 4bcd, 5-6",
+      "second": "Phil 4:4-7"
+    },
+    "season": "Advent",
+    "title": "John of the Cross",
+    "type": "sunday"
+  },
+  "Advent_Week3_Tuesday": {
+    "proper": {
+      "first": "Zephaniah 3:1-2, 9-13",
+      "gospel": "Matthew 21:28-32",
+      "psalm": "Psalm 34:2-3, 6-7, 17-18, 19 and 23"
+    },
+    "season": "Advent",
+    "title": "Tuesday of the 3rd week of Advent",
+    "type": "proper"
+  },
+  "Advent_Week3_Wednesday": {
+    "proper": {
+      "first": "Isaiah 45:6c-8, 18, 21c-25",
+      "gospel": "Luke 7:18b-23",
+      "psalm": "Psalm 85:9ab, 10, 11-12, 13-14"
+    },
+    "season": "Advent",
+    "title": "Wednesday of the 3rd week of Advent",
+    "type": "proper"
+  },
+  "Advent_Week4_Sunday": {
+    "B": {
+      "first": "2 Sam 7:1-5, 8b-12, 14a, 16",
+      "gospel": "Luke 1:26-38",
+      "psalm": "Ps 89:2-3, 4-5, 27+29",
+      "second": "Rom 16:25-27"
+    },
+    "C": {
+      "first": "Mic 5:1-4a",
+      "gospel": "Luke 1:39-45",
+      "psalm": "Ps 80:2-3, 15-16, 18-19",
+      "second": "Heb 10:5-10"
+    },
+    "season": null,
+    "title": "Advent_Week4_Sunday",
+    "type": "sunday"
+  },
+  "AllSaints": {
+    "proper": {
+      "first": "Revelation 7:2-4, 9-14",
+      "gospel": "Matthew 5:1-12a",
+      "psalm": "Psalm 24:1bc-2, 3-4ab, 5-6",
+      "second": "1 John 3:1-3"
+    },
+    "season": "Ordinary Time",
+    "title": "All Saints",
+    "type": "proper"
+  },
+  "AllSouls": {
+    "proper": {
+      "first": "Wisdom 3:1-9",
+      "gospel": "John 6:37-40",
+      "psalm": "Psalm 23:1-3a, 3b-4, 5, 6",
+      "second": "Romans 5:5-11"
+    },
+    "season": "Ordinary Time",
+    "title": "All Souls",
+    "type": "proper"
+  },
+  "Annunciation": {
+    "proper": {
+      "first": "Isaiah 7:10-14; 8:10",
+      "gospel": "Luke 1:26-38",
+      "psalm": "Psalm 40:7-8a, 8b-9, 10, 11",
+      "second": "Hebrews 10:4-10"
+    },
+    "season": "Lent",
+    "title": "Annunciation",
+    "type": "proper"
+  },
+  "AscensionOfTheLord": {
+    "proper": {
+      "first": "Acts 1:1-11",
+      "gospel": "Matthew 28:16-20",
+      "psalm": "Psalm 47:2-3, 6-7, 8-9",
+      "second": "Ephesians 1:17-23"
+    },
+    "season": "Easter",
+    "title": "Ascension of the Lord",
+    "type": "proper"
+  },
+  "AssumptionOfTheBlessedVirginMary": {
+    "proper": {
+      "first": null,
+      "gospel": "Luke 1:39-56",
+      "psalm": "Psalm 45:10, 11, 12, 16",
+      "second": "1 Corinthians 15:20-27"
+    },
+    "season": "Ordinary Time",
+    "title": "The Assumption of the Blessed Virgin Mary",
+    "type": "proper"
+  },
+  "BaptismOfTheLord": {
+    "A": {
+      "first": "Isaiah 42:1-4, 6-7",
+      "gospel": "Matthew 3:13-17",
+      "psalm": "Psalm 29:1-2, 3-4, 3, 9-10",
+      "second": "Acts 10:34-38"
+    },
+    "B": {
+      "first": "Isa 55:1-11",
+      "gospel": "Mark 1:7-11",
+      "psalm": "Isa 12:2-3, 4bcd, 5-6",
+      "second": "1 John 5:1-9"
+    },
+    "C": {
+      "first": "Isa 40:1-5, 9-11",
+      "gospel": "Luke 3:15-16, 21-22",
+      "psalm": "Ps 104:1b-2, 3-4, 24-25, 27-28, 29b-30",
+      "second": "Titus 2:11-14; 3:4-7"
+    },
+    "season": "Christmas",
+    "title": "Baptism of the Lord",
+    "type": "sunday"
+  },
+  "BirthOfJohnTheBaptist": {
+    "proper": {
+      "first": "Isaiah 49:1-6",
+      "gospel": "Luke 1:57-66, 80",
+      "psalm": "Psalm 139:1b-3, 13-14ab, 14c-15",
+      "second": "Acts 13:22-26"
+    },
+    "season": "Ordinary Time",
+    "title": "Birth of John the Baptist",
+    "type": "proper"
+  },
+  "BirthOfMary": {
+    "proper": {
+      "first": "Micah 5:1-4a",
+      "gospel": "Matthew 1:1-16, 18-23",
+      "psalm": "Psalm 13:6ab, 6c"
+    },
+    "season": "Ordinary Time",
+    "title": "Birth of Mary",
+    "type": "proper"
+  },
+  "BirthOfTheBlessedVirginMary": {
+    "proper": {
+      "first": "Micah 5:1-4a",
+      "gospel": "Matthew 1:1-16, 18-23",
+      "psalm": "Psalm 13:6ab, 6c"
+    },
+    "season": "Ordinary Time",
+    "title": "Birth of the Blessed Virgin Mary",
+    "type": "proper"
+  },
+  "BodyAndBloodCorpusChristi": {
+    "B": {
+      "first": "Exod 24:3-8",
+      "gospel": "Mark 14:12-16, 22-26",
+      "psalm": "Ps 116:12-13, 15-16, 17-18",
+      "second": "Heb 9:11-15"
+    },
+    "C": {
+      "first": "Gen 14:18-20",
+      "gospel": "Luke 9:11b-17",
+      "psalm": "Ps 110:1, 2, 3, 4",
+      "second": "1 Cor 11:23-26"
+    },
+    "season": null,
+    "title": "BodyAndBloodCorpusChristi",
+    "type": "sunday"
+  },
+  "ChristTheKing": {
+    "B": {
+      "first": "Dan 7:13-14",
+      "gospel": "John 18:33b-37",
+      "psalm": "Ps 93:1a, 1b-2, 5",
+      "second": "Rev 1:5-8"
+    },
+    "C": {
+      "first": "2 Sam 5:1-3",
+      "gospel": "Luke 23:35-43",
+      "psalm": "Ps 122:1-2, 3-4a, 4b-5",
+      "second": "Col 1:12-20"
+    },
+    "season": null,
+    "title": "ChristTheKing",
+    "type": "sunday"
+  },
+  "DedicationOfTheLateranBasilica": {
+    "proper": {
+      "first": "Ezekiel 47:1-2, 8-9, 12",
+      "gospel": "John 2:13-22",
+      "psalm": "Psalm 46:2-3, 5-6, 8-9",
+      "second": "1 Corinthians 3:9c-11, 16-17"
+    },
+    "season": "Ordinary Time",
+    "title": "Dedication of the Lateran Basilica",
+    "type": "proper"
+  },
+  "Easter_Week1_Friday": {
+    "proper": {
+      "first": "Acts 4:1-12",
+      "gospel": "John 21:1-14",
+      "psalm": "Psalm 118:1-2 and 4, 22-24, 25-27a"
+    },
+    "season": "Easter",
+    "title": "Easter Friday",
+    "type": "proper"
+  },
+  "Easter_Week1_Monday": {
+    "proper": {
+      "first": "Acts 2:14, 22-33",
+      "gospel": "Matthew 28:8-15",
+      "psalm": "Psalm 16:1-2a and 5, 7-8, 9-10, 11"
+    },
+    "season": "Easter",
+    "title": "Easter Monday",
+    "type": "proper"
+  },
+  "Easter_Week1_Saturday": {
+    "proper": {
+      "first": "Acts 4:13-21",
+      "gospel": "Mark 16:9-15",
+      "psalm": "Psalm 118:1 and 14-15ab, 16-18, 19-21"
+    },
+    "season": "Easter",
+    "title": "Easter Saturday",
+    "type": "proper"
+  },
+  "Easter_Week1_Sunday": {
+    "A": {
+      "first": "Acts 2:42-47",
+      "gospel": "John 20:19-31",
+      "psalm": "Psalm 118:2-4, 13-15, 22-24",
+      "second": "1 Peter 1:3-9"
+    },
+    "season": "Easter",
+    "title": "Easter Sunday",
+    "type": "sunday"
+  },
+  "Easter_Week1_Thursday": {
+    "proper": {
+      "first": "Acts 3:11-26",
+      "gospel": "Luke 24:35-48",
+      "psalm": "Psalm 8:2ab and 5, 6-7, 8-9"
+    },
+    "season": "Easter",
+    "title": "Easter Thursday",
+    "type": "proper"
+  },
+  "Easter_Week1_Tuesday": {
+    "proper": {
+      "first": "Acts 2:36-41",
+      "gospel": "John 20:11-18",
+      "psalm": "Psalm 33:4-5, 18-19, 20 and 22"
+    },
+    "season": "Easter",
+    "title": "Easter Tuesday",
+    "type": "proper"
+  },
+  "Easter_Week1_Wednesday": {
+    "proper": {
+      "first": "Acts 3:1-10",
+      "gospel": "Luke 24:13-35",
+      "psalm": "Psalm 105:1-2, 3-4, 6-7, 8-9"
+    },
+    "season": "Easter",
+    "title": "Easter Wednesday",
+    "type": "proper"
+  },
+  "Easter_Week2_Friday": {
+    "proper": {
+      "first": "Acts 5:34-42",
+      "gospel": "John 6:1-15",
+      "psalm": "Psalm 27:1, 4, 13-14"
+    },
+    "season": "Easter",
+    "title": "Friday of the 2nd week of Easter",
+    "type": "proper"
+  },
+  "Easter_Week2_Monday": {
+    "proper": {
+      "first": "Acts 4:23-31",
+      "gospel": "John 3:1-8",
+      "psalm": "Psalm 2:1-3, 4-7a, 7b-9"
+    },
+    "season": "Easter",
+    "title": "Saint Martin I, Pope and Martyr",
+    "type": "proper"
+  },
+  "Easter_Week2_Saturday": {
+    "proper": {
+      "first": "Acts 6:1-7",
+      "gospel": "John 6:16-21",
+      "psalm": "Psalm 33:1-2, 4-5, 18-19"
+    },
+    "season": "Easter",
+    "title": "Saturday of the 2nd week of Easter",
+    "type": "proper"
+  },
+  "Easter_Week2_Thursday": {
+    "proper": {
+      "first": "Acts 5:27-33",
+      "gospel": "John 3:31-36",
+      "psalm": "Psalm 34:2 and 9, 17-18, 19-20"
+    },
+    "season": "Easter",
+    "title": "Thursday of the 2nd week of Easter",
+    "type": "proper"
+  },
+  "Easter_Week2_Tuesday": {
+    "proper": {
+      "first": "Acts 4:32-37",
+      "gospel": "John 3:7b-15",
+      "psalm": "Psalm 93:1ab, 1cd-2, 5"
+    },
+    "season": "Easter",
+    "title": "Tuesday of the 2nd week of Easter",
+    "type": "proper"
+  },
+  "Easter_Week2_Wednesday": {
+    "proper": {
+      "first": "Acts 5:17-26",
+      "gospel": "John 3:16-21",
+      "psalm": "Psalm 34:2-3, 4-5, 6-7, 8-9"
+    },
+    "season": "Easter",
+    "title": "Wednesday of the 2nd week of Easter",
+    "type": "proper"
+  },
+  "Easter_Week3_Friday": {
+    "proper": {
+      "first": "Acts 9:1-20",
+      "gospel": "John 6:52-59",
+      "psalm": "Psalm 117:1bc, 2"
+    },
+    "season": "Easter",
+    "title": "Saint Fidelis of Sigmaringen, Priest and Martyr",
+    "type": "proper"
+  },
+  "Easter_Week3_Monday": {
+    "proper": {
+      "first": "Acts 6:8-15",
+      "gospel": "John 6:22-29",
+      "psalm": "Psalm 119:23-24, 26-27, 29-30"
+    },
+    "season": "Easter",
+    "title": "Monday of the 3rd week of Easter",
+    "type": "proper"
+  },
+  "Easter_Week3_Sunday": {
+    "A": {
+      "first": "Acts 2:14, 22-33",
+      "gospel": "Luke 24:13-35",
+      "psalm": "Psalm 16:1-2, 5, 7-8, 9-10, 11",
+      "second": "1 Peter 1:17-21"
+    },
+    "season": "Easter",
+    "title": "3rd Sunday of Easter",
+    "type": "sunday"
+  },
+  "Easter_Week3_Thursday": {
+    "proper": {
+      "first": "Acts 8:26-40",
+      "gospel": "John 6:44-51",
+      "psalm": "Psalm 66:8-9, 16-17, 20"
+    },
+    "season": "Easter",
+    "title": "Saint George, Martyr/Saint Adalbert, Bishop and Martyr",
+    "type": "proper"
+  },
+  "Easter_Week3_Tuesday": {
+    "proper": {
+      "first": "Acts 7:51—8:1a",
+      "gospel": "John 6:30-35",
+      "psalm": "Psalm 31:3cd-4, 6 and 7b and 8a, 17 and 21ab"
+    },
+    "season": "Easter",
+    "title": "Saint Anselm of Canterbury, Bishop and Doctor of the Church",
+    "type": "proper"
+  },
+  "Easter_Week3_Wednesday": {
+    "proper": {
+      "first": "Acts 8:1b-8",
+      "gospel": "John 6:35-40",
+      "psalm": "Psalm 66:1-3a, 4-5, 6-7a"
+    },
+    "season": "Easter",
+    "title": "Wednesday of the 3rd week of Easter",
+    "type": "proper"
+  },
+  "Easter_Week4_Friday": {
+    "proper": {
+      "first": "Acts 13:26-33",
+      "gospel": "John 14:1-6",
+      "psalm": "Psalm 2:6-7, 8-9, 10-11ab"
+    },
+    "season": "Easter",
+    "title": "Saint Joseph the Worker",
+    "type": "proper"
+  },
+  "Easter_Week4_Monday": {
+    "proper": {
+      "first": "Acts 11:1-18",
+      "gospel": "John 10:11-18",
+      "psalm": "Psalm 42:2-3; 43:3, 4"
+    },
+    "season": "Easter",
+    "title": "Monday of the 4th week of Easter",
+    "type": "proper"
+  },
+  "Easter_Week4_Saturday": {
+    "proper": {
+      "first": "Acts 13:44-52",
+      "gospel": "John 14:7-14",
+      "psalm": "Psalm 98:1, 2-3ab, 3cd-4"
+    },
+    "season": "Easter",
+    "title": "Saint Athanasius, Bishop and Doctor",
+    "type": "proper"
+  },
+  "Easter_Week4_Sunday": {
+    "A": {
+      "first": "Acts 2:14a, 36-41",
+      "gospel": "John 10:1-10",
+      "psalm": "Psalm 23: 1-3a, 3b4, 5, 6",
+      "second": "1 Peter 2:20b-25"
+    },
+    "season": "Easter",
+    "title": "4th Sunday of Easter",
+    "type": "sunday"
+  },
+  "Easter_Week4_Thursday": {
+    "proper": {
+      "first": "Acts 13:13-25",
+      "gospel": "John 13:16-20",
+      "psalm": "Psalm 89:2-3, 21-22, 25 and 27"
+    },
+    "season": "Easter",
+    "title": "Saint Pius V, Pope",
+    "type": "proper"
+  },
+  "Easter_Week4_Tuesday": {
+    "proper": {
+      "first": "Acts 11:19-26",
+      "gospel": "John 10:22-30",
+      "psalm": "Psalm 87:1b-3, 4-5, 6-7"
+    },
+    "season": "Easter",
+    "title": "Saint Peter Chanel, Priest and Martyr/Saint Louis Grignon de Montfort, Priest",
+    "type": "proper"
+  },
+  "Easter_Week4_Wednesday": {
+    "proper": {
+      "first": "Acts 12:24—13:5a",
+      "gospel": "John 12:44-50",
+      "psalm": "Psalm 67:2-3, 5, 6 and 8"
+    },
+    "season": "Easter",
+    "title": "Saint Catherine of Siena, Virgin and Doctor of The Church, Patron of Europe",
+    "type": "proper"
+  },
+  "Easter_Week5_Friday": {
+    "proper": {
+      "first": "Acts 15:22-31",
+      "gospel": "John 15:12-17",
+      "psalm": "Psalm 57:8-9, 10 and 12"
+    },
+    "season": "Easter",
+    "title": "Friday of the 5th week of Easter",
+    "type": "proper"
+  },
+  "Easter_Week5_Monday": {
+    "proper": {
+      "first": "Acts 14:5-18",
+      "gospel": "John 14:21-26",
+      "psalm": "Psalm 115:1-2, 3-4, 15-16"
+    },
+    "season": "Easter",
+    "title": "Monday of the 5th week of Easter",
+    "type": "proper"
+  },
+  "Easter_Week5_Saturday": {
+    "proper": {
+      "first": "Acts 16:1-10",
+      "gospel": "John 15:18-21",
+      "psalm": "Psalm 100:1b-2, 3, 5"
+    },
+    "season": "Easter",
+    "title": "Saturday of the 5th week of Easter",
+    "type": "proper"
+  },
+  "Easter_Week5_Sunday": {
+    "A": {
+      "first": "Acts 6:1-7",
+      "gospel": "John 14:1-12",
+      "psalm": "Psalm 33:1-2, 4-5, 18-19",
+      "second": "1 Peter 2:4-9"
+    },
+    "season": "Easter",
+    "title": "5th Sunday of Easter",
+    "type": "sunday"
+  },
+  "Easter_Week5_Thursday": {
+    "proper": {
+      "first": "Acts 15:7-21",
+      "gospel": "John 15:9-11",
+      "psalm": "Psalm 96:1-2a, 2b-3, 10"
+    },
+    "season": "Easter",
+    "title": "Thursday of the 5th week of Easter",
+    "type": "proper"
+  },
+  "Easter_Week5_Tuesday": {
+    "proper": {
+      "first": "Acts 14:19-28",
+      "gospel": "John 14:27-31a",
+      "psalm": "Psalm 145:10-11, 12-13ab, 21"
+    },
+    "season": "Easter",
+    "title": "Tuesday of the 5th week of Easter",
+    "type": "proper"
+  },
+  "Easter_Week5_Wednesday": {
+    "proper": {
+      "first": "Acts 15:1-6",
+      "gospel": "John 15:1-8",
+      "psalm": "Psalm 122:1-2, 3-4ab, 4cd-5"
+    },
+    "season": "Easter",
+    "title": "Wednesday of the 5th week of Easter",
+    "type": "proper"
+  },
+  "Easter_Week6_Friday": {
+    "proper": {
+      "first": "Acts 18:9-18",
+      "gospel": "John 16:20-23",
+      "psalm": "Psalm 47:2-3, 4-5, 6-7"
+    },
+    "season": "Easter",
+    "title": "Friday of the 6th week of Easter",
+    "type": "proper"
+  },
+  "Easter_Week6_Monday": {
+    "proper": {
+      "first": "Acts 16:11-15",
+      "gospel": "John 15:26—16:4a",
+      "psalm": "Psalm 149:1b-2, 3-4, 5-6a and 9b"
+    },
+    "season": "Easter",
+    "title": "Monday of the 6th week of Easter",
+    "type": "proper"
+  },
+  "Easter_Week6_Saturday": {
+    "proper": {
+      "first": "Acts 18:23-28",
+      "gospel": "John 16:23b-28",
+      "psalm": "Psalm 47:2-3, 8-9, 10"
+    },
+    "season": "Easter",
+    "title": "Saturday of the 6th week of Easter",
+    "type": "proper"
+  },
+  "Easter_Week6_Sunday": {
+    "A": {
+      "first": "Acts 8:5-8, 14-17",
+      "gospel": "John 14:15-21",
+      "psalm": "Psalm 66:1-3, 4-5, 6-7, 16, 20",
+      "second": "1 Peter 3:15-18"
+    },
+    "season": "Easter",
+    "title": "6th Sunday of Easter",
+    "type": "sunday"
+  },
+  "Easter_Week6_Tuesday": {
+    "proper": {
+      "first": "Acts 16:22-34",
+      "gospel": "John 16:5-11",
+      "psalm": "Psalm 138:1-2ab, 2cde-3, 7c-8"
+    },
+    "season": "Easter",
+    "title": "Saints Nereus and Achilleus, Martyrs/Saint Pancras, Martyr",
+    "type": "proper"
+  },
+  "Easter_Week6_Wednesday": {
+    "proper": {
+      "first": "Acts 17:15, 22—18:1",
+      "gospel": "John 16:12-15",
+      "psalm": "Psalm 148:1-2, 11-12, 13, 14"
+    },
+    "season": "Easter",
+    "title": "Our Lady of Fatima",
+    "type": "proper"
+  },
+  "Easter_Week7_Friday": {
+    "proper": {
+      "first": "Acts 25:13b-21",
+      "gospel": "John 21:15-19",
+      "psalm": "Psalm 103:1-2, 11-12, 19-20ab"
+    },
+    "season": "Easter",
+    "title": "Saint Rita of Cascia",
+    "type": "proper"
+  },
+  "Easter_Week7_Monday": {
+    "proper": {
+      "first": "Acts 19:1-8",
+      "gospel": "John 16:29-33",
+      "psalm": "Psalm 68:2-3ab, 4-5acd, 6-7ab"
+    },
+    "season": "Easter",
+    "title": "Saint John I, Pope and Martyr",
+    "type": "proper"
+  },
+  "Easter_Week7_Saturday": {
+    "proper": {
+      "first": "Acts 28:16-20, 30-31",
+      "gospel": "John 21:20-25",
+      "psalm": "Psalm 11:4, 5 and 7"
+    },
+    "season": "Easter",
+    "title": "Saturday of the 7th week of Easter",
+    "type": "proper"
+  },
+  "Easter_Week7_Sunday": {
+    "A": {
+      "first": "Acts 2:1-11",
+      "gospel": "John 20:19-23",
+      "psalm": "Psalm 104:1, 24, 29-30, 31, 34",
+      "second": "1 Corinthians 12:3b-7, 12-13"
+    },
+    "season": "Easter",
+    "title": "7th Sunday of Easter",
+    "type": "sunday"
+  },
+  "Easter_Week7_Thursday": {
+    "proper": {
+      "first": "Acts 22:30; 23:6-11",
+      "gospel": "John 17:20-26",
+      "psalm": "Psalm 16:1-2a and 5, 7-8, 9-10, 11"
+    },
+    "season": "Easter",
+    "title": "Saint Christopher Magallanes and Companions, Martyrs",
+    "type": "proper"
+  },
+  "Easter_Week7_Tuesday": {
+    "proper": {
+      "first": "Acts 20:17-27",
+      "gospel": "John 17:1-11a",
+      "psalm": "Psalm 68:10-11, 20-21"
+    },
+    "season": "Easter",
+    "title": "Tuesday of the 7th week of Easter",
+    "type": "proper"
+  },
+  "Easter_Week7_Wednesday": {
+    "proper": {
+      "first": "Acts 20:28-38",
+      "gospel": "John 17:11b-19",
+      "psalm": "Psalm 68:29-30, 33-35a, 35bc-36ab"
+    },
+    "season": "Easter",
+    "title": "Saint Bernardine of Siena, Priest",
+    "type": "proper"
+  },
+  "EpiphanyOfTheLord": {
+    "A": {
+      "first": "Isaiah 60:1-6",
+      "gospel": "Matthew 2:1-12",
+      "psalm": "Psalm 72:1-2, 7-8, 10-11, 12-13.",
+      "second": "Ephesians 3:2-3a, 5-6"
+    },
+    "season": "Christmas",
+    "title": "Epiphany",
+    "type": "sunday"
+  },
+  "ExaltationOfTheHolyCross": {
+    "proper": {
+      "first": "Numbers 21:4b-9",
+      "gospel": "John 3:13-17",
+      "psalm": "Psalm 78:1bc-2, 34-35, 36-37, 38",
+      "second": "Philippians 2:6-11"
+    },
+    "season": "Ordinary Time",
+    "title": "The Exaltation of the Holy Cross",
+    "type": "proper"
+  },
+  "FridayAfterEpiphany": {
+    "proper": {
+      "first": "1 John 5:5-13",
+      "gospel": "Luke 5:12-16",
+      "psalm": "Psalm 147:12-13, 14-15, 19-20"
+    },
+    "season": "Christmas",
+    "title": "Friday after Epiphany",
+    "type": "proper"
+  },
+  "GoodFriday": {
+    "proper": {
+      "first": "Isaiah 52:13—53:12",
+      "gospel": "John 18:1—19:42",
+      "psalm": "Psalm 31:2, 6, 12-13, 15-16, 17, 25",
+      "second": "Hebrews 4:14-16; 5:7-9"
+    },
+    "season": "Lent",
+    "title": "Good Friday",
+    "type": "proper"
+  },
+  "HolyFamily": {
+    "A": {
+      "first": "Sirach 3:2-6, 12-14",
+      "gospel": "Matthew 2:13-15, 19-23",
+      "psalm": "Psalm 128:1-2, 3, 4-5",
+      "second": "Colossians 3:12-21"
+    },
+    "B": {
+      "first": "Gen 15:1-6; 21:1-3",
+      "gospel": "Luke 2:22-40",
+      "psalm": "Ps 105:1-2, 3-4, 5-6, 8-9",
+      "second": "Heb 11:8, 11-12, 17-19"
+    },
+    "C": {
+      "first": "1 Sam 1:20-22, 24-28",
+      "gospel": "Luke 2:41-52",
+      "psalm": "Ps 84:2-3, 5-6, 9-10",
+      "second": "1 John 3:1-2, 21-24"
+    },
+    "season": "Christmas",
+    "title": "Holy Family",
+    "type": "sunday"
+  },
+  "HolyInnocentsMartyrs": {
+    "proper": {
+      "first": "1 John 1:5—2:2",
+      "gospel": "Matthew 2:13-18",
+      "psalm": "Psalm 124:2-3, 4-5, 7cd-8"
+    },
+    "season": "Christmas",
+    "title": "Holy Innocents, Martyrs",
+    "type": "proper"
+  },
+  "HolySaturdayEasterVigil": {
+    "proper": {
+      "first": "Isaiah 54:5-14",
+      "gospel": "Matthew 28:1-10",
+      "psalm": "Psalm 118:1-2, 16-17, 22-23",
+      "second": "Exodus 14:15—15:1"
+    },
+    "season": "Lent",
+    "title": "Holy Saturday/Easter Vigil",
+    "type": "proper"
+  },
+  "HolyThursday": {
+    "proper": {
+      "first": "Exodus 12:1-8, 11-14",
+      "gospel": "John 13:1-15",
+      "psalm": "Psalm 116:12-13, 15-16bc, 17-18.",
+      "second": "1 Corinthians 11:23-26"
+    },
+    "season": "Lent",
+    "title": "Holy Thursday",
+    "type": "proper"
+  },
+  "HolyWeek_Monday": {
+    "proper": {
+      "first": "Isaiah 42:1-7",
+      "gospel": "John 12:1-11",
+      "psalm": "Psalm 27:1, 2, 3, 13-14"
+    },
+    "season": "Lent",
+    "title": "Monday of Holy Week",
+    "type": "proper"
+  },
+  "HolyWeek_Sunday": {
+    "A": {
+      "first": "Isaiah 50:4-7",
+      "gospel": "Matthew 26:14—27:66",
+      "psalm": "Psalm 22:8-9, 17-18, 19-20, 23-24",
+      "second": "Philippians 2:6-11"
+    },
+    "season": "Lent",
+    "title": "Palm Sunday",
+    "type": "sunday"
+  },
+  "HolyWeek_Tuesday": {
+    "proper": {
+      "first": "Isaiah 49:1-6",
+      "gospel": "John 13:21-33, 36-38",
+      "psalm": "Psalm 71:1-2, 3-4a, 5ab-6ab, 15 and 17"
+    },
+    "season": "Lent",
+    "title": "Tuesday of Holy Week",
+    "type": "proper"
+  },
+  "HolyWeek_Wednesday": {
+    "proper": {
+      "first": "Isaiah 50:4-9a",
+      "gospel": "Matthew 26:14-25",
+      "psalm": "Psalm 69:8-10, 21-22, 31 and 33-34"
+    },
+    "season": "Lent",
+    "title": "Wednesday of Holy Week",
+    "type": "proper"
+  },
+  "ImmaculateConception": {
+    "proper": {
+      "first": "Genesis 3:9-15, 20",
+      "gospel": "Luke 1:26-38",
+      "psalm": "Psalm 98:1, 2-3ab, 3cd-4",
+      "second": "Ephesians 1:3-6, 11-12"
+    },
+    "season": "Advent",
+    "title": "Immaculate Conception",
+    "type": "proper"
+  },
+  "ImmaculateHeartOfMary": {
+    "proper": {
+      "first": "1 Kings 19:19-21",
+      "gospel": "Matthew 5:33-37",
+      "psalm": "Psalm 16:1b-2a and 5, 7-8, 9-10"
+    },
+    "season": "Ordinary Time",
+    "title": "Immaculate Heart of Mary",
+    "type": "proper"
+  },
+  "John": {
+    "proper": {
+      "first": "1 John 1:1-4",
+      "gospel": "John 20:1a and 2-8",
+      "psalm": "Psalm 97:1-2, 5-6, 11-12"
+    },
+    "season": "Christmas",
+    "title": "John",
+    "type": "proper"
+  },
+  "JosephHusbandOfMary": {
+    "proper": {
+      "first": "2 Samuel 7:4-5a, 12-14a, 16",
+      "gospel": "Matthew 1:16, 18-21, 24a",
+      "psalm": "Psalm 89:2-3, 4-5, 27 and 29",
+      "second": "Romans 4:13, 16-18, 22"
+    },
+    "season": "Lent",
+    "title": "Joseph, Husband of Mary",
+    "type": "proper"
+  },
+  "Lent_AshWeek_Friday": {
+    "proper": {
+      "first": "Isaiah 58:1-9a",
+      "gospel": "Matthew 9:14-15",
+      "psalm": "Psalm 51:3-4, 5-6ab, 18-19"
+    },
+    "season": "Lent",
+    "title": "Friday after Ash Wednesday",
+    "type": "proper"
+  },
+  "Lent_AshWeek_Saturday": {
+    "proper": {
+      "first": "Isaiah 58:9b-14",
+      "gospel": "Luke 5:27-32",
+      "psalm": "Psalm 86:1-2, 3-4, 5-6"
+    },
+    "season": "Lent",
+    "title": "Saint Peter Damian, Bishop and Doctor of the Church",
+    "type": "proper"
+  },
+  "Lent_AshWeek_Thursday": {
+    "proper": {
+      "first": "Deuteronomy 30:15-20",
+      "gospel": "Luke 9:22-25",
+      "psalm": "Psalm 1:1-2, 3, 4 and 6"
+    },
+    "season": "Lent",
+    "title": "Thursday after Ash Wednesday",
+    "type": "proper"
+  },
+  "Lent_AshWeek_Wednesday": {
+    "proper": {
+      "first": "Joel 2:12-18",
+      "gospel": "Matthew 6:1-6, 16-18",
+      "psalm": "Psalm 51:3-4, 5-6ab, 12-13, 14 and 17",
+      "second": "2 Corinthians 5:20—6:2"
+    },
+    "season": "Lent",
+    "title": "Ash Wednesday",
+    "type": "proper"
+  },
+  "Lent_Week1_Friday": {
+    "proper": {
+      "first": "Ezekiel 18:21-28",
+      "gospel": "Matthew 5:20-26",
+      "psalm": "Psalm 130:1-2, 3-4, 5-7a, 7bc-8"
+    },
+    "season": "Lent",
+    "title": "Friday of the 1st week of Lent",
+    "type": "proper"
+  },
+  "Lent_Week1_Monday": {
+    "proper": {
+      "first": "Leviticus 19:1-2, 11-18",
+      "gospel": "Matthew 25:31-46",
+      "psalm": "Psalm 19:8, 9, 10, 15"
+    },
+    "season": "Lent",
+    "title": "Saint Polycarp, Bishop and Martyr",
+    "type": "proper"
+  },
+  "Lent_Week1_Saturday": {
+    "proper": {
+      "first": "Deuteronomy 26:16-19",
+      "gospel": "Matthew 5:43-48",
+      "psalm": "Psalm 119:1-2, 4-5, 7-8"
+    },
+    "season": "Lent",
+    "title": "Saturday of the 1st week of Lent",
+    "type": "proper"
+  },
+  "Lent_Week1_Sunday": {
+    "A": {
+      "first": "Genesis 2:7-9; 3:1-7",
+      "gospel": "Matthew 4:1-11",
+      "psalm": "Psalm 51:3-4, 5-6, 12-13, 17",
+      "second": "Romans 5:12-19"
+    },
+    "season": "Lent",
+    "title": "1st Sunday of Lent",
+    "type": "sunday"
+  },
+  "Lent_Week1_Thursday": {
+    "proper": {
+      "first": "Esther C:12, 14-16, 23-25",
+      "gospel": "Matthew 7:7-12",
+      "psalm": "Psalm 138:1-2ab, 2cde-3, 7c-8"
+    },
+    "season": "Lent",
+    "title": "Thursday of the 1st week of Lent",
+    "type": "proper"
+  },
+  "Lent_Week1_Tuesday": {
+    "proper": {
+      "first": "Isaiah 55:10-11",
+      "gospel": "Matthew 6:7-15",
+      "psalm": "Psalm 34:4-5, 6-7, 16-17, 18-19"
+    },
+    "season": "Lent",
+    "title": "Tuesday of the 1st week of Lent",
+    "type": "proper"
+  },
+  "Lent_Week1_Wednesday": {
+    "proper": {
+      "first": "Jonah 3:1-10",
+      "gospel": "Luke 11:29-32",
+      "psalm": "Psalm 51:3-4, 12-13, 18-19"
+    },
+    "season": "Lent",
+    "title": "Wednesday of the 1st week of Lent",
+    "type": "proper"
+  },
+  "Lent_Week2_Friday": {
+    "proper": {
+      "first": "Genesis 37:3-4, 12-13a, 17b-28a",
+      "gospel": "Matthew 21:33-43, 45-46",
+      "psalm": "Psalm 105:16-17, 18-19, 20-21"
+    },
+    "season": "Lent",
+    "title": "Friday of the 2nd week of Lent",
+    "type": "proper"
+  },
+  "Lent_Week2_Monday": {
+    "proper": {
+      "first": "Daniel 9:4b-10",
+      "gospel": "Luke 6:36-38",
+      "psalm": "Psalm 79:8, 9, 11 and 13"
+    },
+    "season": "Lent",
+    "title": "Monday of the 2nd week of Lent",
+    "type": "proper"
+  },
+  "Lent_Week2_Saturday": {
+    "proper": {
+      "first": "Micah 7:14-15, 18-20",
+      "gospel": "Luke 15:1-3, 11-32",
+      "psalm": "Psalm 103:1-2, 3-4, 9-10, 11-12"
+    },
+    "season": "Lent",
+    "title": "Saints Perpetua and Felicity, Martyrs",
+    "type": "proper"
+  },
+  "Lent_Week2_Sunday": {
+    "A": {
+      "first": "Genesis 12:1-4a",
+      "gospel": "Matthew 17:1-9",
+      "psalm": "Psalm 33:4-5, 18-19, 20, 22.",
+      "second": "2 Timothy 1:8b-10"
+    },
+    "season": "Lent",
+    "title": "2nd Sunday of Lent",
+    "type": "sunday"
+  },
+  "Lent_Week2_Thursday": {
+    "proper": {
+      "first": "Jeremiah 17:5-10",
+      "gospel": "Luke 16:19-31",
+      "psalm": "Psalm 1:1-2, 3, 4 and 6"
+    },
+    "season": "Lent",
+    "title": "Thursday of the 2nd week of Lent",
+    "type": "proper"
+  },
+  "Lent_Week2_Tuesday": {
+    "proper": {
+      "first": "Isaiah 1:10, 16-20",
+      "gospel": "Matthew 23:1-12",
+      "psalm": "Psalm 50:8-9, 16bc-17, 21 and 23"
+    },
+    "season": "Lent",
+    "title": "Tuesday of the 2nd week of Lent",
+    "type": "proper"
+  },
+  "Lent_Week2_Wednesday": {
+    "proper": {
+      "first": "Jeremiah 18:18-20",
+      "gospel": "Matthew 20:17-28",
+      "psalm": "Psalm 31:5-6, 14, 15-16"
+    },
+    "season": "Lent",
+    "title": "Saint Casimir",
+    "type": "proper"
+  },
+  "Lent_Week3_Friday": {
+    "proper": {
+      "first": "Hosea 14:2-10",
+      "gospel": "Mark 12:28-34",
+      "psalm": "Psalm 81:6c-8a, 8bc-9, 10-11ab, 14 and 17"
+    },
+    "season": "Lent",
+    "title": "Friday of the 3rd week of Lent",
+    "type": "proper"
+  },
+  "Lent_Week3_Monday": {
+    "proper": {
+      "first": "2 Kings 5:1-15ab",
+      "gospel": "Luke 4:24-30",
+      "psalm": "Psalm 42:2, 3; 43:3, 4"
+    },
+    "season": "Lent",
+    "title": "Saint Frances of Rome, Religious",
+    "type": "proper"
+  },
+  "Lent_Week3_Saturday": {
+    "proper": {
+      "first": "Hosea 6:1-6",
+      "gospel": "Luke 18:9-14",
+      "psalm": "Psalm 51:3-4, 18-19, 20-21ab"
+    },
+    "season": "Lent",
+    "title": "Saturday of the 3rd week of Lent",
+    "type": "proper"
+  },
+  "Lent_Week3_Sunday": {
+    "A": {
+      "first": "Exodus 17:3-7",
+      "gospel": "John 4:5-42",
+      "psalm": "Psalm 95:1-2, 6-7, 8-9",
+      "second": "Romans 5:1-2, 5-8"
+    },
+    "season": "Lent",
+    "title": "3rd Sunday of Lent",
+    "type": "sunday"
+  },
+  "Lent_Week3_Thursday": {
+    "proper": {
+      "first": "Jeremiah 7:23-28",
+      "gospel": "Luke 11:14-23",
+      "psalm": "Psalm 95:1-2, 6-7, 8-9"
+    },
+    "season": "Lent",
+    "title": "Thursday of the 3rd week of Lent",
+    "type": "proper"
+  },
+  "Lent_Week3_Tuesday": {
+    "proper": {
+      "first": "Daniel 3:25, 34-43",
+      "gospel": "Matthew 18:21-35",
+      "psalm": "Psalm 25:4-5ab, 6 and 7bc, 8-9"
+    },
+    "season": "Lent",
+    "title": "Tuesday of the 3rd week of Lent",
+    "type": "proper"
+  },
+  "Lent_Week3_Wednesday": {
+    "proper": {
+      "first": "Deuteronomy 4:1, 5-9",
+      "gospel": "Matthew 5:17-19",
+      "psalm": "Psalm 147:12-13, 15-16, 19-20"
+    },
+    "season": "Lent",
+    "title": "Wednesday of the 3rd week of Lent",
+    "type": "proper"
+  },
+  "Lent_Week4_Friday": {
+    "proper": {
+      "first": "Wisdom 2:1a, 12-22",
+      "gospel": "John 7:1-2, 10, 25-30",
+      "psalm": "Psalm 34:17-18, 19-20, 21 and 23"
+    },
+    "season": "Lent",
+    "title": "Friday of the 4th week of Lent",
+    "type": "proper"
+  },
+  "Lent_Week4_Monday": {
+    "proper": {
+      "first": "Isaiah 65:17-21",
+      "gospel": "John 4:43-54",
+      "psalm": "Psalm 30:2 and 4, 5-6, 11-12a and 13b"
+    },
+    "season": "Lent",
+    "title": "Monday of the 4th week of Lent",
+    "type": "proper"
+  },
+  "Lent_Week4_Saturday": {
+    "proper": {
+      "first": "Jeremiah 11:18-20",
+      "gospel": "John 7:40-53",
+      "psalm": "Psalm 7:2-3, 9bc-10, 11-12"
+    },
+    "season": "Lent",
+    "title": "Saturday of the 4th week of Lent",
+    "type": "proper"
+  },
+  "Lent_Week4_Sunday": {
+    "A": {
+      "first": "1 Samuel 16:1b, 6-7, 10-13a",
+      "gospel": "John 9:1-41",
+      "psalm": "Psalm 23: 1-3a, 3b-4, 5, 6",
+      "second": "Ephesians 5:8-14"
+    },
+    "season": "Lent",
+    "title": "4th Sunday of Lent",
+    "type": "sunday"
+  },
+  "Lent_Week4_Tuesday": {
+    "proper": {
+      "first": "Ezekiel 47:1-9, 12",
+      "gospel": "John 5:1-16",
+      "psalm": "Psalm 46:2-3, 5-6, 8-9"
+    },
+    "season": "Lent",
+    "title": "Saint Patrick, Bishop",
+    "type": "proper"
+  },
+  "Lent_Week4_Wednesday": {
+    "proper": {
+      "first": "Isaiah 49:8-15",
+      "gospel": "John 5:17-30",
+      "psalm": "Psalm 145:8-9, 13cd-14, 17-18"
+    },
+    "season": "Lent",
+    "title": "Saint Cyril of Jerusalem, Bishop and Doctor",
+    "type": "proper"
+  },
+  "Lent_Week5_Friday": {
+    "proper": {
+      "first": "Jeremiah 20:10-13",
+      "gospel": "John 10:31-42",
+      "psalm": "Psalm 18:2-3a, 3bc-4, 5-6, 7"
+    },
+    "season": "Lent",
+    "title": "Friday of the 5th week of Lent",
+    "type": "proper"
+  },
+  "Lent_Week5_Monday": {
+    "proper": {
+      "first": "Daniel 13:1-9, 15-17, 19-30, 33-62",
+      "gospel": "John 8:1-11",
+      "psalm": "Psalm 23:1-3a, 3b-4, 5, 6"
+    },
+    "season": "Lent",
+    "title": "Saint Turibius of Mogrovejo, Bishop",
+    "type": "proper"
+  },
+  "Lent_Week5_Saturday": {
+    "proper": {
+      "first": "Ezekiel 37:21-28",
+      "gospel": "John 11:45-56",
+      "psalm": "Jeremiah 31:10, 11-12abcd, 13"
+    },
+    "season": "Lent",
+    "title": "Saturday of the 5th week of Lent",
+    "type": "proper"
+  },
+  "Lent_Week5_Sunday": {
+    "A": {
+      "first": "Ezekiel 37:12-14",
+      "gospel": "John 11:1-45",
+      "psalm": "Psalm 130:1-2, 3-4, 5-6, 7-8",
+      "second": "Romans 8:8-11"
+    },
+    "season": "Lent",
+    "title": "5th Sunday of Lent",
+    "type": "sunday"
+  },
+  "Lent_Week5_Thursday": {
+    "proper": {
+      "first": "Genesis 17:3-9",
+      "gospel": "John 8:51-59",
+      "psalm": "Psalm 105:4-5, 6-7, 8-9"
+    },
+    "season": "Lent",
+    "title": "Thursday of the 5th week of Lent",
+    "type": "proper"
+  },
+  "Lent_Week5_Tuesday": {
+    "proper": {
+      "first": "Numbers 21:4-9",
+      "gospel": "John 8:21-30",
+      "psalm": "Psalm 102:2-3, 16-18, 19-21"
+    },
+    "season": "Lent",
+    "title": "Tuesday of the 5th week of Lent",
+    "type": "proper"
+  },
+  "Luke": {
+    "proper": {
+      "first": "Exodus 17:8-13",
+      "gospel": "Luke 18:1-8",
+      "psalm": "Psalm 121:1-2, 3-4, 5-6, 7-8",
+      "second": "2 Timothy 3:14-4:2"
+    },
+    "season": "Ordinary Time",
+    "title": "Luke",
+    "type": "proper"
+  },
+  "Mary_MotherOfGod": {
+    "proper": {
+      "first": "Numbers 6:22-27",
+      "gospel": "Luke 2:16-21",
+      "psalm": "Psalm 67:2-3, 5, 6, 8",
+      "second": "Galatians 4:4-7"
+    },
+    "season": "Christmas",
+    "title": "Mary, Mother of God",
+    "type": "proper"
+  },
+  "MichaelGabrielAndRaphael": {
+    "proper": {
+      "first": "Daniel 7:9-10, 13-14",
+      "gospel": "John 1:47-51",
+      "psalm": "Psalm 138:1-2ab, 2cde-3, 4-5"
+    },
+    "season": "Ordinary Time",
+    "title": "Michael, Gabriel, and Raphael",
+    "type": "proper"
+  },
+  "MondayAfterEpiphany": {
+    "proper": {
+      "first": "1 John 3:22–4:6",
+      "gospel": "Matthew 4:12-17, 23-25",
+      "psalm": "Psalm 2:7bc-8, 10-12a"
+    },
+    "season": "Christmas",
+    "title": "Monday after Epiphany",
+    "type": "proper"
+  },
+  "MostHolyNameOfJesus": {
+    "proper": {
+      "first": "1 John 2:29–3:6",
+      "gospel": "John 1:29-34",
+      "psalm": "Psalm 98:1, 3cd-4, 5-6"
+    },
+    "season": "Christmas",
+    "title": "The Most Holy Name of Jesus",
+    "type": "proper"
+  },
+  "MostSacredHeartOfJesus": {
+    "proper": {
+      "first": "Deuteronomy 7:6-11",
+      "gospel": "Matthew 11:25-30",
+      "psalm": "Psalm 103:1-2, 3-4, 6-7, 8, 10",
+      "second": "1 John 4:7-16"
+    },
+    "season": "Ordinary Time",
+    "title": "Sacred Heart of Jesus",
+    "type": "proper"
+  },
+  "NativityOfTheLord": {
+    "proper": {
+      "first": "Isaiah 52:7-10",
+      "gospel": "John 1:1-18",
+      "psalm": "Psalm 98:1, 2-3, 3-4, 5-6",
+      "second": "Hebrews 1:1-6"
+    },
+    "season": "Christmas",
+    "title": "Nativity of the Lord",
+    "type": "proper"
+  },
+  "NativityOfTheLord_Christmas": {
+    "proper": {
+      "first": "Isaiah 52:7-10",
+      "gospel": "John 1:1-18",
+      "psalm": "Psalm 98:1, 2-3, 3-4, 5-6.",
+      "second": "Hebrews 1:1-6"
+    },
+    "season": "Christmas",
+    "title": "Christmas",
+    "type": "proper"
+  },
+  "OrdinaryTime_Week1_Friday": {
+    "season": "Ordinary Time",
+    "title": "Friday of the 1st week of Ordinary Time",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "1 Samuel 8:4-7, 10-22a",
+        "gospel": "Mark 2:1-12",
+        "psalm": "Psalm 89:16-17, 18-19"
+      }
+    }
+  },
+  "OrdinaryTime_Week1_Monday": {
+    "season": "Ordinary Time",
+    "title": "Monday of the 1st week of Ordinary Time",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "1 Samuel 1:1-8",
+        "gospel": "Mark 1:14-20",
+        "psalm": "Psalm 116:12-13, 14-17, 18-19"
+      }
+    }
+  },
+  "OrdinaryTime_Week1_Saturday": {
+    "season": "Ordinary Time",
+    "title": "Saint Anthony of Egypt, Abbot",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "1 Samuel 9:1-4, 17-19; 10:1",
+        "gospel": "Mark 2:13-17",
+        "psalm": "Psalm 21:2-3, 4-5, 6-7"
+      }
+    }
+  },
+  "OrdinaryTime_Week1_Thursday": {
+    "season": "Ordinary Time",
+    "title": "Thursday of the 1st week of Ordinary Time",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "1 Samuel 4:1-11",
+        "gospel": "Mark 1:40-45",
+        "psalm": "Psalm 44:10-11, 14-15, 24-25"
+      }
+    }
+  },
+  "OrdinaryTime_Week1_Tuesday": {
+    "season": "Ordinary Time",
+    "title": "Saint Hilary of Poitiers, Bishop and Doctor",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "1 Samuel 1:9-20",
+        "gospel": "Mark 1:21-28",
+        "psalm": "1 Samuel 2:1, 4-5, 6-7, 8abcd"
+      }
+    }
+  },
+  "OrdinaryTime_Week1_Wednesday": {
+    "season": "Ordinary Time",
+    "title": "Wednesday of the 1st week of Ordinary Time",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "1 Samuel 3:1-10, 19-20",
+        "gospel": "Mark 1:29-39",
+        "psalm": "Psalm 40:2 and 5, 7-8a, 8b-9, 10"
+      }
+    }
+  },
+  "OrdinaryTime_Week10_Monday": {
+    "season": "Ordinary Time",
+    "title": "Monday of the 10th week of Ordinary Time",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "1 Kings 17:1-6",
+        "gospel": "Matthew 5:1-12",
+        "psalm": "Psalm 121:1bc-2, 3-4, 5-6, 7-8"
+      }
+    }
+  },
+  "OrdinaryTime_Week10_Sunday": {
+    "B": {
+      "first": "Gen 3:9-15",
+      "gospel": "Mark 3:20-35",
+      "psalm": "Ps 130:1-2, 3-4, 5-6, 7-8",
+      "second": "2 Cor 4:13—5:1"
+    },
+    "season": null,
+    "title": "OrdinaryTime_Week10_Sunday",
+    "type": "sunday"
+  },
+  "OrdinaryTime_Week10_Thursday": {
+    "season": "Ordinary Time",
+    "title": "Saint Barnabas the Apostle",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "Acts 11:21b-26; 13:1-3",
+        "gospel": "Matthew 5:20-26",
+        "psalm": "Psalm 98:1, 2-3ab, 3cd-4, 5-6"
+      }
+    }
+  },
+  "OrdinaryTime_Week10_Tuesday": {
+    "season": "Ordinary Time",
+    "title": "Saint Ephrem, Deacon and Doctor",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "1 Kings 17:7-16",
+        "gospel": "Matthew 5:13-16",
+        "psalm": "Psalm 4:2-3, 4-5, 7b-8"
+      }
+    }
+  },
+  "OrdinaryTime_Week10_Wednesday": {
+    "season": "Ordinary Time",
+    "title": "Wednesday of the 10th week of Ordinary Time",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "1 Kings 18:20-39",
+        "gospel": "Matthew 5:17-19",
+        "psalm": "Psalm 16:1b-2ab, 4, 5ab and 8, 11"
+      }
+    }
+  },
+  "OrdinaryTime_Week11_Friday": {
+    "season": "Ordinary Time",
+    "title": "Saint Romuald, Abbot",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "2 Kings 11:1-4, 9-18, 20",
+        "gospel": "Matthew 6:19-23",
+        "psalm": "Psalm 132:11, 12, 13-14, 17-18"
+      }
+    }
+  },
+  "OrdinaryTime_Week11_Monday": {
+    "season": "Ordinary Time",
+    "title": "Monday of the 11th week of Ordinary Time",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "1 Kings 21:1-16",
+        "gospel": "Matthew 5:38-42",
+        "psalm": "Psalm 5:2-3ab, 4b-6a, 6b-7"
+      }
+    }
+  },
+  "OrdinaryTime_Week11_Saturday": {
+    "season": "Ordinary Time",
+    "title": "Saturday of the 11th week of Ordinary Time",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "2 Chronicles 24:17-25",
+        "gospel": "Matthew 6:24-34",
+        "psalm": "Psalm 89:4-5, 29-30, 31-32, 33-34"
+      }
+    }
+  },
+  "OrdinaryTime_Week11_Sunday": {
+    "A": {
+      "first": "Exodus 19:2-6a",
+      "gospel": "Matthew 9:36—10:8",
+      "psalm": "Psalm 100:1-2, 3, 5",
+      "second": "Romans 5:6-11"
+    },
+    "B": {
+      "first": "Ezek 17:22-24",
+      "gospel": "Mark 4:26-34",
+      "psalm": "Ps 92:2-3, 13-14, 15-16",
+      "second": "2 Cor 5:6-10"
+    },
+    "season": "Ordinary Time",
+    "title": "11th Sunday of Ordinary Time",
+    "type": "sunday"
+  },
+  "OrdinaryTime_Week11_Thursday": {
+    "season": "Ordinary Time",
+    "title": "Thursday of the 11th week of Ordinary Time",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "Sirach 48:1-14",
+        "gospel": "Matthew 6:7-15",
+        "psalm": "Psalm 97:1-2, 3-4, 5-6, 7"
+      }
+    }
+  },
+  "OrdinaryTime_Week11_Tuesday": {
+    "season": "Ordinary Time",
+    "title": "Tuesday of the 11th week of Ordinary Time",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "1 Kings 21:17-29",
+        "gospel": "Matthew 5:43-48",
+        "psalm": "Psalm 51:3-4, 5-6ab, 11 and 16"
+      }
+    }
+  },
+  "OrdinaryTime_Week11_Wednesday": {
+    "season": "Ordinary Time",
+    "title": "Wednesday of the 11th week of Ordinary Time",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "2 Kings 2:1, 6-14",
+        "gospel": "Matthew 6:1-6, 16-18",
+        "psalm": "Psalm 31:20, 21, 24"
+      }
+    }
+  },
+  "OrdinaryTime_Week12_Friday": {
+    "season": "Ordinary Time",
+    "title": "Friday of the 12th week of Ordinary Time",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "2 Kings 25:1-12",
+        "gospel": "Matthew 8:1-4",
+        "psalm": "Psalm 137:1-2, 3, 4-5, 6"
+      }
+    }
+  },
+  "OrdinaryTime_Week12_Monday": {
+    "season": "Ordinary Time",
+    "title": "Saint Paulinus of Nola, Bishop/Saints John Fisher, Bishop and Thomas More, Martyrs",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "2 Kings 17:5-8, 13-15a, 18",
+        "gospel": "Matthew 7:1-5",
+        "psalm": "Psalm 60:3, 4-5, 12-13"
+      }
+    }
+  },
+  "OrdinaryTime_Week12_Saturday": {
+    "season": "Ordinary Time",
+    "title": "Saint Cyril of Alexandria, Bishop and Doctor",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "Lamentations 2:2, 10-14, 18-19",
+        "gospel": "Matthew 8:5-17",
+        "psalm": "Psalm 74:1b-2, 3-5, 6-7, 20-21"
+      }
+    }
+  },
+  "OrdinaryTime_Week12_Sunday": {
+    "A": {
+      "first": "Jeremiah 20:10-13",
+      "gospel": "Matthew 10:26-33",
+      "psalm": "Psalm 69:8-10, 14, 17, 33-35",
+      "second": "Romans 5:12-15"
+    },
+    "B": {
+      "first": "Job 38:1, 8-11",
+      "gospel": "Mark 4:35-41",
+      "psalm": "Ps 107:23-24, 25-26, 28-29, 30-31",
+      "second": "2 Cor 5:14-17"
+    },
+    "season": "Ordinary Time",
+    "title": "12th Sunday of Ordinary Time",
+    "type": "sunday"
+  },
+  "OrdinaryTime_Week12_Thursday": {
+    "season": "Ordinary Time",
+    "title": "Thursday of the 12th week of Ordinary Time",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "2 Kings 24:8-17",
+        "gospel": "Matthew 7:21-29",
+        "psalm": "Psalm 79:1b-2, 3-5, 8, 9"
+      }
+    }
+  },
+  "OrdinaryTime_Week12_Tuesday": {
+    "season": "Ordinary Time",
+    "title": "Tuesday of the 12th week of Ordinary Time",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "2 Kings 19:9b-11, 14-21, 31-35a, 36",
+        "gospel": "Matthew 7:6, 12-14",
+        "psalm": "Psalm 48:2-3Ab, 3cd-4, 10-11"
+      }
+    }
+  },
+  "OrdinaryTime_Week13_Saturday": {
+    "season": "Ordinary Time",
+    "title": "Saint Elizabeth of Portugal",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "Amos 9:11-15",
+        "gospel": "Matthew 9:14-17",
+        "psalm": "Psalm 85:9 and 10, 11-12, 13-14"
+      }
+    }
+  },
+  "OrdinaryTime_Week13_Sunday": {
+    "A": {
+      "first": null,
+      "gospel": "Matthew 10:37-42",
+      "psalm": "Psalm 89:2-3, 16-17, 18-19",
+      "second": "Romans 6:3-4, 8-11"
+    },
+    "B": {
+      "first": "Wis 1:13-15; 2:23-24",
+      "gospel": "Mark 5:21-43",
+      "psalm": "Ps 30:2+4, 5-6, 11-12a+13b",
+      "second": "2 Cor 8:7, 9, 13-15"
+    },
+    "season": "Ordinary Time",
+    "title": "13th Sunday of Ordinary Time",
+    "type": "sunday"
+  },
+  "OrdinaryTime_Week13_Thursday": {
+    "season": "Ordinary Time",
+    "title": "Thursday of the 13th week of Ordinary Time",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "Amos 7:10-17",
+        "gospel": "Matthew 9:1-8",
+        "psalm": "Psalm 19:8, 9, 10, 11"
+      }
+    }
+  },
+  "OrdinaryTime_Week13_Tuesday": {
+    "season": "Ordinary Time",
+    "title": "First Martyrs of the Church of Rome",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "Amos 3:1-8; 4:11-12",
+        "gospel": "Matthew 8:23-27",
+        "psalm": "Psalm 5:5-6, 7, 8"
+      }
+    }
+  },
+  "OrdinaryTime_Week13_Wednesday": {
+    "season": "Ordinary Time",
+    "title": "Wednesday of the 13th week of Ordinary Time",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "Amos 5:14-15, 21-24",
+        "gospel": "Matthew 8:28-34",
+        "psalm": "Psalm 50:7, 8-9, 10-11, 12-13, 16bc-17"
+      }
+    }
+  },
+  "OrdinaryTime_Week14_Friday": {
+    "season": "Ordinary Time",
+    "title": "Friday of the 14th week of Ordinary Time",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "Hosea 14:2-10",
+        "gospel": "Matthew 10:16-23",
+        "psalm": "Psalm 51:3-4, 8-9, 12-13, 14, 17"
+      }
+    }
+  },
+  "OrdinaryTime_Week14_Monday": {
+    "season": "Ordinary Time",
+    "title": "Saint Maria Goretti, Virgin and Martyr",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "Hosea 2:16, 17c-18, 21-22",
+        "gospel": "Matthew 9:18-26",
+        "psalm": "Psalm 145:2-3, 4-5, 6-7, 8-9"
+      }
+    }
+  },
+  "OrdinaryTime_Week14_Saturday": {
+    "season": "Ordinary Time",
+    "title": "Saint Benedict of Nursia, Abbot, Patron of Europe",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "Isaiah 6:1-8",
+        "gospel": "Matthew 10:24-33",
+        "psalm": "Psalm 93:1ab, 1cd-2, 5"
+      }
+    }
+  },
+  "OrdinaryTime_Week14_Sunday": {
+    "A": {
+      "first": "Zechariah 9:9-10",
+      "gospel": "Matthew 11:25-30",
+      "psalm": "Psalm 145:1-2, 8-9, 10-11, 13-14",
+      "second": "Romans 8:9, 11-13"
+    },
+    "B": {
+      "first": "Ezek 2:2-5",
+      "gospel": "Mark 6:1-6",
+      "psalm": "Ps 123:1-2a, 2bc, 3-4",
+      "second": "2 Cor 12:7-10"
+    },
+    "C": {
+      "first": "Isa 66:10-14c",
+      "gospel": "Luke 10:1-12, 17-20",
+      "psalm": "Ps 66:1-3, 4-5, 6-7, 16+20",
+      "second": "Gal 6:14-18"
+    },
+    "season": "Ordinary Time",
+    "title": "14th Sunday of Ordinary Time",
+    "type": "sunday"
+  },
+  "OrdinaryTime_Week14_Thursday": {
+    "season": "Ordinary Time",
+    "title": "Saints Augustine Zhao Rong, Priest, and Companions, Martyrs",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "Hosea 11:1-4, 8e-9",
+        "gospel": "Matthew 10:7-15",
+        "psalm": "Psalm 80:2ac, 3b, 15-16"
+      }
+    }
+  },
+  "OrdinaryTime_Week14_Tuesday": {
+    "season": "Ordinary Time",
+    "title": "Tuesday of the 14th week of Ordinary Time",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "Hosea 8:4-7, 11-13",
+        "gospel": "Matthew 9:32-38",
+        "psalm": "Psalm 115:3-4, 5-6, 7ab-8, 9-10"
+      }
+    }
+  },
+  "OrdinaryTime_Week14_Wednesday": {
+    "season": "Ordinary Time",
+    "title": "Wednesday of the 14th week of Ordinary Time",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "Hosea 10:1-3, 7-8, 12",
+        "gospel": "Matthew 10:1-7",
+        "psalm": "Psalm 105:2-3, 4-5, 6-7"
+      }
+    }
+  },
+  "OrdinaryTime_Week15_Friday": {
+    "season": "Ordinary Time",
+    "title": "Friday of the 15th week of Ordinary Time",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "Isaiah 38:1-6, 21-22, 7-8",
+        "gospel": "Matthew 12:1-8",
+        "psalm": "Isaiah 38:10, 11, 12abcd, 16"
+      }
+    }
+  },
+  "OrdinaryTime_Week15_Monday": {
+    "season": "Ordinary Time",
+    "title": "Saint Henry, Bishop and Martyr",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "Isaiah 1:10-17",
+        "gospel": "Matthew 10:34-11:1",
+        "psalm": "Psalm 50:8-9, 16bc-17, 21, 23"
+      }
+    }
+  },
+  "OrdinaryTime_Week15_Saturday": {
+    "season": "Ordinary Time",
+    "title": "Saturday of the 15th week of Ordinary Time",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "Micah 2:1-5",
+        "gospel": "Matthew 12:14-21",
+        "psalm": "Psalm 10:1-2, 3-4, 7-8, 14"
+      }
+    }
+  },
+  "OrdinaryTime_Week15_Sunday": {
+    "A": {
+      "first": "Isaiah 55:10-11",
+      "gospel": "Matthew 13:1-23",
+      "psalm": "Psalm 65:10, 11, 12-13, 14",
+      "second": "Romans 8:18-23"
+    },
+    "B": {
+      "first": "Amos 7:12-15",
+      "gospel": "Mark 6:7-13",
+      "psalm": "Ps 85:9ab+10, 11-12, 13-14",
+      "second": "Eph 1:3-14"
+    },
+    "C": {
+      "first": "Deut 30:10-14",
+      "gospel": "Luke 10:25-37",
+      "psalm": "Ps 69:14+17, 30-31, 33-34, 36a+37",
+      "second": "Col 1:15-20"
+    },
+    "season": "Ordinary Time",
+    "title": "15th Sunday of Ordinary Time",
+    "type": "sunday"
+  },
+  "OrdinaryTime_Week15_Thursday": {
+    "season": "Ordinary Time",
+    "title": "Our Lady of Mount Carmel",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "Isaiah 26:7-9, 12, 16-19",
+        "gospel": "Matthew 11:28-30",
+        "psalm": "Psalm 102:13-14ab and 15, 16-18, 19-21"
+      }
+    }
+  },
+  "OrdinaryTime_Week15_Tuesday": {
+    "season": "Ordinary Time",
+    "title": "Saint Camillus de Lellis, Priest",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "Isaiah 7:1-9",
+        "gospel": "Matthew 11:20-24",
+        "psalm": "Psalm 48:2-3a, 3b-4, 5-6, 7-8"
+      }
+    }
+  },
+  "OrdinaryTime_Week15_Wednesday": {
+    "season": "Ordinary Time",
+    "title": "Saint Bonaventure, Bishop and Doctor",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "Isaiah 10:5-7, 13b-16",
+        "gospel": "Matthew 11:25-27",
+        "psalm": "Psalm 94:5-6, 7-8, 9-10, 14-15"
+      }
+    }
+  },
+  "OrdinaryTime_Week16_Friday": {
+    "season": "Ordinary Time",
+    "title": "Saint Charbel Makhlouf, Priest and Hermit",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "Jeremiah 3:14-17",
+        "gospel": "Matthew 13:18-23",
+        "psalm": "Jeremiah 31:10, 11-12abcd, 13"
+      }
+    }
+  },
+  "OrdinaryTime_Week16_Monday": {
+    "season": "Ordinary Time",
+    "title": "Saint Apollinaris",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "Micah 6:1-4, 6-8",
+        "gospel": "Matthew 12:38-42",
+        "psalm": "Psalm 50:5-6, 8-9, 16bc-17, 21, 23"
+      }
+    }
+  },
+  "OrdinaryTime_Week16_Sunday": {
+    "A": {
+      "first": "Wisdom 12:13, 16-19",
+      "gospel": "Matthew 13:24-43",
+      "psalm": "Psalm 86:5-6, 9-10, 15-16",
+      "second": "Romans 8:26-27"
+    },
+    "B": {
+      "first": "Jer 23:1-6",
+      "gospel": "Mark 6:30-34",
+      "psalm": "Ps 23:1-3a, 3b-4, 5, 6",
+      "second": "Eph 2:13-18"
+    },
+    "C": {
+      "first": "Gen 18:1-10a",
+      "gospel": "Luke 10:38-42",
+      "psalm": "Ps 15:2-3a, 3b-4, 5",
+      "second": "Col 1:24-28"
+    },
+    "season": "Ordinary Time",
+    "title": "16th Sunday of Ordinary Time",
+    "type": "sunday"
+  },
+  "OrdinaryTime_Week16_Tuesday": {
+    "season": "Ordinary Time",
+    "title": "Saint Lawrence of Brindisi, Priest and Doctor",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "Micah 7:14-15, 18-20",
+        "gospel": "Matthew 12:46-50",
+        "psalm": "Psalm 85:2-4, 5-6, 7-8"
+      }
+    }
+  },
+  "OrdinaryTime_Week17_Friday": {
+    "season": "Ordinary Time",
+    "title": "Saint Ignatius of Loyola, Priest",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "Jeremiah 26:1-9",
+        "gospel": "Matthew 13:54-58",
+        "psalm": "Psalm 69:5, 8-10, 14"
+      }
+    }
+  },
+  "OrdinaryTime_Week17_Monday": {
+    "season": "Ordinary Time",
+    "title": "Monday of the 17th week of Ordinary Time",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "Jeremiah 13:1-11",
+        "gospel": "Matthew 13:31-35",
+        "psalm": "Deuteronomy 32:18-19, 20, 21"
+      }
+    }
+  },
+  "OrdinaryTime_Week17_Saturday": {
+    "season": "Ordinary Time",
+    "title": "Saint Alphonsus Maria de Liguori, Bishop and Doctor of the Church",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "Jeremiah 26:11-16, 24",
+        "gospel": "Matthew 14:1-12",
+        "psalm": "Psalm 69:15-16, 30-31, 33-34"
+      }
+    }
+  },
+  "OrdinaryTime_Week17_Sunday": {
+    "A": {
+      "first": "1 Kings 3:5, 7-12",
+      "gospel": "Matthew 13:44-52",
+      "psalm": "Psalm 119:57, 72, 76-77, 127-128, 129-130",
+      "second": "Romans 8:28-30"
+    },
+    "B": {
+      "first": "2 Kgs 4:42-44",
+      "gospel": "John 6:1-15",
+      "psalm": "Ps 145:10-11, 15-16, 17-18",
+      "second": "Eph 4:1-6"
+    },
+    "C": {
+      "first": "Gen 18:20-32",
+      "gospel": "Luke 11:1-13",
+      "psalm": "Ps 138:1-2a, 2b-3, 6-7a, 7b-8",
+      "second": "Col 2:12-14"
+    },
+    "season": "Ordinary Time",
+    "title": "17th Sunday of Ordinary Time",
+    "type": "sunday"
+  },
+  "OrdinaryTime_Week17_Thursday": {
+    "season": "Ordinary Time",
+    "title": "Saint Peter Chrysologus, Bishop and Doctor",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "Jeremiah 18:1-6",
+        "gospel": "Matthew 13:47-53",
+        "psalm": "Psalm 146:1B-2, 3-4, 5-6ab"
+      }
+    }
+  },
+  "OrdinaryTime_Week17_Tuesday": {
+    "season": "Ordinary Time",
+    "title": "Tuesday of the 17th week of Ordinary Time",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "Jeremiah 14:17-22",
+        "gospel": "Matthew 13:36-43",
+        "psalm": "Psalm 79:8, 9, 11 and 13"
+      }
+    }
+  },
+  "OrdinaryTime_Week17_Wednesday": {
+    "season": "Ordinary Time",
+    "title": "Saint Martha",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "Jeremiah 15:10, 16-21",
+        "gospel": "John 11:19-27",
+        "psalm": "Psalm 59:2-3, 4, 10-11, 17, 18"
+      }
+    }
+  },
+  "OrdinaryTime_Week18_Friday": {
+    "season": "Ordinary Time",
+    "title": "Saint Sixtus II, Pope, and Companions, Martyrs/Saint Cajetan, Priest",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "Nahum 2:1, 3; 3:1-3, 6-7",
+        "gospel": "Matthew 16:24-28",
+        "psalm": "Deuteronomy 32:35cd-36ab, 39abcd, 41"
+      }
+    }
+  },
+  "OrdinaryTime_Week18_Monday": {
+    "season": "Ordinary Time",
+    "title": "Monday of the 18th week of Ordinary Time",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "Jeremiah 28:1-17",
+        "gospel": "Matthew 14:22-36",
+        "psalm": "Psalm 119:29, 43, 79, 80, 95, 102"
+      }
+    }
+  },
+  "OrdinaryTime_Week18_Saturday": {
+    "season": "Ordinary Time",
+    "title": "Saint Dominic, Priest",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "Habakkuk 1:12—2:4",
+        "gospel": "Matthew 17:14-20",
+        "psalm": "Psalm 9:8-9, 10-11, 12-13"
+      }
+    }
+  },
+  "OrdinaryTime_Week18_Sunday": {
+    "A": {
+      "first": "Isaiah 55:1-3",
+      "gospel": "Matthew 14:13-21",
+      "psalm": "Psalm 145:8-9, 15-16, 17-18",
+      "second": "Romans 8:35, 37-39"
+    },
+    "B": {
+      "first": "Exod 16:2-4, 12-15",
+      "gospel": "John 6:24-35",
+      "psalm": "Ps 78:3-4, 23-24, 25+54",
+      "second": "Eph 4:17, 20-24"
+    },
+    "C": {
+      "first": "Eccl 1:2; 2:21-23",
+      "gospel": "Luke 12:13-21",
+      "psalm": "Ps 90:3-4, 5-6, 12-13, 14+17",
+      "second": "Col 3:1-5, 9-11"
+    },
+    "season": "Ordinary Time",
+    "title": "18th Sunday of Ordinary Time",
+    "type": "sunday"
+  },
+  "OrdinaryTime_Week18_Tuesday": {
+    "season": "Ordinary Time",
+    "title": "Saint Jean Vianney (the Cure of Ars), Priest",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "Jeremiah 30:1-2, 12-15, 18-22",
+        "gospel": "Matthew 14:22-36",
+        "psalm": "Psalm 102:16-18, 19-21, 29, 22-23"
+      }
+    }
+  },
+  "OrdinaryTime_Week18_Wednesday": {
+    "season": "Ordinary Time",
+    "title": "Dedication of the Basilica of Saint Mary Major",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "Jeremiah 31:1-7",
+        "gospel": "Matthew 15:21-28",
+        "psalm": "Jeremiah 31:10, 11-12ab, 13"
+      }
+    }
+  },
+  "OrdinaryTime_Week19_Friday": {
+    "season": "Ordinary Time",
+    "title": "Saint Maximilian Mary Kolbe, Priest and Martyr",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "Ezekiel 16:1-15, 60, 63",
+        "gospel": "Matthew 19:3-12",
+        "psalm": "Isaiah 12:2-3, 4bcd, 5-6"
+      }
+    }
+  },
+  "OrdinaryTime_Week19_Sunday": {
+    "A": {
+      "first": "1 Kings 19:9a, 11-13a",
+      "gospel": "Matthew 14:22-33",
+      "psalm": "Psalm 85:9, 10, 11-12, 13-14",
+      "second": "Romans 9:1-5"
+    },
+    "B": {
+      "first": "1 Kgs 19:4-8",
+      "gospel": "John 6:41-51",
+      "psalm": "Ps 34:2-3, 4-5, 6-7, 8-9",
+      "second": "Eph 4:30—5:2"
+    },
+    "C": {
+      "first": "Wis 18:6-9",
+      "gospel": "Luke 12:32-48",
+      "psalm": "Ps 33:1+12, 18-19, 20-22",
+      "second": "Heb 11:1-2, 8-19"
+    },
+    "season": "Ordinary Time",
+    "title": "19th Sunday of Ordinary Time",
+    "type": "sunday"
+  },
+  "OrdinaryTime_Week19_Thursday": {
+    "season": "Ordinary Time",
+    "title": "Saints Pontian, Pope and Hippolytus, Priest, Martyrs",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "Ezekiel 12:1-12",
+        "gospel": "Matthew 18:21–19:1",
+        "psalm": "Psalm 78:56-57, 58-59, 61-62"
+      }
+    }
+  },
+  "OrdinaryTime_Week19_Tuesday": {
+    "season": "Ordinary Time",
+    "title": "Saint Clare, Virgin",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "Ezekiel 2:8-3:4",
+        "gospel": "Matthew 18:1-5, 10, 12-14",
+        "psalm": "Psalm 119:14, 24, 72, 103, 111, 131"
+      }
+    }
+  },
+  "OrdinaryTime_Week19_Wednesday": {
+    "season": "Ordinary Time",
+    "title": "Saint Jane Frances de Chantal, Religious",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "Ezekiel 9:1-7; 10:18-22",
+        "gospel": "Matthew 18:15-20",
+        "psalm": "Psalm 113:1-2, 3-4, 5-6"
+      }
+    }
+  },
+  "OrdinaryTime_Week2_Friday": {
+    "season": "Ordinary Time",
+    "title": "Friday of the 2nd week of Ordinary Time",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "1 Samuel 24:3-21",
+        "gospel": "Mark 3:13-19",
+        "psalm": "Psalm 57:2, 3-4, 6 and 11"
+      }
+    }
+  },
+  "OrdinaryTime_Week2_Monday": {
+    "season": "Ordinary Time",
+    "title": "Monday of the 2nd week of Ordinary Time",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "1 Samuel 15:16-23",
+        "gospel": "Mark 2:18-22",
+        "psalm": "Psalm 50:8-9, 16bc-17, 21 and 23"
+      }
+    }
+  },
+  "OrdinaryTime_Week2_Saturday": {
+    "season": "Ordinary Time",
+    "title": "Saint Francis de Sales, Bishop and Doctor",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "2 Samuel 1:1-4, 11-12, 19, 23-27",
+        "gospel": "Mark 3:20-21",
+        "psalm": "Psalm 80:2-3, 5-7"
+      }
+    }
+  },
+  "OrdinaryTime_Week2_Sunday": {
+    "A": {
+      "first": "Isaiah 49:3, 5-6",
+      "gospel": "John 1:29-34",
+      "psalm": "Psalm 40:2, 4, 7-8, 8-9, 10",
+      "second": "1 Corinthians 1:1-3"
+    },
+    "B": {
+      "first": "1 Sam 3:3b-10, 19",
+      "gospel": "John 1:35-42",
+      "psalm": "Ps 40:2+4, 7-8a, 8b-9, 10",
+      "second": "1 Cor 6:13c-15a, 17-20"
+    },
+    "C": {
+      "first": "Isa 62:1-5",
+      "gospel": "John 2:1-11",
+      "psalm": "Ps 96:1-2a, 2b-3, 7-8, 9-10",
+      "second": "1 Cor 12:4-11"
+    },
+    "season": "Ordinary Time",
+    "title": "2nd Sunday of Ordinary Time",
+    "type": "sunday"
+  },
+  "OrdinaryTime_Week2_Thursday": {
+    "season": "Ordinary Time",
+    "title": "Saint Vincent, Deacon and Martyr",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "1 Samuel 18:6-9; 19:1-7",
+        "gospel": "Mark 3:7-12",
+        "psalm": "Psalm 56:2-3, 9-10a, 10b-11, 12-13"
+      }
+    }
+  },
+  "OrdinaryTime_Week2_Tuesday": {
+    "season": "Ordinary Time",
+    "title": "Saints Fabian, Pope, and Sebastian, Martyrs",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "1 Samuel 16:1-13",
+        "gospel": "Mark 2:23-28",
+        "psalm": "Psalm 89:20, 21-22, 27-28"
+      }
+    }
+  },
+  "OrdinaryTime_Week2_Wednesday": {
+    "season": "Ordinary Time",
+    "title": "Saint Agnes, Virgin and Martyr",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "1 Samuel 17:32-33, 37, 40-51",
+        "gospel": "Mark 3:1-6",
+        "psalm": "Psalm 144:1b, 2, 9-10"
+      }
+    }
+  },
+  "OrdinaryTime_Week20_Friday": {
+    "season": "Ordinary Time",
+    "title": "Saint Pius X, Pope",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "Ezekiel 37:1-14",
+        "gospel": "Matthew 22:34-40",
+        "psalm": "Psalm 107:2-3, 4-5, 6-7, 8-9"
+      }
+    }
+  },
+  "OrdinaryTime_Week20_Monday": {
+    "season": "Ordinary Time",
+    "title": "Monday of the 20th week of Ordinary Time",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "Ezekiel 24:15-23",
+        "gospel": "Matthew 19:16-22",
+        "psalm": "Deuteronomy 32:18-19, 20, 21"
+      }
+    }
+  },
+  "OrdinaryTime_Week20_Saturday": {
+    "season": "Ordinary Time",
+    "title": "Queenship of Blessed Virgin Mary",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "Ezekiel 43:1-7ab",
+        "gospel": "Matthew 23:1-12",
+        "psalm": "Psalm 85:9ab, 10, 11-12, 13-14"
+      }
+    }
+  },
+  "OrdinaryTime_Week20_Sunday": {
+    "A": {
+      "first": "Isaiah 56:1, 6-7",
+      "gospel": "Matthew 15:21-28",
+      "psalm": "Psalm 67:2-3, 5, 6, 8",
+      "second": "Romans 11:13-15, 29-32"
+    },
+    "B": {
+      "first": "Prov 9:1-6",
+      "gospel": "John 6:51-58",
+      "psalm": "Ps 34:2-3, 4-5, 6-7",
+      "second": "Eph 5:15-20"
+    },
+    "C": {
+      "first": "Jer 38:4-6, 8-10",
+      "gospel": "Luke 12:49-53",
+      "psalm": "Ps 40:2, 3, 4, 18",
+      "second": "Heb 12:1-4"
+    },
+    "season": "Ordinary Time",
+    "title": "20th Sunday of Ordinary Time",
+    "type": "sunday"
+  },
+  "OrdinaryTime_Week20_Thursday": {
+    "season": "Ordinary Time",
+    "title": "Saint Bernard of Clairvaux, Abbot and Doctor of the Church",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "Ezekiel 36:23-28",
+        "gospel": "Matthew 22:1-14",
+        "psalm": "Psalm 51:12-13, 14-15, 18-19"
+      }
+    }
+  },
+  "OrdinaryTime_Week20_Tuesday": {
+    "season": "Ordinary Time",
+    "title": "Tuesday of the 20th week of Ordinary Time",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "Ezekiel 28:1-10",
+        "gospel": "Matthew 19:23-30",
+        "psalm": "Deuteronomy 32:26-27ab, 27cd-28, 30, 35cd-36ab"
+      }
+    }
+  },
+  "OrdinaryTime_Week20_Wednesday": {
+    "season": "Ordinary Time",
+    "title": "Saint John Eudes, Priest",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "Ezekiel 34:1-11",
+        "gospel": "Matthew 20:1-16",
+        "psalm": "Psalm 23:1-3a, 3b-4, 5, 6"
+      }
+    }
+  },
+  "OrdinaryTime_Week21_Friday": {
+    "season": "Ordinary Time",
+    "title": "Passion of John the Baptist",
+    "type": "weekday",
+    "weekdayCycle": {
+      "I": {
+        "first": "1 Thessalonians 4:1-8",
+        "gospel": "Mark 6:17-29",
+        "psalm": "Psalm 97:1 and 2b, 5-6, 10, 11-12"
+      },
+      "II": {
+        "first": "1 Corinthians 1:17-25",
+        "gospel": "Matthew 25:1-13",
+        "psalm": "Psalm 33:1-2, 4-5, 10-11"
+      }
+    }
+  },
+  "OrdinaryTime_Week21_Monday": {
+    "season": "Ordinary Time",
+    "title": "Louis",
+    "type": "weekday",
+    "weekdayCycle": {
+      "I": {
+        "first": "1 Thessalonians 1:1-5, 8b-10",
+        "gospel": "Matthew 23:13-22",
+        "psalm": "Psalm 149:1b-2, 3-4, 5-6a and 9b"
+      }
+    }
+  },
+  "OrdinaryTime_Week21_Saturday": {
+    "season": "Ordinary Time",
+    "title": "The Beheading of Saint John the Baptist, Martyr",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "1 Corinthians 1:26-31",
+        "gospel": "Mark 6:17-29",
+        "psalm": "Psalm 33:12-13, 18-19, 20-21"
+      }
+    }
+  },
+  "OrdinaryTime_Week21_Sunday": {
+    "A": {
+      "first": "Isaiah 22:19-23",
+      "gospel": "Matthew 16:13-20",
+      "psalm": "Psalm 138:1-2, 2-3, 6, 8",
+      "second": "Romans 11:33-36"
+    },
+    "B": {
+      "first": "Josh 24:1-2a, 15-17, 18b",
+      "gospel": "John 6:60-69",
+      "psalm": "Ps 34:2-3, 16-17, 18-19, 20-21",
+      "second": "Eph 5:21-32"
+    },
+    "C": {
+      "first": "Isa 66:18-21",
+      "gospel": "Luke 13:22-30",
+      "psalm": "Ps 117:1, 2",
+      "second": "Heb 12:5-7, 11-13"
+    },
+    "season": "Ordinary Time",
+    "title": "21st Sunday of Ordinary Time",
+    "type": "sunday"
+  },
+  "OrdinaryTime_Week21_Thursday": {
+    "season": "Ordinary Time",
+    "title": "Augustine",
+    "type": "weekday",
+    "weekdayCycle": {
+      "I": {
+        "first": "1 Thessalonians 3:7-13",
+        "gospel": "Matthew 24:42-51",
+        "psalm": "Psalm 90:3-5a, 12-13, 14 and 17"
+      },
+      "II": {
+        "first": "1 Corinthians 1:1-9",
+        "gospel": "Matthew 24:42-51",
+        "psalm": "Psalm 145:2-3, 4-5, 6-7"
+      }
+    }
+  },
+  "OrdinaryTime_Week21_Tuesday": {
+    "season": "Ordinary Time",
+    "title": "Saint Louis/Saint Joseph of Calasanz, Priest",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "2 Thessalonians 2:1-3a, 14-17",
+        "gospel": "Matthew 23:23-26",
+        "psalm": "Psalm 96:10, 11-12, 13"
+      }
+    }
+  },
+  "OrdinaryTime_Week21_Wednesday": {
+    "season": "Ordinary Time",
+    "title": "Monica",
+    "type": "weekday",
+    "weekdayCycle": {
+      "I": {
+        "first": "1 Thessalonians 2:9-13",
+        "gospel": "Matthew 23:27-32",
+        "psalm": "Psalm 139:7-8, 9-10, 11-12ab"
+      },
+      "II": {
+        "first": "2 Thessalonians 3:6-10, 16-18",
+        "gospel": "Matthew 23:27-32",
+        "psalm": "Psalm 128:1-2, 4-5"
+      }
+    }
+  },
+  "OrdinaryTime_Week22_Friday": {
+    "season": "Ordinary Time",
+    "title": "Friday of the 22nd week of Ordinary Time",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "1 Corinthians 4:1-5",
+        "gospel": "Luke 5:33-39",
+        "psalm": "Psalm 37:3-4, 5-6, 27-28, 39-40"
+      }
+    }
+  },
+  "OrdinaryTime_Week22_Monday": {
+    "season": "Ordinary Time",
+    "title": "Monday of the 22nd week of Ordinary Time",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "1 Corinthians 2:1-5",
+        "gospel": "Luke 4:16-30",
+        "psalm": "Psalm 119:97, 98, 99, 100, 101, 102"
+      }
+    }
+  },
+  "OrdinaryTime_Week22_Saturday": {
+    "season": "Ordinary Time",
+    "title": "Saturday of the 22nd week of Ordinary Time",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "1 Corinthians 4:6b-15",
+        "gospel": "Luke 6:1-5",
+        "psalm": "Psalm 145:17-18, 19-20, 21"
+      }
+    }
+  },
+  "OrdinaryTime_Week22_Sunday": {
+    "A": {
+      "first": "Jeremiah 20:7-9",
+      "gospel": "Matthew 16:21-27",
+      "psalm": "Psalm 63:2, 3-4, 5-6, 8-9",
+      "second": "Romans 12:1-2"
+    },
+    "B": {
+      "first": "Deut 4:1-2, 6-8",
+      "gospel": "Mark 7:1-8, 14-15, 21-23",
+      "psalm": "Ps 15:2-3a, 3b-4a, 4b-5",
+      "second": "Jas 1:17-18, 21b-22, 27"
+    },
+    "C": {
+      "first": "Sir 3:17-18, 20, 28-29",
+      "gospel": "Luke 14:1, 7-14",
+      "psalm": "Ps 68:4-5, 6-7, 10-11",
+      "second": "Heb 12:18-19, 22-24a"
+    },
+    "season": "Ordinary Time",
+    "title": "22nd Sunday of Ordinary Time",
+    "type": "sunday"
+  },
+  "OrdinaryTime_Week22_Thursday": {
+    "season": "Ordinary Time",
+    "title": "Saint Gregory the Great, Pope and Doctor of the Church",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "1 Corinthians 3:18-23",
+        "gospel": "Luke 5:1-11",
+        "psalm": "Psalm 24:1bc-2, 3-4ab, 5-6"
+      }
+    }
+  },
+  "OrdinaryTime_Week22_Tuesday": {
+    "season": "Ordinary Time",
+    "title": "Tuesday of the 22nd week of Ordinary Time",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "1 Corinthians 2:10b-16",
+        "gospel": "Luke 4:31-37",
+        "psalm": "Psalm 145:8-9, 10-11, 12-13ab, 13cd-14"
+      }
+    }
+  },
+  "OrdinaryTime_Week22_Wednesday": {
+    "season": "Ordinary Time",
+    "title": "Gregory the Great",
+    "type": "weekday",
+    "weekdayCycle": {
+      "I": {
+        "first": "Colossians 1:1-8",
+        "gospel": "Luke 4:38-44",
+        "psalm": "Psalm 52:10, 11"
+      },
+      "II": {
+        "first": "1 Corinthians 3:1-9",
+        "gospel": "Luke 4:38-44",
+        "psalm": "Psalm 33:12-13, 14-15, 20-21"
+      }
+    }
+  },
+  "OrdinaryTime_Week23_Friday": {
+    "season": "Ordinary Time",
+    "title": "Most Holy Name of Mary",
+    "type": "weekday",
+    "weekdayCycle": {
+      "I": {
+        "first": "1 Timothy 1:1-2, 12-14",
+        "gospel": "Luke 6:39-42",
+        "psalm": "Psalm 16:1b-2a and 5, 7-8, 11"
+      },
+      "II": {
+        "first": "1 Corinthians 9:16-19, 22b-27",
+        "gospel": "Luke 6:39-42",
+        "psalm": "Psalm 84:3, 4, 5-6, 12"
+      }
+    }
+  },
+  "OrdinaryTime_Week23_Monday": {
+    "season": "Ordinary Time",
+    "title": "Monday of the 23rd week of Ordinary Time",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "1 Corinthians 5:1-8",
+        "gospel": "Luke 6:6-11",
+        "psalm": "Psalm 5:5-6, 7, 12"
+      }
+    }
+  },
+  "OrdinaryTime_Week23_Saturday": {
+    "season": "Ordinary Time",
+    "title": "John Chrysostom",
+    "type": "weekday",
+    "weekdayCycle": {
+      "I": {
+        "first": "1 Timothy 1:15-17",
+        "gospel": "Luke 6:43-49",
+        "psalm": "Psalm 113:1b-2, 3-4, 5 and 6-7"
+      },
+      "II": {
+        "first": "1 Corinthians 10:14-22",
+        "gospel": "Luke 6:43-49",
+        "psalm": "Psalm 116:12-13, 17-18"
+      }
+    }
+  },
+  "OrdinaryTime_Week23_Sunday": {
+    "A": {
+      "first": "Ezekiel 33:7-9",
+      "gospel": "Matthew 18:15-20",
+      "psalm": "Psalm 95:1-2, 6-7, 8-9",
+      "second": "Romans 13:8-10"
+    },
+    "B": {
+      "first": "Isa 35:4-7a",
+      "gospel": "Mark 7:31-37",
+      "psalm": "Ps 146:6c-7, 8-9a, 9b-10",
+      "second": "Jas 2:1-5"
+    },
+    "C": {
+      "first": "Wis 9:13-18b",
+      "gospel": "Luke 14:25-33",
+      "psalm": "Ps 90:3-4, 5-6, 12-13, 14+17",
+      "second": "Phlm 9-10, 12-17"
+    },
+    "season": "Ordinary Time",
+    "title": "Exaltation of the Holy Cross",
+    "type": "sunday"
+  },
+  "OrdinaryTime_Week23_Thursday": {
+    "season": "Ordinary Time",
+    "title": "Thursday of the 23rd week of Ordinary Time",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "1 Corinthians 8:1b-7, 11-13",
+        "gospel": "Luke 6:27-38",
+        "psalm": "Psalm 139:1b-3, 13-14ab, 23-24"
+      }
+    }
+  },
+  "OrdinaryTime_Week23_Tuesday": {
+    "season": "Ordinary Time",
+    "title": "Peter Claver",
+    "type": "weekday",
+    "weekdayCycle": {
+      "I": {
+        "first": "Colossians 2:6-15",
+        "gospel": "Luke 6:12-19",
+        "psalm": "Psalm 145:1b-2, 8-9, 10-11"
+      }
+    }
+  },
+  "OrdinaryTime_Week23_Wednesday": {
+    "season": "Ordinary Time",
+    "title": "Saint Peter Claver, Priest",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "1 Corinthians 7:25-31",
+        "gospel": "Luke 6:20-26",
+        "psalm": "Psalm 45:11-12, 14-15, 16-17"
+      }
+    }
+  },
+  "OrdinaryTime_Week24_Friday": {
+    "season": "Ordinary Time",
+    "title": "Januarius",
+    "type": "weekday",
+    "weekdayCycle": {
+      "I": {
+        "first": "1 Timothy 6:2c-12",
+        "gospel": "Luke 8:1-3",
+        "psalm": "Psalm 49:6-7, 8-10, 17-18, 19-20"
+      },
+      "II": {
+        "first": "1 Corinthians 15:12-20",
+        "gospel": "Luke 8:1-3",
+        "psalm": "Psalm 17:1bcd, 6-7, 8b, 15"
+      }
+    }
+  },
+  "OrdinaryTime_Week24_Monday": {
+    "season": "Ordinary Time",
+    "title": "Our Lady of Sorrows",
+    "type": "weekday",
+    "weekdayCycle": {
+      "I": {
+        "first": "1 Timothy 2:1-8",
+        "gospel": "John 19:25-27",
+        "psalm": "Psalm 28:2, 7, 8-9"
+      }
+    }
+  },
+  "OrdinaryTime_Week24_Saturday": {
+    "season": "Ordinary Time",
+    "title": "Andrew Kim Tae-gon and Companions",
+    "type": "weekday",
+    "weekdayCycle": {
+      "I": {
+        "first": "1 Timothy 6:13-16",
+        "gospel": "Luke 8:4-15",
+        "psalm": "Psalm 100:1b-2, 3, 4, 5"
+      },
+      "II": {
+        "first": "1 Corinthians 15:35-37, 42-49",
+        "gospel": "Luke 8:4-15",
+        "psalm": "Psalm 56:10c-12, 13-14"
+      }
+    }
+  },
+  "OrdinaryTime_Week24_Sunday": {
+    "A": {
+      "first": "Sirach 27:30—28:7",
+      "gospel": "Matthew 18:21-35",
+      "psalm": "Psalm 103:1-2, 3-4, 9-10, 11-12",
+      "second": "Romans 14:7-9"
+    },
+    "B": {
+      "first": "Isa 50:4-9a",
+      "gospel": "Mark 8:27-35",
+      "psalm": "Ps 116:1-2, 3-4, 5-6, 8-9",
+      "second": "Jas 2:14-18"
+    },
+    "C": {
+      "first": "Amos 8:4-7",
+      "gospel": "Luke 16:1-13",
+      "psalm": "Psalm 113:1-2, 4-6, 7-8",
+      "second": "1 Timothy 2:1-8"
+    },
+    "season": "Ordinary Time",
+    "title": "Matthew",
+    "type": "sunday"
+  },
+  "OrdinaryTime_Week24_Thursday": {
+    "season": "Ordinary Time",
+    "title": "Saint Robert Bellarmine, Bishop and Doctor of the Church",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "1 Corinthians 15:1-11",
+        "gospel": "Luke 7:36-50",
+        "psalm": "Psalm 118:1b-2, 16ab-17, 28"
+      }
+    }
+  },
+  "OrdinaryTime_Week24_Tuesday": {
+    "season": "Ordinary Time",
+    "title": "Cornelius and Cyprian",
+    "type": "weekday",
+    "weekdayCycle": {
+      "I": {
+        "first": "1 Timothy 3:1-13",
+        "gospel": "Luke 7:11-17",
+        "psalm": "Psalm 101:1b-2ab, 2cd-3ab, 5, 6"
+      },
+      "II": {
+        "first": "1 Corinthians 12:12-14, 27-31a",
+        "gospel": "John 19:25-27",
+        "psalm": "Psalm 100:1b-2, 3, 4, 5"
+      }
+    }
+  },
+  "OrdinaryTime_Week24_Wednesday": {
+    "season": "Ordinary Time",
+    "title": "Robert Bellarmine",
+    "type": "weekday",
+    "weekdayCycle": {
+      "I": {
+        "first": "1 Timothy 3:14-16",
+        "gospel": "Luke 7:31-35",
+        "psalm": "Psalm 111:1-2, 3-4, 5-6"
+      },
+      "II": {
+        "first": "1 Corinthians 12:31-13:13",
+        "gospel": "Luke 7:31-35",
+        "psalm": "Psalm 33:2-3, 4-5, 12 and 22"
+      }
+    }
+  },
+  "OrdinaryTime_Week25_Friday": {
+    "season": "Ordinary Time",
+    "title": "Cosmas and Damian",
+    "type": "weekday",
+    "weekdayCycle": {
+      "I": {
+        "first": "Haggai 2:1-9",
+        "gospel": "Luke 9:18-22",
+        "psalm": "Psalm 43:1, 2, 3, 4"
+      },
+      "II": {
+        "first": "Ecclesiastes 3:1-11",
+        "gospel": "Luke 9:18-22",
+        "psalm": "Psalm 144:1b and 2abc, 3-4"
+      }
+    }
+  },
+  "OrdinaryTime_Week25_Saturday": {
+    "season": "Ordinary Time",
+    "title": "Vincent de Paul",
+    "type": "weekday",
+    "weekdayCycle": {
+      "I": {
+        "first": "Zechariah 2:5-9, 14-15a",
+        "gospel": "Luke 9:43b-45",
+        "psalm": "Jeremiah 31:10, 11-12ab, 13"
+      },
+      "II": {
+        "first": "Ecclesiastes 11:9—12:8",
+        "gospel": "Luke 9:43b-45",
+        "psalm": "Psalm 90:3-4, 5-6, 12-13, 14 and 17"
+      }
+    }
+  },
+  "OrdinaryTime_Week25_Sunday": {
+    "A": {
+      "first": "Isaiah 55:6-9",
+      "gospel": "Matthew 20:1-16a",
+      "psalm": "Psalm 145:2-3, 8-9, 17-18",
+      "second": "Philippians 1:20c-24, 27a"
+    },
+    "B": {
+      "first": "Wis 2:12, 17-20",
+      "gospel": "Mark 9:30-37",
+      "psalm": "Ps 54:3-4, 5, 6-8",
+      "second": "Jas 3:16—4:3"
+    },
+    "C": {
+      "first": "Amos 8:4-7",
+      "gospel": "Luke 16:1-13",
+      "psalm": "Ps 113:1-2, 4-6, 7-8",
+      "second": "1 Tim 2:1-8"
+    },
+    "season": "Ordinary Time",
+    "title": "Wenceslaus",
+    "type": "sunday"
+  },
+  "OrdinaryTime_Week25_Thursday": {
+    "season": "Ordinary Time",
+    "title": "Thursday of the 25th week of Ordinary Time",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "Ecclesiastes 1:2-11",
+        "gospel": "Luke 9:7-9",
+        "psalm": "Psalm 90:3-4, 5-6, 12-13, 14, 17bc"
+      }
+    }
+  },
+  "OrdinaryTime_Week25_Tuesday": {
+    "season": "Ordinary Time",
+    "title": "Padre Pio",
+    "type": "weekday",
+    "weekdayCycle": {
+      "I": {
+        "first": "Ezra 6:7-8, 12b, 14-20",
+        "gospel": "Luke 8:19-21",
+        "psalm": "Psalm 122:1-2, 3-4ab, 4cd-5"
+      },
+      "II": {
+        "first": "Proverbs 21:1-6, 10-13",
+        "gospel": "Luke 8:19-21",
+        "psalm": "Psalm 119:1, 27, 30, 34, 35, 44"
+      }
+    }
+  },
+  "OrdinaryTime_Week25_Wednesday": {
+    "season": "Ordinary Time",
+    "title": "Saint Pio of Pietrelcina (Padre Pio), Priest",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "Proverbs 30:5-9",
+        "gospel": "Luke 9:1-6",
+        "psalm": "Psalm 119:29, 72, 89, 101, 104, 163"
+      }
+    }
+  },
+  "OrdinaryTime_Week26_Friday": {
+    "season": "Ordinary Time",
+    "title": "St. Thérèse of the Child Jesus (Thérèse of Lisieux)",
+    "type": "weekday",
+    "weekdayCycle": {
+      "I": {
+        "first": "Baruch 1:15-22",
+        "gospel": "Luke 10:13-16",
+        "psalm": "Psalm 79:1b-2, 3-5, 8, 9"
+      },
+      "II": {
+        "first": "Job 38:1, 12-21; 40:3-5",
+        "gospel": "Matthew 18:1-5, 10",
+        "psalm": "Psalm 139:1-3, 7-8, 9-10, 13-14ab"
+      }
+    }
+  },
+  "OrdinaryTime_Week26_Monday": {
+    "season": "Ordinary Time",
+    "title": "Saint Wenceslaus, Martyr/Saints Lawrence Ruiz and Companions, Martyrs",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "Job 1:6-22",
+        "gospel": "Luke 9:46-50",
+        "psalm": "Psalm 17:1bcd, 2-3, 6-7"
+      }
+    }
+  },
+  "OrdinaryTime_Week26_Saturday": {
+    "season": "Ordinary Time",
+    "title": "Francis of Assisi",
+    "type": "weekday",
+    "weekdayCycle": {
+      "I": {
+        "first": "Baruch 4:5-12, 27-29",
+        "gospel": "Luke 10:17-24",
+        "psalm": "Psalm 69:33-35, 36-37"
+      },
+      "II": {
+        "first": "Job 42:1-3, 5-6, 12-17",
+        "gospel": "Luke 10:17-24",
+        "psalm": "Psalm 119:66, 71, 75, 91, 125, 130"
+      }
+    }
+  },
+  "OrdinaryTime_Week26_Sunday": {
+    "A": {
+      "first": "Ezekiel 18:25-28",
+      "gospel": "Matthew 21:28-32",
+      "psalm": "Psalm 25:4-5, 6-7, 8-9",
+      "second": "Philippians 2:1-11"
+    },
+    "B": {
+      "first": "Num 11:25-29",
+      "gospel": "Mark 9:38-43, 45, 47-48",
+      "psalm": "Ps 19:8, 10, 12-13, 14",
+      "second": "Jas 5:1-6"
+    },
+    "C": {
+      "first": "Amos 6:1a, 4-7",
+      "gospel": "Luke 16:19-31",
+      "psalm": "Ps 146:6c-7, 8-9a, 9b-10",
+      "second": "1 Tim 6:11-16"
+    },
+    "season": "Ordinary Time",
+    "title": "Faustina Kowalska",
+    "type": "sunday"
+  },
+  "OrdinaryTime_Week26_Thursday": {
+    "season": "Ordinary Time",
+    "title": "Guardian Angels",
+    "type": "weekday",
+    "weekdayCycle": {
+      "I": {
+        "first": "Nehemiah 8:1-4a, 5-6, 7b-12",
+        "gospel": "Matthew 18:1-5, 10",
+        "psalm": "Psalm 19:8, 9, 10, 11"
+      },
+      "II": {
+        "first": "Job 19:21-27",
+        "gospel": "Luke 10:1-12",
+        "psalm": "Psalm 27:7-8a, 8b-9abc, 13-14"
+      }
+    }
+  },
+  "OrdinaryTime_Week26_Tuesday": {
+    "season": "Ordinary Time",
+    "title": "Jerome",
+    "type": "weekday",
+    "weekdayCycle": {
+      "I": {
+        "first": "Zechariah 8:20-23",
+        "gospel": "Luke 9:51-56",
+        "psalm": "Psalm 87:1b-3, 4-5, 6-7"
+      }
+    }
+  },
+  "OrdinaryTime_Week26_Wednesday": {
+    "season": "Ordinary Time",
+    "title": "Therese of the Child Jesus",
+    "type": "weekday",
+    "weekdayCycle": {
+      "I": {
+        "first": "Nehemiah 2:1-8",
+        "gospel": "Luke 9:57-62",
+        "psalm": "Psalm 137:1-2, 3, 4-5, 6"
+      },
+      "II": {
+        "first": "Job 9:1-12, 14-16",
+        "gospel": "Luke 9:57-62",
+        "psalm": "Psalm 88:10bc-11, 12-13, 14-15"
+      }
+    }
+  },
+  "OrdinaryTime_Week27_Friday": {
+    "season": "Ordinary Time",
+    "title": "Saint Denis and Companions Martyrs/Saint John Leonardi, Priest",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "Galatians 3:7-14",
+        "gospel": "Luke 11:15-26",
+        "psalm": "Psalm 111:1b-2, 3-4, 5-6"
+      }
+    }
+  },
+  "OrdinaryTime_Week27_Monday": {
+    "season": "Ordinary Time",
+    "title": "Bruno",
+    "type": "weekday",
+    "weekdayCycle": {
+      "I": {
+        "first": "Jonah 1:1–2:1-2, 11",
+        "gospel": "Luke 10:25-37",
+        "psalm": "Jonah 2:3, 4, 5, 8"
+      },
+      "II": {
+        "first": "Galatians 1:6-12",
+        "gospel": "Luke 10:25-37",
+        "psalm": "Psalm 111:1b-2, 7-8, 9, 10c"
+      }
+    }
+  },
+  "OrdinaryTime_Week27_Saturday": {
+    "season": "Ordinary Time",
+    "title": "John XXIII",
+    "type": "weekday",
+    "weekdayCycle": {
+      "I": {
+        "first": "Joel 4:12-21",
+        "gospel": "Luke 11:27-28",
+        "psalm": "Psalm 97:1-2, 5-6, 11-12"
+      },
+      "II": {
+        "first": "Galatians 3:22-29",
+        "gospel": "Luke 11:27-28",
+        "psalm": "Psalm 105:2-3, 4-5, 6-7"
+      }
+    }
+  },
+  "OrdinaryTime_Week27_Sunday": {
+    "A": {
+      "first": "Isaiah 5:1-7",
+      "gospel": "Matthew 21:33-43",
+      "psalm": "Psalm 80:9, 12, 13-14, 15-16, 19-20",
+      "second": "Philippians 4:6-9"
+    },
+    "B": {
+      "first": "Gen 2:18-24",
+      "gospel": "Mark 10:2-16",
+      "psalm": "Ps 128:1-2, 3, 4-5, 6",
+      "second": "Heb 2:9-11"
+    },
+    "C": {
+      "first": "Hab 1:2-3; 2:2-4",
+      "gospel": "Luke 17:5-10",
+      "psalm": "Ps 95:1-2, 6-7b, 7c-9",
+      "second": "2 Tim 1:6-8, 13-14"
+    },
+    "season": "Ordinary Time",
+    "title": "27th Sunday of Ordinary Time",
+    "type": "sunday"
+  },
+  "OrdinaryTime_Week27_Thursday": {
+    "season": "Ordinary Time",
+    "title": "Denis and Companions",
+    "type": "weekday",
+    "weekdayCycle": {
+      "I": {
+        "first": "Malachi 3:13-20b",
+        "gospel": "Luke 11:5-13",
+        "psalm": "Psalm 1:1-2, 3, 4 and 6"
+      },
+      "II": {
+        "first": "Galatians 3:1-5",
+        "gospel": "Luke 11:5-13",
+        "psalm": "Luke 1:69-70, 71-72, 73-75"
+      }
+    }
+  },
+  "OrdinaryTime_Week27_Tuesday": {
+    "season": "Ordinary Time",
+    "title": "Our Lady of the Rosary",
+    "type": "weekday",
+    "weekdayCycle": {
+      "I": {
+        "first": "Jonah 3:1-10",
+        "gospel": "Luke 10:38-42",
+        "psalm": "Psalm 130:1b-2, 3-4ab, 7-8"
+      },
+      "II": {
+        "first": "Galatians 1:13-24",
+        "gospel": "Luke 10:38-42",
+        "psalm": "Psalm 139:1b-3, 13-14ab, 14c-15"
+      }
+    }
+  },
+  "OrdinaryTime_Week27_Wednesday": {
+    "season": "Ordinary Time",
+    "title": "Our Lady of the Rosary",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "Galatians 2:1-2, 7-14",
+        "gospel": "Luke 11:1-4",
+        "psalm": "Psalm 117:1bc, 2"
+      }
+    }
+  },
+  "OrdinaryTime_Week28_Friday": {
+    "season": "Ordinary Time",
+    "title": "Ignatius of Antioch",
+    "type": "weekday",
+    "weekdayCycle": {
+      "I": {
+        "first": "2 Timothy 4:10-17b",
+        "gospel": "Luke 10:1-9",
+        "psalm": "Psalm 145:10-11, 12-13, 17-18"
+      },
+      "II": {
+        "first": "Ephesians 1:11-14",
+        "gospel": "Luke 12:1-7",
+        "psalm": "Psalm 33:1-2, 4-5, 12-13"
+      }
+    }
+  },
+  "OrdinaryTime_Week28_Monday": {
+    "season": "Ordinary Time",
+    "title": "Monday of the 28th week of Ordinary Time",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "Galatians 4:22-24, 26-27, 31–5:1",
+        "gospel": "Luke 11:29-32",
+        "psalm": "Psalm 113:1b-2, 3-4, 5a, 6-7"
+      }
+    }
+  },
+  "OrdinaryTime_Week28_Saturday": {
+    "season": "Ordinary Time",
+    "title": "Saint Ignatius of Antioch, Bishop and Martyr",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "Ephesians 1:15-23",
+        "gospel": "Luke 12:8-12",
+        "psalm": "Psalm 8:2-3ab, 4-5, 6-7"
+      }
+    }
+  },
+  "OrdinaryTime_Week28_Sunday": {
+    "A": {
+      "first": "Isaiah 25:6-10a",
+      "gospel": "Matthew 22:1-14",
+      "psalm": "Psalm 23:1-3a, 3b-4, 5, 6",
+      "second": "Philippians 4:12-14, 19-20"
+    },
+    "B": {
+      "first": "Wis 7:7-11",
+      "gospel": "Mark 10:17-30",
+      "psalm": "Ps 90:12-13, 14-15, 16-17",
+      "second": "Heb 4:12-13"
+    },
+    "C": {
+      "first": "2 Kgs 5:14-17",
+      "gospel": "Luke 17:11-19",
+      "psalm": "Ps 98:1, 2-3a, 3b-4",
+      "second": "2 Tim 2:8-13"
+    },
+    "season": "Ordinary Time",
+    "title": "John de Brebeuf and Isaac Jogues",
+    "type": "sunday"
+  },
+  "OrdinaryTime_Week28_Thursday": {
+    "season": "Ordinary Time",
+    "title": "Hedwig",
+    "type": "weekday",
+    "weekdayCycle": {
+      "I": {
+        "first": "Romans 4:1-8",
+        "gospel": "Luke 12:1-7",
+        "psalm": "Psalm 32:1b-2, 5, 11"
+      },
+      "II": {
+        "first": "Ephesians 1:1-10",
+        "gospel": "Luke 11:47-54",
+        "psalm": "Psalm 98:1, 2-3ab, 3cd-4, 5-6"
+      }
+    }
+  },
+  "OrdinaryTime_Week28_Tuesday": {
+    "season": "Ordinary Time",
+    "title": "Callistus I",
+    "type": "weekday",
+    "weekdayCycle": {
+      "I": {
+        "first": "Romans 1:16-25",
+        "gospel": "Luke 11:37-41",
+        "psalm": "Psalm 19:2-3, 4-5"
+      },
+      "II": {
+        "first": "Galatians 5:1-6",
+        "gospel": "Luke 11:37-41",
+        "psalm": "Psalm 119:41, 43, 44, 45, 47, 48"
+      }
+    }
+  },
+  "OrdinaryTime_Week28_Wednesday": {
+    "season": "Ordinary Time",
+    "title": "Teresa of Avila",
+    "type": "weekday",
+    "weekdayCycle": {
+      "I": {
+        "first": "Romans 3:21-30",
+        "gospel": "Luke 11:47-54",
+        "psalm": "Psalm 130:1b-2, 3-4, 5-6ab"
+      },
+      "II": {
+        "first": "Galatians 5:18-25",
+        "gospel": "Luke 11:42-46",
+        "psalm": "Psalm 1:1-2, 3, 4, 6"
+      }
+    }
+  },
+  "OrdinaryTime_Week29_Friday": {
+    "season": "Ordinary Time",
+    "title": "Anthony Mary Claret",
+    "type": "weekday",
+    "weekdayCycle": {
+      "I": {
+        "first": "Romans 7:18-25a",
+        "gospel": "Luke 12:54-59",
+        "psalm": "Psalm 119:66, 68, 76, 77, 93, 94"
+      },
+      "II": {
+        "first": "Ephesians 4:1-6",
+        "gospel": "Luke 12:54-59",
+        "psalm": "Psalm 24:1-2, 3-4ab, 5-6"
+      }
+    }
+  },
+  "OrdinaryTime_Week29_Monday": {
+    "season": "Ordinary Time",
+    "title": "Paul of the Cross",
+    "type": "weekday",
+    "weekdayCycle": {
+      "I": {
+        "first": "Romans 5:12, 15b, 17-19, 20b-21",
+        "gospel": "Luke 12:35-38",
+        "psalm": "Psalm 40:7-8a, 8b-9, 10, 17"
+      },
+      "II": {
+        "first": "Ephesians 2:1-10",
+        "gospel": "Luke 12:13-21",
+        "psalm": "Psalm 100:1b-2, 3, 4ab, 4c-5"
+      }
+    }
+  },
+  "OrdinaryTime_Week29_Saturday": {
+    "season": "Ordinary Time",
+    "title": "Saint Anthony Mary Claret, Bishop",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "Ephesians 4:7-16",
+        "gospel": "Luke 13:1-9",
+        "psalm": "Psalm 122:1-2, 3-4ab, 4cd-5"
+      }
+    }
+  },
+  "OrdinaryTime_Week29_Sunday": {
+    "A": {
+      "first": "Isaiah 45:1, 4-6",
+      "gospel": "Matthew 22:15-21",
+      "psalm": "Psalm 96:1, 3, 4-5, 7-8, 9-10",
+      "second": "1 Thessalonians 1:1-5b"
+    },
+    "B": {
+      "first": "Isa 53:10-11",
+      "gospel": "Mark 10:35-45",
+      "psalm": "Ps 33:4-5, 18-19, 20+22",
+      "second": "Heb 4:14-16"
+    },
+    "C": {
+      "first": "Exod 17:8-13",
+      "gospel": "Luke 18:1-8",
+      "psalm": "Ps 121:1-2, 3-4, 5-6, 7-8",
+      "second": "2 Tim 3:14—4:2"
+    },
+    "season": "Ordinary Time",
+    "title": "29th Sunday of Ordinary Time",
+    "type": "sunday"
+  },
+  "OrdinaryTime_Week29_Thursday": {
+    "season": "Ordinary Time",
+    "title": "John of Capistrano",
+    "type": "weekday",
+    "weekdayCycle": {
+      "I": {
+        "first": "Romans 6:19-23",
+        "gospel": "Luke 12:49-53",
+        "psalm": "Psalm 1:1-2, 3, 4 and 6"
+      },
+      "II": {
+        "first": "Ephesians 3:14-21",
+        "gospel": "Luke 12:49-53",
+        "psalm": "Psalm 33:1-2, 4-5, 11-12, 18-19"
+      }
+    }
+  },
+  "OrdinaryTime_Week29_Tuesday": {
+    "season": "Ordinary Time",
+    "title": "Tuesday of the 29th week of Ordinary Time",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "Ephesians 2:12-22",
+        "gospel": "Luke 12:35-38",
+        "psalm": "Psalm 85:9ab-10, 11-12, 13-14"
+      }
+    }
+  },
+  "OrdinaryTime_Week29_Wednesday": {
+    "season": "Ordinary Time",
+    "title": "John Paul II",
+    "type": "weekday",
+    "weekdayCycle": {
+      "I": {
+        "first": "Romans 6:12-18",
+        "gospel": "Luke 12:39-48",
+        "psalm": "Psalm 124:1b-3, 4-6, 7-8"
+      },
+      "II": {
+        "first": "Ephesians 3:2-12",
+        "gospel": "Luke 12:39-48",
+        "psalm": "Isaiah 12:2-3, 4bcd, 5-6"
+      }
+    }
+  },
+  "OrdinaryTime_Week3_Friday": {
+    "season": "Ordinary Time",
+    "title": "Friday of the 3rd week of Ordinary Time",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "2 Samuel 11:1-4a, 5-10a, 13-17",
+        "gospel": "Mark 4:26-34",
+        "psalm": "Psalm 51:3-4, 5-6a, 6bcd-7, 10-11"
+      }
+    }
+  },
+  "OrdinaryTime_Week3_Monday": {
+    "season": "Ordinary Time",
+    "title": "Saints Timothy and Titus, Bishops",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "2 Timothy 1:1-8",
+        "gospel": "Mark 3:22-30",
+        "psalm": "Psalm 96:1-2a, 2b-3, 7-8a, 10"
+      }
+    }
+  },
+  "OrdinaryTime_Week3_Saturday": {
+    "season": "Ordinary Time",
+    "title": "Saint John Bosco, Priest",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "2 Samuel 12:1-7a, 10-17",
+        "gospel": "Mark 4:35-41",
+        "psalm": "Psalm 51:12-13, 14-15, 16-17"
+      }
+    }
+  },
+  "OrdinaryTime_Week3_Sunday": {
+    "A": {
+      "first": "Isaiah 8:23—9:3",
+      "gospel": "Matthew 4:12-23",
+      "psalm": "Psalm 27:1, 4, 13-14",
+      "second": "1 Corinthians 1:10-13, 17"
+    },
+    "season": "Ordinary Time",
+    "title": "3rd Sunday of Ordinary Time",
+    "type": "sunday"
+  },
+  "OrdinaryTime_Week3_Thursday": {
+    "season": "Ordinary Time",
+    "title": "Thursday of the 3rd week of Ordinary Time",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "2 Samuel 7:18-19, 24-29",
+        "gospel": "Mark 4:21-25",
+        "psalm": "Psalm 132:1-2, 3-5, 11, 12, 13-14"
+      }
+    }
+  },
+  "OrdinaryTime_Week3_Tuesday": {
+    "season": "Ordinary Time",
+    "title": "Saint Angela Merici, Virgin",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "2 Samuel 6:12b-15, 17-19",
+        "gospel": "Mark 3:31-35",
+        "psalm": "Psalm 24:7, 8, 9, 10"
+      }
+    }
+  },
+  "OrdinaryTime_Week3_Wednesday": {
+    "season": "Ordinary Time",
+    "title": "Saint Thomas Aquinas, Priest and Doctor",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "2 Samuel 7:4-17",
+        "gospel": "Mark 4:1-20",
+        "psalm": "Psalm 89:4-5, 27-28, 29-30"
+      }
+    }
+  },
+  "OrdinaryTime_Week30_Friday": {
+    "season": "Ordinary Time",
+    "title": "Friday of the 30th week of Ordinary Time",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "Philippians 1:1-11",
+        "gospel": "Luke 14:1-6",
+        "psalm": "Psalm 111:1-2, 3-4, 5-6"
+      }
+    }
+  },
+  "OrdinaryTime_Week30_Monday": {
+    "season": "Ordinary Time",
+    "title": "Monday of the 30th week of Ordinary Time",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "Ephesians 4:32–5:8",
+        "gospel": "Luke 13:10-17",
+        "psalm": "Psalm 1:1-2, 3, 4, 6"
+      }
+    }
+  },
+  "OrdinaryTime_Week30_Saturday": {
+    "season": "Ordinary Time",
+    "title": "Saturday of the 30th week of Ordinary Time",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "Philippians 1:18b-26",
+        "gospel": "Luke 14:1, 7-11",
+        "psalm": "Psalm 42:2, 3, 5cdef"
+      }
+    }
+  },
+  "OrdinaryTime_Week30_Sunday": {
+    "A": {
+      "first": "Revelation 7:2-4, 9-14",
+      "gospel": "Matthew 5:1-12a",
+      "psalm": "Psalm 24:1bc-2, 3-4ab, 5-6",
+      "second": "1 John 3:1-3"
+    },
+    "B": {
+      "first": "Jer 31:7-9",
+      "gospel": "Mark 10:46-52",
+      "psalm": "Ps 126:1-2a, 2b-3, 4-5, 6",
+      "second": "Heb 5:1-6"
+    },
+    "C": {
+      "first": "Sir 35:12-14, 16-18",
+      "gospel": "Luke 18:9-14",
+      "psalm": "Ps 34:2-3, 17-18, 19+23",
+      "second": "2 Tim 4:6-8, 16-18"
+    },
+    "season": "Ordinary Time",
+    "title": "All Souls",
+    "type": "sunday"
+  },
+  "OrdinaryTime_Week30_Thursday": {
+    "season": "Ordinary Time",
+    "title": "Thursday of the 30th week of Ordinary Time",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "Ephesians 6:10-20",
+        "gospel": "Luke 13:31-35",
+        "psalm": "Psalm 144:1b, 2, 9-10"
+      }
+    }
+  },
+  "OrdinaryTime_Week30_Tuesday": {
+    "season": "Ordinary Time",
+    "title": "Tuesday of the 30th week of Ordinary Time",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "Ephesians 5:21-33",
+        "gospel": "Luke 13:18-21",
+        "psalm": "Psalm 128:1-2, 3, 4-5"
+      }
+    }
+  },
+  "OrdinaryTime_Week31_Friday": {
+    "season": "Ordinary Time",
+    "title": "Friday of the 31st week of Ordinary Time",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "Philippians 3:17—4:1",
+        "gospel": "Luke 16:1-8",
+        "psalm": "Psalm 122:1-2, 3-4ab, 4cd-5"
+      }
+    }
+  },
+  "OrdinaryTime_Week31_Monday": {
+    "season": "Ordinary Time",
+    "title": "Martin de Porres",
+    "type": "weekday",
+    "weekdayCycle": {
+      "I": {
+        "first": "Romans 11:29-36",
+        "gospel": "Luke 14:12-14",
+        "psalm": "Psalm 69:30-31, 33-34, 36"
+      }
+    }
+  },
+  "OrdinaryTime_Week31_Saturday": {
+    "season": "Ordinary Time",
+    "title": "Saturday of the 31st week of Ordinary Time",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "Philippians 4:10-19",
+        "gospel": "Luke 16:9-15",
+        "psalm": "Psalm 112:1b-2, 5-6, 8a, 9"
+      }
+    }
+  },
+  "OrdinaryTime_Week31_Sunday": {
+    "B": {
+      "first": "Deut 6:2-6",
+      "gospel": "Mark 12:28b-34",
+      "psalm": "Ps 18:2-3a, 3b-4, 47+51",
+      "second": "Heb 7:23-28"
+    },
+    "C": {
+      "first": "Ezekiel 47:1-2, 8-9, 12",
+      "gospel": "John 2:13-22",
+      "psalm": "Psalm 46:2-3, 5-6, 8-9",
+      "second": "1 Corinthians 3:9c-11, 16-17"
+    },
+    "season": "Ordinary Time",
+    "title": "Dedication of the Lateran Basilica",
+    "type": "sunday"
+  },
+  "OrdinaryTime_Week31_Thursday": {
+    "season": "Ordinary Time",
+    "title": "Thursday of the 31st week of Ordinary Time",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "Philippians 3:3-8a",
+        "gospel": "Luke 15:1-10",
+        "psalm": "Psalm 105:2-3, 4-5, 6-7"
+      }
+    }
+  },
+  "OrdinaryTime_Week31_Tuesday": {
+    "season": "Ordinary Time",
+    "title": "Charles Borromeo",
+    "type": "weekday",
+    "weekdayCycle": {
+      "I": {
+        "first": "Romans 12:5-16ab",
+        "gospel": "Luke 14:15-24",
+        "psalm": "Psalm 131:1bcde, 2, 3"
+      },
+      "II": {
+        "first": "Philippians 2:5-11",
+        "gospel": "Luke 14:15-24",
+        "psalm": "Psalm 22:26b-27, 28-30ab, 30e, 31-32"
+      }
+    }
+  },
+  "OrdinaryTime_Week31_Wednesday": {
+    "season": "Ordinary Time",
+    "title": "Saint Charles Borromeo, Bishop",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "Phiippians 2:12-18",
+        "gospel": "Luke 14:25-33",
+        "psalm": "Psalm 27:1, 4, 13-14"
+      }
+    }
+  },
+  "OrdinaryTime_Week32_Friday": {
+    "season": "Ordinary Time",
+    "title": "Friday of the 32nd week of Ordinary Time",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "2 John 4-9",
+        "gospel": "Luke 17:26-37",
+        "psalm": "Psalm 119:1, 2, 10, 11, 17, 18"
+      }
+    }
+  },
+  "OrdinaryTime_Week32_Monday": {
+    "season": "Ordinary Time",
+    "title": "Leo the Great",
+    "type": "weekday",
+    "weekdayCycle": {
+      "I": {
+        "first": "Wisdom 1:1-7",
+        "gospel": "Luke 17:1-6",
+        "psalm": "Psalm 139:1b-3, 4-6, 7-8, 9-10"
+      }
+    }
+  },
+  "OrdinaryTime_Week32_Saturday": {
+    "season": "Ordinary Time",
+    "title": "Albert the Great",
+    "type": "weekday",
+    "weekdayCycle": {
+      "I": {
+        "first": "Wisdom 18:14-16; 19:6-9",
+        "gospel": "Luke 18:1-8",
+        "psalm": "Psalm 105:2-3, 36-37, 42-43"
+      },
+      "II": {
+        "first": "3 John 5-8",
+        "gospel": "Luke 18:1-8",
+        "psalm": "Psalm 112:1-2, 3-4, 5-6"
+      }
+    }
+  },
+  "OrdinaryTime_Week32_Sunday": {
+    "A": {
+      "first": "Wisdom 6:12-16",
+      "gospel": "Matthew 25:1-13",
+      "psalm": "Psalm 63:2, 3-4, 5-6, 7-8",
+      "second": "1 Thessalonians 4:13-18"
+    },
+    "B": {
+      "first": "1 Kgs 17:10-16",
+      "gospel": "Mark 12:38-44",
+      "psalm": "Ps 146:6c-7, 8-9a, 9b-10",
+      "second": "Heb 9:24-28"
+    },
+    "C": {
+      "first": "Malachi 4:1-2a",
+      "gospel": "Luke 21:5-19",
+      "psalm": "Psalm 98:5-6, 7-8, 9",
+      "second": "2 Thessalonians 3:7-12"
+    },
+    "season": "Ordinary Time",
+    "title": "Margaret of Scotland",
+    "type": "sunday"
+  },
+  "OrdinaryTime_Week32_Thursday": {
+    "season": "Ordinary Time",
+    "title": "Frances Xavier Cabrini",
+    "type": "weekday",
+    "weekdayCycle": {
+      "I": {
+        "first": "Wisdom 7:22b—8:1",
+        "gospel": "Luke 17:20-25",
+        "psalm": "Psalm 119:89, 90, 91, 130, 135, 175"
+      },
+      "II": {
+        "first": "Philemon 7-20",
+        "gospel": "Luke 17:20-25",
+        "psalm": "Psalm 146:7, 8-9a, 9bc-10"
+      }
+    }
+  },
+  "OrdinaryTime_Week32_Tuesday": {
+    "season": "Ordinary Time",
+    "title": "Martin of Tours",
+    "type": "weekday",
+    "weekdayCycle": {
+      "I": {
+        "first": "Wisdom 2:23—3:9",
+        "gospel": "Luke 17:7-10",
+        "psalm": "Psalm 34:2-3, 16-17, 18-19"
+      },
+      "II": {
+        "first": "Titus 2:1-8, 11-14",
+        "gospel": "Luke 17:7-10",
+        "psalm": "Psalm 37:3-4, 18 and 23, 27 and 29"
+      }
+    }
+  },
+  "OrdinaryTime_Week32_Wednesday": {
+    "season": "Ordinary Time",
+    "title": "Josaphat",
+    "type": "weekday",
+    "weekdayCycle": {
+      "I": {
+        "first": "Wisdom 6:1-11",
+        "gospel": "Luke 17:11-19",
+        "psalm": "Psalm 82:3-4, 6-7"
+      },
+      "II": {
+        "first": "Titus 3:1-7",
+        "gospel": "Luke 17:11-19",
+        "psalm": "Psalm 23:1b-3a, 3bc-4, 5, 6"
+      }
+    }
+  },
+  "OrdinaryTime_Week33_Friday": {
+    "season": "Ordinary Time",
+    "title": "Presentation of Mary",
+    "type": "weekday",
+    "weekdayCycle": {
+      "I": {
+        "first": "1 Maccabees 4:36-37, 52-59",
+        "gospel": "Luke 19:45-48",
+        "psalm": "1 Chronicles 29:10bcd, 11abc, 11d-12a, 12bcd"
+      },
+      "II": {
+        "first": "Revelation 10:8-11",
+        "gospel": "Luke 19:45-48",
+        "psalm": "Psalm 119:14, 24, 72, 103, 111, 131"
+      }
+    }
+  },
+  "OrdinaryTime_Week33_Monday": {
+    "season": "Ordinary Time",
+    "title": "Elizabeth of Hungary",
+    "type": "weekday",
+    "weekdayCycle": {
+      "I": {
+        "first": "1 Maccabees 1:10-15, 41-43, 54-57, 62-63",
+        "gospel": "Luke 18:35-43",
+        "psalm": "Psalm 119:53, 61, 134, 150, 155, 158"
+      },
+      "II": {
+        "first": "Revelation 1:1-4; 2:1-5",
+        "gospel": "Luke 18:35-43",
+        "psalm": "Psalm 1:1-2, 3, 4, 6"
+      }
+    }
+  },
+  "OrdinaryTime_Week33_Saturday": {
+    "season": "Ordinary Time",
+    "title": "Cecilia",
+    "type": "weekday",
+    "weekdayCycle": {
+      "I": {
+        "first": "1 Maccabees 6:1-13",
+        "gospel": "Luke 20:27-40",
+        "psalm": "Psalm 9:2-3, 4, 6, 16, 19"
+      },
+      "II": {
+        "first": null,
+        "gospel": "Luke 20:27-40",
+        "psalm": "Psalm 144:1, 2, 9-10"
+      }
+    }
+  },
+  "OrdinaryTime_Week33_Sunday": {
+    "A": {
+      "first": "Ezekiel 34:11-12, 15-17",
+      "gospel": "Matthew 25:31-46",
+      "psalm": "Psalm 23:1-2, 2-3, 5-6",
+      "second": "1 Corinthians 15:20-26, 28"
+    },
+    "B": {
+      "first": "Dan 12:1-3",
+      "gospel": "Mark 13:24-32",
+      "psalm": "Ps 16:5+8, 9-10, 11",
+      "second": "Heb 10:11-14, 18"
+    },
+    "C": {
+      "first": "Mal 3:19-20a",
+      "gospel": "Luke 21:5-19",
+      "psalm": "Ps 98:5-6, 7-8, 9",
+      "second": "2 Thess 3:7-12"
+    },
+    "season": "Ordinary Time",
+    "title": "Clement I",
+    "type": "sunday"
+  },
+  "OrdinaryTime_Week33_Thursday": {
+    "season": "Ordinary Time",
+    "title": "Thursday of the 33rd week of Ordinary Time",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "Revelation 5:1-10",
+        "gospel": "Luke 19:41-44",
+        "psalm": "Psalm 149:1b-2, 3-4, 5-6b, 9b"
+      }
+    }
+  },
+  "OrdinaryTime_Week33_Tuesday": {
+    "season": "Ordinary Time",
+    "title": "Dedication of Basilicas of Peter and Paul",
+    "type": "weekday",
+    "weekdayCycle": {
+      "I": {
+        "first": "2 Maccabees 6:18-31",
+        "gospel": "Luke 19:1-10",
+        "psalm": "Psalm 3:2-3, 4-5, 6-7"
+      },
+      "II": {
+        "first": "Revelation 3:1-6, 14-22",
+        "gospel": "Luke 19:1-10",
+        "psalm": "Psalm 15:2-3a, 3bc-4ab, 5"
+      }
+    }
+  },
+  "OrdinaryTime_Week33_Wednesday": {
+    "season": "Ordinary Time",
+    "title": "Dedication of the basilicas of Saints Peter and Paul, Apostles",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "Revelation 4:1-11",
+        "gospel": "Luke 19:11-28",
+        "psalm": "Psalm 150:1b-2, 3-4, 5-6"
+      }
+    }
+  },
+  "OrdinaryTime_Week34_Friday": {
+    "season": "Ordinary Time",
+    "title": "Friday of the 34th week of Ordinary Time",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "Revelation 20:1-4, 11—21:2",
+        "gospel": "Luke 21:29-33",
+        "psalm": "Psalm 84:3, 4, 5-6a, 8a"
+      }
+    }
+  },
+  "OrdinaryTime_Week34_Monday": {
+    "season": "Ordinary Time",
+    "title": "Andrew Dung-Lac and Companions",
+    "type": "weekday",
+    "weekdayCycle": {
+      "I": {
+        "first": "Daniel 1:1-6, 8-20",
+        "gospel": "Luke 21:1-4",
+        "psalm": "Daniel 3:52, 53, 54, 55, 56"
+      },
+      "II": {
+        "first": "Revelation 14:1-3, 4b-5",
+        "gospel": "Luke 21:1-4",
+        "psalm": "Psalm 24:1bc-2, 3-4ab, 5-6"
+      }
+    }
+  },
+  "OrdinaryTime_Week34_Saturday": {
+    "season": "Ordinary Time",
+    "title": "Saturday of the 34th week of Ordinary Time",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "Revelation 22:1-7",
+        "gospel": "Luke 21:34-36",
+        "psalm": "Psalm 95:1-2, 3-5, 6-7ab"
+      }
+    }
+  },
+  "OrdinaryTime_Week34_Thursday": {
+    "season": "Ordinary Time",
+    "title": "Thursday of the 34th week of Ordinary Time",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "Sirach 50:22-24",
+        "gospel": "Luke 17:11-19",
+        "psalm": "Psalm 145:2-3, 4-5, 6-7, 8-9, 10-11",
+        "second": "1 Corinthians 1:3-9"
+      }
+    }
+  },
+  "OrdinaryTime_Week34_Tuesday": {
+    "season": "Ordinary Time",
+    "title": "Catherine of Alexandria",
+    "type": "weekday",
+    "weekdayCycle": {
+      "I": {
+        "first": "Daniel 2:31-45",
+        "gospel": "Luke 21:5-11",
+        "psalm": "Daniel 3:57, 58, 59, 60, 61"
+      },
+      "II": {
+        "first": "Revelation 14:14-19",
+        "gospel": "Luke 21:5-11",
+        "psalm": "Psalm 96:10, 11-12, 13"
+      }
+    }
+  },
+  "OrdinaryTime_Week34_Wednesday": {
+    "season": "Ordinary Time",
+    "title": "Saint Catherine of Alexandria, Virgin and Martyr",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "Revelation 15:1-4",
+        "gospel": "Luke 21:12-19",
+        "psalm": "Psalm 98:1, 2-3ab, 7-8, 9"
+      }
+    }
+  },
+  "OrdinaryTime_Week4_Friday": {
+    "season": "Ordinary Time",
+    "title": "Saint Paul Miki and Companions, Martyrs",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "Sirach 47:2-11",
+        "gospel": "Mark 6:14-29",
+        "psalm": "Psalm 18:31, 47 and 50, 51"
+      }
+    }
+  },
+  "OrdinaryTime_Week4_Saturday": {
+    "season": "Ordinary Time",
+    "title": "Saturday of the 4th week of Ordinary Time",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "1 Kings 3:4-13",
+        "gospel": "Mark 6:30-34",
+        "psalm": "Psalm 119:9, 10, 11, 12, 13, 14"
+      }
+    }
+  },
+  "OrdinaryTime_Week4_Sunday": {
+    "A": {
+      "first": "Zephaniah 2:3; 3:12-13",
+      "gospel": "Matthew 5:1-12a",
+      "psalm": "Psalm 146:6-7, 8-9, 9-10",
+      "second": "1 Corinthians 1:26-31"
+    },
+    "B": {
+      "first": "Deut 18:15-20",
+      "gospel": "Mark 1:21-28",
+      "psalm": "Ps 95:1-2, 6-7b, 7c-9",
+      "second": "1 Cor 7:32-35"
+    },
+    "season": "Ordinary Time",
+    "title": "4th Sunday of Ordinary Time",
+    "type": "sunday"
+  },
+  "OrdinaryTime_Week4_Thursday": {
+    "season": "Ordinary Time",
+    "title": "Saint Agatha, Virgin and Martyr",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "1 Kings 2:1-4, 10-12",
+        "gospel": "Mark 6:7-13",
+        "psalm": "1 Chronicles 29:10, 11ab, 11d-12a, 12bcd"
+      }
+    }
+  },
+  "OrdinaryTime_Week4_Tuesday": {
+    "season": "Ordinary Time",
+    "title": "Saint Blase, Bishop Martyr and Saint Ansgar, Bishop",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "2 Samuel 18:9-10, 14b, 24-25a, 30–19:3",
+        "gospel": "Mark 5:21-43",
+        "psalm": "Psalm 86:1-2, 3-4, 5-6"
+      }
+    }
+  },
+  "OrdinaryTime_Week4_Wednesday": {
+    "season": "Ordinary Time",
+    "title": "Wednesday of the 4th week of Ordinary Time",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "2 Samuel 24:2, 9-17",
+        "gospel": "Mark 6:1-6",
+        "psalm": "Psalm 32:1-2, 5, 6, 7"
+      }
+    }
+  },
+  "OrdinaryTime_Week5_Friday": {
+    "season": "Ordinary Time",
+    "title": "Friday of the 5th week of Ordinary Time",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "1 Kings 11:29-32; 12:19",
+        "gospel": "Mark 7:31-37",
+        "psalm": "Psalm 81:10-11ab, 12-13, 14-15"
+      }
+    }
+  },
+  "OrdinaryTime_Week5_Monday": {
+    "season": "Ordinary Time",
+    "title": "Monday of the 5th week of Ordinary Time",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "1 Kings 8:1-7, 9-13",
+        "gospel": "Mark 6:53-56",
+        "psalm": "Psalm 132:6-7, 8-10"
+      }
+    }
+  },
+  "OrdinaryTime_Week5_Saturday": {
+    "season": "Ordinary Time",
+    "title": "Saints Cyril, Monk and Methodius, Bishop",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "1 Kings 12:26-32; 13:33-34",
+        "gospel": "Mark 8:1-10",
+        "psalm": "Psalm 106:6-7ab, 19-20, 21-22"
+      }
+    }
+  },
+  "OrdinaryTime_Week5_Sunday": {
+    "A": {
+      "first": "Isaiah 58:7-10",
+      "gospel": "Matthew 5:13-16",
+      "psalm": "Psalm 112:4-5, 6-7, 8-9",
+      "second": "1 Corinthians 2:1-5"
+    },
+    "B": {
+      "first": "Job 7:1-4, 6-7",
+      "gospel": "Mark 1:29-39",
+      "psalm": "Ps 147:1-2, 3-4, 5-6",
+      "second": "1 Cor 9:16-19, 22-23"
+    },
+    "C": {
+      "first": "Isa 6:1-2a, 3-8",
+      "gospel": "Luke 5:1-11",
+      "psalm": "Ps 138:1-2a, 2b-3, 4-5, 7-8",
+      "second": "1 Cor 15:1-11"
+    },
+    "season": "Ordinary Time",
+    "title": "5th Sunday of Ordinary Time",
+    "type": "sunday"
+  },
+  "OrdinaryTime_Week5_Thursday": {
+    "season": "Ordinary Time",
+    "title": "Thursday of the 5th week of Ordinary Time",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "1 Kings 11:4-13",
+        "gospel": "Mark 7:24-30",
+        "psalm": "Psalm 106:3-4, 35-36, 37 and 40"
+      }
+    }
+  },
+  "OrdinaryTime_Week5_Tuesday": {
+    "season": "Ordinary Time",
+    "title": "Saint Scholastica, Virgin",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "1 Kings 8:22-23, 27-30",
+        "gospel": "Mark 7:1-13",
+        "psalm": "Psalm 84:3, 4, 5 and 10, 11"
+      }
+    }
+  },
+  "OrdinaryTime_Week5_Wednesday": {
+    "season": "Ordinary Time",
+    "title": "Our Lady of Lourdes",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "1 Kings 10:1-10",
+        "gospel": "Mark 7:14-23",
+        "psalm": "Psalm 37:5-6, 30-31, 39-40"
+      }
+    }
+  },
+  "OrdinaryTime_Week6_Monday": {
+    "season": "Ordinary Time",
+    "title": "Monday of the 6th week of Ordinary Time",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "James 1:1-11",
+        "gospel": "Mark 8:11-13",
+        "psalm": "Psalm 119:67, 68, 71, 72, 75, 76"
+      }
+    }
+  },
+  "OrdinaryTime_Week6_Sunday": {
+    "A": {
+      "first": "Sirach 15:15-20",
+      "gospel": "Matthew 5:17-37",
+      "psalm": "Psalm 119:1-2, 4-5, 17-18, 33-34",
+      "second": "1 Corinthians 2:6-10"
+    },
+    "B": {
+      "first": "Lev 13:1-2, 44-46",
+      "gospel": "Mark 1:40-45",
+      "psalm": "Ps 32:1-2, 5, 11",
+      "second": "1 Cor 10:31—11:1"
+    },
+    "C": {
+      "first": "Jer 17:5-8",
+      "gospel": "Luke 6:17, 20-26",
+      "psalm": "Ps 1:1-2, 3, 4+6",
+      "second": "1 Cor 15:12, 16-20"
+    },
+    "season": "Ordinary Time",
+    "title": "6th Sunday of Ordinary Time",
+    "type": "sunday"
+  },
+  "OrdinaryTime_Week6_Tuesday": {
+    "season": "Ordinary Time",
+    "title": "Seven Holy Founders of the Servite Order",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "James 1:12-18",
+        "gospel": "Mark 8:14-21",
+        "psalm": "Psalm 94:12-13a, 14-15, 18-19"
+      }
+    }
+  },
+  "OrdinaryTime_Week7_Sunday": {
+    "C": {
+      "first": "1 Sam 26:2, 7-9, 12-13, 22-23",
+      "gospel": "Luke 6:27-38",
+      "psalm": "Ps 103:1-2, 3-4, 8+10, 12-13",
+      "second": "1 Cor 15:45-49"
+    },
+    "season": null,
+    "title": "OrdinaryTime_Week7_Sunday",
+    "type": "sunday"
+  },
+  "OrdinaryTime_Week8_Friday": {
+    "season": "Ordinary Time",
+    "title": "Friday of the 8th week of Ordinary Time",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "1 Peter 4:7-13",
+        "gospel": "Mark 11:11-26",
+        "psalm": "Psalm 96:10, 11-12, 13"
+      }
+    }
+  },
+  "OrdinaryTime_Week8_Monday": {
+    "season": "Ordinary Time",
+    "title": "Mary, Mother of The Church",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "Genesis 3:9-15, 20",
+        "gospel": "John 19:25-34",
+        "psalm": "Psalm 87:1-2, 3 and 5, 6-7"
+      }
+    }
+  },
+  "OrdinaryTime_Week8_Saturday": {
+    "season": "Ordinary Time",
+    "title": "Saturday of the 8th week of Ordinary Time",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "Jude 17, 20b-25",
+        "gospel": "Mark 11:27-33",
+        "psalm": "Psalm 63:2, 3-4, 5-6"
+      }
+    }
+  },
+  "OrdinaryTime_Week8_Sunday": {
+    "A": {
+      "first": "Exodus 34:4b-6, 8-9",
+      "gospel": "John 3:16-18",
+      "psalm": "Daniel 3:52, 53, 54, 55, 56",
+      "second": "2 Corinthians 13:11-13"
+    },
+    "C": {
+      "first": "Sir 27:5-8",
+      "gospel": "Luke 6:39-45",
+      "psalm": "Ps 92:2-3, 13-14, 15-16",
+      "second": "1 Cor 15:54-58"
+    },
+    "season": "Ordinary Time",
+    "title": "Trinity Sunday",
+    "type": "sunday"
+  },
+  "OrdinaryTime_Week8_Thursday": {
+    "season": "Ordinary Time",
+    "title": "Thursday of the 8th week of Ordinary Time",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "1 Peter 2:2-5, 9-12",
+        "gospel": "Mark 10:46-52",
+        "psalm": "Psalm 100:2, 3, 4, 5"
+      }
+    }
+  },
+  "OrdinaryTime_Week8_Tuesday": {
+    "season": "Ordinary Time",
+    "title": "Saint Philip Neri, Priest",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "1 Peter 1:10-16",
+        "gospel": "Mark 10:28-31",
+        "psalm": "Psalm 98:1, 2-3ab, 3cd-4"
+      }
+    }
+  },
+  "OrdinaryTime_Week8_Wednesday": {
+    "season": "Ordinary Time",
+    "title": "Saint Augustine of Canterbury, Bishop",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "1 Peter 1:18-25",
+        "gospel": "Mark 10:32-45",
+        "psalm": "Psalm 147:12-13, 14-15, 19-20"
+      }
+    }
+  },
+  "OrdinaryTime_Week9_Friday": {
+    "season": "Ordinary Time",
+    "title": "Saint Boniface, Bishop and Martyr",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "2 Timothy 3:10-17",
+        "gospel": "Mark 12:35-37",
+        "psalm": "Psalm 119:157, 160, 161, 165, 166, 168"
+      }
+    }
+  },
+  "OrdinaryTime_Week9_Monday": {
+    "season": "Ordinary Time",
+    "title": "Saint Justin Martyr",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "2 Peter 1:2-7",
+        "gospel": "Mark 12:1-12",
+        "psalm": "Psalm 91:1-2, 14-15b, 15c-16"
+      }
+    }
+  },
+  "OrdinaryTime_Week9_Saturday": {
+    "season": "Ordinary Time",
+    "title": "Saint Norbert, Bishop",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "2 Timothy 4:1-8",
+        "gospel": "Mark 12:38-44",
+        "psalm": "Psalm 71:8-9, 14-15AB, 16-17, 22"
+      }
+    }
+  },
+  "OrdinaryTime_Week9_Sunday": {
+    "A": {
+      "first": "Deuteronomy 8:2-3, 14b-16a",
+      "gospel": "John 6:51-58",
+      "psalm": "Psalm 147:12-13, 14-15, 19-20",
+      "second": "1 Corinthians 10:16-17"
+    },
+    "season": "Ordinary Time",
+    "title": "Corpus Christi",
+    "type": "sunday"
+  },
+  "OrdinaryTime_Week9_Thursday": {
+    "season": "Ordinary Time",
+    "title": "Thursday of the 9th week of Ordinary Time",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "2 Timothy 2:8-15",
+        "gospel": "Mark 12:28-34",
+        "psalm": "Psalm 25:4-5ab, 8-9, 10 and 14"
+      }
+    }
+  },
+  "OrdinaryTime_Week9_Tuesday": {
+    "season": "Ordinary Time",
+    "title": "Saints Marcellinus and Peter, Martyrs",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "2 Peter 3:12-15a, 17-18",
+        "gospel": "Mark 12:13-17",
+        "psalm": null
+      }
+    }
+  },
+  "OrdinaryTime_Week9_Wednesday": {
+    "season": "Ordinary Time",
+    "title": "Saints Charles Lwanga and Companions, Martyrs",
+    "type": "weekday",
+    "weekdayCycle": {
+      "II": {
+        "first": "2 Timothy 1:1-3, 6-12",
+        "gospel": "Mark 12:18-27",
+        "psalm": "Psalm 123:1b-2ab, 2cdef"
+      }
+    }
+  },
+  "OurLadyOfGuadalupe": {
+    "proper": {
+      "first": "Zechariah 2:14-17",
+      "gospel": "Luke 1:26-38",
+      "psalm": "Judith 13:18bcde, 19"
+    },
+    "season": "Advent",
+    "title": "Our Lady of Guadalupe",
+    "type": "proper"
+  },
+  "PresentationOfTheLord": {
+    "proper": {
+      "first": "Malachi 3:1-4",
+      "gospel": "Luke 2:22-40",
+      "psalm": "Psalm 24:7, 8, 9, 10",
+      "second": "Hebrews 2:14-18"
+    },
+    "season": "Ordinary Time",
+    "title": "Presentation of the Lord",
+    "type": "proper"
+  },
+  "SacredHeart": {
+    "B": {
+      "first": "Hos 11:1, 3-4, 8c-9",
+      "gospel": "John 19:31-37",
+      "psalm": "Isa 12:2-3, 4bcd, 5-6",
+      "second": "Eph 3:8-12, 14-19"
+    },
+    "C": {
+      "first": "Ezek 34:11-16",
+      "gospel": "Luke 15:3-7",
+      "psalm": "Ps 23:1-3a, 3b-4, 5, 6",
+      "second": "Rom 5:5b-11"
+    },
+    "season": null,
+    "title": "SacredHeart",
+    "type": "sunday"
+  },
+  "SaintAndrewTheApostle": {
+    "proper": {
+      "first": "Romans 10:9-18",
+      "gospel": "Matthew 4:18-22",
+      "psalm": "Psalm 19:8, 9, 10, 11"
+    },
+    "season": "Advent",
+    "title": "Saint Andrew the Apostle",
+    "type": "proper"
+  },
+  "SaintBartholomewTheApostle": {
+    "proper": {
+      "first": "Revelation 21:9b-14",
+      "gospel": "John 1:45-51",
+      "psalm": "Psalm 145:10-11, 12-13, 17-18"
+    },
+    "season": "Ordinary Time",
+    "title": "Saint Bartholomew the Apostle",
+    "type": "proper"
+  },
+  "SaintBridgetOfSwedenReligiousPatronOfEurope": {
+    "proper": {
+      "first": "Jeremiah 2:1-3, 7-8, 12-13",
+      "gospel": "Matthew 13:10-17",
+      "psalm": "Psalm 36:6-7ab, 8-9, 10-11"
+    },
+    "season": "Ordinary Time",
+    "title": "Saint Bridget of Sweden, Religious, Patron of Europe",
+    "type": "proper"
+  },
+  "SaintJamesApostle": {
+    "proper": {
+      "first": "2 Corinthians 4:7-15",
+      "gospel": "Matthew 20:20-28",
+      "psalm": "Psalm 126:1bc-2ab, 2cd-3, 4-5, 6"
+    },
+    "season": "Ordinary Time",
+    "title": "Saint James, Apostle",
+    "type": "proper"
+  },
+  "SaintLawrenceOfRomeDeaconAndMartyr": {
+    "proper": {
+      "first": "2 Corinthians 9:6-10",
+      "gospel": "John 12:24-26",
+      "psalm": "Psalm 112:1-2, 5-6, 7-8, 9"
+    },
+    "season": "Ordinary Time",
+    "title": "Saint Lawrence of Rome, Deacon and Martyr",
+    "type": "proper"
+  },
+  "SaintMarkTheEvangelist": {
+    "proper": {
+      "first": "1 Peter 5:5b-14",
+      "gospel": "Mark 16:15-20",
+      "psalm": "Psalm 89:2-3, 6-7, 16-17"
+    },
+    "season": "Easter",
+    "title": "Saint Mark the Evangelist",
+    "type": "proper"
+  },
+  "SaintMaryMagdalene": {
+    "proper": {
+      "first": "Song of Songs 3:1-4b",
+      "gospel": "John 20:1-2, 11-18",
+      "psalm": "Psalm 63:2, 3-4, 5-6, 8-9"
+    },
+    "season": "Ordinary Time",
+    "title": "Saint Mary Magdalene",
+    "type": "proper"
+  },
+  "SaintMatthewApostleAndEvangelist": {
+    "proper": {
+      "first": "Ephesians 4:1-7, 11-13",
+      "gospel": "Matthew 9:9-13",
+      "psalm": "Psalm 19:2-3, 4-5"
+    },
+    "season": "Ordinary Time",
+    "title": "Saint Matthew, Apostle and Evangelist",
+    "type": "proper"
+  },
+  "SaintRaymondOfPenyafortPriest": {
+    "proper": {
+      "first": "1 John 4:11-18",
+      "gospel": "Mark 6:45-52",
+      "psalm": "Psalm 72:1-2, 10, 12-13"
+    },
+    "season": "Christmas",
+    "title": "Saint Raymond of Penyafort, Priest",
+    "type": "proper"
+  },
+  "SaintsBasilTheGreatAndGregoryNazianzenBishopsAndDoctors": {
+    "proper": {
+      "first": "1 John 2:22-28",
+      "gospel": "John 1:19-28",
+      "psalm": "Psalm 98:1, 2-3ab, 3cd-4"
+    },
+    "season": "Christmas",
+    "title": "Saints Basil the Great and Gregory Nazianzen, Bishops and Doctors",
+    "type": "proper"
+  },
+  "SaintsMichaelGabrielAndRaphaelArchangels": {
+    "proper": {
+      "first": "Daniel 7:9-10, 13-14",
+      "gospel": "John 1:47-51",
+      "psalm": "Psalm 138:1-2ab, 2cde-3, 4-5"
+    },
+    "season": "Ordinary Time",
+    "title": "Saints Michael, Gabriel and Raphael, Archangels",
+    "type": "proper"
+  },
+  "SaintsPeterAndPaulApostles": {
+    "proper": {
+      "first": "Acts 12:1-11",
+      "gospel": "Matthew 16:13-19",
+      "psalm": "Psalm 34:2-3, 4-5, 6-7, 8-9",
+      "second": "2 Timothy 4:6-8, 17-18"
+    },
+    "season": "Ordinary Time",
+    "title": "Saints Peter and Paul, Apostles",
+    "type": "proper"
+  },
+  "SaintsSimonAndJudeApostles": {
+    "proper": {
+      "first": "Ephesians 2:19-22",
+      "gospel": "Luke 6:12-16",
+      "psalm": "Psalm 19:2-3, 4-5"
+    },
+    "season": "Ordinary Time",
+    "title": "Saints Simon and Jude, Apostles",
+    "type": "proper"
+  },
+  "SaintStephenTheFirstMartyr": {
+    "proper": {
+      "first": "Acts 6:8-10; 7:54-59",
+      "gospel": "Matthew 10:17-22",
+      "psalm": "Psalm 31:3cd-4, 6 and 8ab, 16bc and 17"
+    },
+    "season": "Christmas",
+    "title": "Saint Stephen, The First Martyr",
+    "type": "proper"
+  },
+  "SaintSylvesterIPope": {
+    "proper": {
+      "first": "1 John 2:18-21",
+      "gospel": "John 1:1-18",
+      "psalm": "Psalm 96:1-2, 11-12, 13"
+    },
+    "season": "Christmas",
+    "title": "Saint Sylvester I, Pope",
+    "type": "proper"
+  },
+  "SaintThomasBecketBishopAndMartyr": {
+    "proper": {
+      "first": "1 John 2:3-11",
+      "gospel": "Luke 2:22-35",
+      "psalm": "Psalm 96:1-2a, 2b-3, 5b-6"
+    },
+    "season": "Christmas",
+    "title": "Saint Thomas Becket, Bishop and Martyr",
+    "type": "proper"
+  },
+  "SaintThomasTheApostle": {
+    "proper": {
+      "first": "Ephesians 2:19-22",
+      "gospel": "John 20:24-29",
+      "psalm": "Psalm 117:1bc, 2"
+    },
+    "season": "Ordinary Time",
+    "title": "Saint Thomas the Apostle",
+    "type": "proper"
+  },
+  "SaturdayAfterEpiphany": {
+    "proper": {
+      "first": "1 John 5:14-21",
+      "gospel": "John 3:22-30",
+      "psalm": "Psalm 149:1-2, 3-4, 5-6a and 9b"
+    },
+    "season": "Christmas",
+    "title": "Saturday after Epiphany",
+    "type": "proper"
+  },
+  "SimonAndJude": {
+    "proper": {
+      "first": "Ephesians 2:19-22",
+      "gospel": "Luke 6:12-16",
+      "psalm": "Psalm 19:2-3, 4-5"
+    },
+    "season": "Ordinary Time",
+    "title": "Simon and Jude",
+    "type": "proper"
+  },
+  "Stephen": {
+    "proper": {
+      "first": "Acts 6:8-10; 7:54-59",
+      "gospel": "Matthew 10:17-22",
+      "psalm": "Psalm 31:3cd-4, 6 and 8ab, 16bc and 17"
+    },
+    "season": "Christmas",
+    "title": "Stephen",
+    "type": "proper"
+  },
+  "SundayOfTheWordOfGod": {
+    "B": {
+      "first": "Jon 3:1-5, 10",
+      "gospel": "Mark 1:14-20",
+      "psalm": "Ps 25:4-5, 6-7, 8-9",
+      "second": "1 Cor 7:29-31"
+    },
+    "C": {
+      "first": "Neh 8:2-4a, 5-6, 8-10",
+      "gospel": "Luke 1:1-4; 4:14-21",
+      "psalm": "Ps 19:8, 9, 10, 15",
+      "second": "1 Cor 12:12-30"
+    },
+    "season": null,
+    "title": "SundayOfTheWordOfGod",
+    "type": "sunday"
+  },
+  "SylvesterI": {
+    "proper": {
+      "first": "1 John 2:18-21",
+      "gospel": "John 1:1-18",
+      "psalm": "Psalm 96:1-2, 11-12, 13"
+    },
+    "season": "Christmas",
+    "title": "Sylvester I",
+    "type": "proper"
+  },
+  "TheBaptismOfTheLordB": {
+    "B": {
+      "first": "Isa 55:1-11",
+      "gospel": "Mark 1:7-11",
+      "psalm": "Isa 12:2-3, 4bcd, 5-6",
+      "second": "1 John 5:1-9"
+    },
+    "season": null,
+    "title": "TheBaptismOfTheLordB",
+    "type": "sunday"
+  },
+  "TheBaptismOfTheLordC": {
+    "C": {
+      "first": "Isa 40:1-5, 9-11",
+      "gospel": "Luke 3:15-16, 21-22",
+      "psalm": "Ps 104:1b-2, 3-4, 24-25, 27-28, 29b-30;",
+      "second": "Titus 2:11-14; 3:4-7"
+    },
+    "season": null,
+    "title": "TheBaptismOfTheLordC",
+    "type": "sunday"
+  },
+  "ThomasBecket": {
+    "proper": {
+      "first": "1 John 2:3-11",
+      "gospel": "Luke 2:22-35",
+      "psalm": "Psalm 96:1-2a, 2b-3, 5b-6"
+    },
+    "season": "Christmas",
+    "title": "Thomas Becket",
+    "type": "proper"
+  },
+  "ThursdayAfterEpiphany": {
+    "proper": {
+      "first": "1 John 4:19–5:4",
+      "gospel": "Luke 4:14-22",
+      "psalm": "Psalm 72:1-2, 14 and 15bc, 17"
+    },
+    "season": "Christmas",
+    "title": "Thursday after Epiphany",
+    "type": "proper"
+  },
+  "Transfiguration": {
+    "proper": {
+      "first": "Daniel 7:9-10, 13-14",
+      "gospel": "Matthew 17:1-9",
+      "psalm": "Psalm 97:1-2, 5-6, 9",
+      "second": "2 Peter 1:16-19"
+    },
+    "season": "Ordinary Time",
+    "title": "Transfiguration",
+    "type": "proper"
+  },
+  "TrinitySunday": {
+    "B": {
+      "first": "Deut 4:32-34, 39-40",
+      "gospel": "Matt 28:16-20",
+      "psalm": "Ps 33:4-5, 6+9, 18-19, 20+22",
+      "second": "Rom 8:14-17"
+    },
+    "C": {
+      "first": "Prov 8:22-31",
+      "gospel": "John 16:12-15",
+      "psalm": "Ps 8:4-5, 6-7, 8-9",
+      "second": "Rom 5:1-5"
+    },
+    "season": null,
+    "title": "TrinitySunday",
+    "type": "sunday"
+  },
+  "TuesdayAfterEpiphany": {
+    "proper": {
+      "first": "1 John 4:7-10",
+      "gospel": "Mark 6:34-44",
+      "psalm": "Psalm 72:1-2, 3-4, 7-8"
+    },
+    "season": "Christmas",
+    "title": "Tuesday after Epiphany",
+    "type": "proper"
+  }
+}

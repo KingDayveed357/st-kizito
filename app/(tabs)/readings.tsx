@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 import { useTheme } from '../../src/hooks/useTheme';
 import { useReadings } from '../../src/hooks/useReadings';
 import { TextSizeControl } from '../../src/components/ui/TextSizeControl';
@@ -20,6 +21,8 @@ import { ReadingSection } from '../../src/components/liturgical/ReadingSection';
 import { EmptyState } from '../../src/components/ui/EmptyState';
 import { OfflineBanner } from '../../src/components/ui/OfflineBanner';
 import { useFavourites } from '../../src/hooks/useFavourites';
+import { useAppStore } from '../../src/store/useAppStore';
+import { getCalendar, getDatePresentation, getTodayIso } from '../../src/services/liturgicalData';
 
 type ReadingTab = 'First Reading' | 'Psalm' | 'Gospel';
 
@@ -30,15 +33,26 @@ const TAB_ORDER: ReadingTab[] = ['First Reading', 'Psalm', 'Gospel'];
 export default function ReadingsScreen() {
     const { colors, allColors } = useTheme();
     const insets = useSafeAreaInsets();
+    const router = useRouter();
     const scrollViewRef = useRef<ScrollView>(null);
     const [activeTab, setActiveTab] = useState<ReadingTab>('First Reading');
     const { toggleFavourite, isFavourite } = useFavourites();
+    const { selectedDate, setSource } = useAppStore();
     const [sectionOffsets, setSectionOffsets] = useState<Record<ReadingTab, number>>({
         'First Reading': 0,
         Psalm: 0,
         Gospel: 0,
     });
-    const { data, isLoading } = useReadings('2024-06-27');
+    const effectiveDate = getCalendar(selectedDate) ? selectedDate : getTodayIso();
+    const presentation = getDatePresentation(effectiveDate);
+    const { data, isLoading } = useReadings(effectiveDate);
+
+    const colorMap = {
+        green: allColors.liturgical.ordinaryTime,
+        purple: allColors.liturgical.adventLent,
+        gold: allColors.liturgical.christmasEaster,
+    } as const;
+    const accentColor = colorMap[data?.liturgicalColor as keyof typeof colorMap] ?? allColors.liturgical.ordinaryTime;
 
     const tabPills = useMemo(
         () =>
@@ -114,16 +128,29 @@ export default function ReadingsScreen() {
                 <View style={[styles.headerRow, { paddingHorizontal: HORIZONTAL_PADDING }]}>
                     <View style={styles.titleBlock}>
                         <Text style={{ color: colors.textPrimary }} className="font-serif text-[22px] font-bold">
-                            Thursday, June 27
+                            {presentation?.formattedDate ?? effectiveDate}
                         </Text>
                     </View>
-                    <TextSizeControl />
+                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                        <TextSizeControl />
+                        <TouchableOpacity
+                            accessibilityRole="button"
+                            accessibilityLabel="Open calendar"
+                            onPress={() => {
+                                setSource('readings');
+                                router.push('/calendar');
+                            }}
+                            style={{ marginLeft: 12 }}
+                        >
+                            <Ionicons name="calendar-outline" size={22} color={accentColor} />
+                        </TouchableOpacity>
+                    </View>
                 </View>
 
                 <View style={[styles.metaRow, { paddingHorizontal: HORIZONTAL_PADDING }]}>
                     <View
                         style={{
-                            backgroundColor: allColors.liturgical.ordinaryTime,
+                            backgroundColor: accentColor,
                             width: 7,
                             height: 7,
                             borderRadius: 999,
@@ -134,7 +161,7 @@ export default function ReadingsScreen() {
                         style={{ color: colors.textSecondary, flex: 1 }}
                         className="font-sans text-[11px] font-bold uppercase tracking-[1.8px]"
                     >
-                        ST. CYRIL OF ALEXANDRIA, BISHOP & DOCTOR
+                        {(data.feastName ?? 'Daily Readings').toUpperCase()}
                     </Text>
                 </View>
             </View>
@@ -157,7 +184,7 @@ export default function ReadingsScreen() {
                         style={[
                             styles.tabButton,
                             {
-                                backgroundColor: tab.isActive ? allColors.liturgical.ordinaryTime : colors.surfaceElevated,
+                                backgroundColor: tab.isActive ? accentColor : colors.surfaceElevated,
                             },
                         ]}
                     >
@@ -219,7 +246,7 @@ export default function ReadingsScreen() {
                                 style={{ color: colors.textPrimary }}
                                 className="mt-2 text-center font-serif text-[18px] font-bold leading-8"
                             >
-                                {data.psalm.verses[0].text}
+                                {data.psalm.verses[0]?.text ?? data.psalm.reference}
                             </Text>
                         </View>
 
@@ -248,7 +275,7 @@ export default function ReadingsScreen() {
                                 style={{ color: colors.textPrimary }}
                                 className="mt-2 text-center font-serif text-[18px] font-bold leading-8"
                             >
-                                {data.psalm.verses[0].text}
+                                {data.psalm.verses[0]?.text ?? data.psalm.reference}
                             </Text>
                         </View>
                     </View>

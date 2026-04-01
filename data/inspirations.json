@@ -1,0 +1,192 @@
+{
+  "defaults": {
+    "Advent": {
+      "title": "A Day of Expectant Hope",
+      "theme": "hope",
+      "body": "Advent invites a watchful heart. Stay awake to the quiet ways Christ is already coming into the ordinary rhythm of today.",
+      "prayer": "Lord Jesus, make my heart ready to receive you with hope, patience, and joy.",
+      "heroVerse": {
+        "text": "Prepare the way of the Lord, make straight his paths.",
+        "reference": "LUKE 3:4"
+      },
+      "reflections": [
+        {
+          "id": "advent-1",
+          "verse": "The people who walked in darkness have seen a great light.",
+          "reference": "ISAIAH 9:2",
+          "reflection": "Christ comes into places that have felt dim or uncertain. Let his light meet you there today.",
+          "theme": "hope"
+        },
+        {
+          "id": "advent-2",
+          "verse": "Stay awake, for you do not know on which day your Lord will come.",
+          "reference": "MATTHEW 24:42",
+          "reflection": "Watchfulness is not anxiety. It is a steady readiness shaped by trust.",
+          "theme": "faith"
+        }
+      ],
+      "saintQuote": {
+        "quote": "Let us prepare our hearts to receive the Lord in humility and love.",
+        "saint": "St. Charles Borromeo",
+        "initials": "SC"
+      }
+    },
+    "Christmas": {
+      "title": "The Word Made Flesh",
+      "theme": "love",
+      "body": "The mystery of Christmas is God's nearness. Receive this day as a gift and let gratitude become your praise.",
+      "prayer": "Lord Jesus, born for us, dwell in my heart and make me a bearer of your peace.",
+      "heroVerse": {
+        "text": "And the Word was made flesh, and dwelt among us.",
+        "reference": "JOHN 1:14"
+      },
+      "reflections": [
+        {
+          "id": "christmas-1",
+          "verse": "Glory to God in the highest and on earth peace to those on whom his favor rests.",
+          "reference": "LUKE 2:14",
+          "reflection": "Peace begins where Christ is welcomed. Ask for grace to welcome him again today.",
+          "theme": "love"
+        },
+        {
+          "id": "christmas-2",
+          "verse": "A child is born for us, a son is given us.",
+          "reference": "ISAIAH 9:6",
+          "reflection": "God's power comes to us clothed in humility. Let that reshape the way you see greatness.",
+          "theme": "hope"
+        }
+      ],
+      "saintQuote": {
+        "quote": "What can I give him, poor as I am? If I were a shepherd I would bring a lamb. Yet what I can I give him: give my heart.",
+        "saint": "St. Christina Rossetti",
+        "initials": "CR"
+      }
+    },
+    "Lent": {
+      "title": "A Day of Conversion",
+      "theme": "faith",
+      "body": "Lent clears space for repentance, prayer, and mercy. Return to the Lord with honesty, and let his compassion renew your strength.",
+      "prayer": "Merciful Father, draw me closer to you in prayer, fasting, and works of charity.",
+      "heroVerse": {
+        "text": "Create in me a clean heart, O God, and renew a steadfast spirit within me.",
+        "reference": "PSALM 51:10"
+      },
+      "reflections": [
+        {
+          "id": "lent-1",
+          "verse": "Even now, says the Lord, return to me with your whole heart.",
+          "reference": "JOEL 2:12",
+          "reflection": "God does not wait for a perfect version of you. He asks for your whole heart today.",
+          "theme": "faith"
+        },
+        {
+          "id": "lent-2",
+          "verse": "If today you hear his voice, harden not your hearts.",
+          "reference": "PSALM 95:8",
+          "reflection": "Conversion grows through small acts of surrender. Notice where the Lord is asking for one more yes.",
+          "theme": "strength"
+        }
+      ],
+      "saintQuote": {
+        "quote": "We always find that those who walked closest to Christ were those who had to bear the greatest trials.",
+        "saint": "St. Teresa of Avila",
+        "initials": "TA"
+      }
+    },
+    "Easter": {
+      "title": "A Day of Resurrection Joy",
+      "theme": "hope",
+      "body": "The risen Lord stands among his people with peace. Let Easter joy move you from fear toward witness and renewed trust.",
+      "prayer": "Risen Christ, fill me with your peace and make my life a living witness to your victory.",
+      "heroVerse": {
+        "text": "This is the day the Lord has made; let us rejoice and be glad in it.",
+        "reference": "PSALM 118:24"
+      },
+      "reflections": [
+        {
+          "id": "easter-1",
+          "verse": "Do not be afraid.",
+          "reference": "MATTHEW 28:10",
+          "reflection": "The resurrection steadies us in uncertainty. Christ has gone before you into this day.",
+          "theme": "hope"
+        },
+        {
+          "id": "easter-2",
+          "verse": "Peace be with you.",
+          "reference": "JOHN 20:19",
+          "reflection": "Easter peace is not the absence of struggle but the presence of the risen Lord within it.",
+          "theme": "peace"
+        }
+      ],
+      "saintQuote": {
+        "quote": "The glory of God is man fully alive.",
+        "saint": "St. Irenaeus",
+        "initials": "SI"
+      }
+    },
+    "Ordinary Time": {
+      "title": "Grace for the Ordinary Day",
+      "theme": "peace",
+      "body": "Ordinary Time teaches steady discipleship. God is present in the repeated, the hidden, and the faithful work of today.",
+      "prayer": "Lord, teach me to find you in ordinary duties and to serve you with a generous heart.",
+      "heroVerse": {
+        "text": "This is the day the Lord has made; let us rejoice and be glad in it.",
+        "reference": "PSALM 118:24"
+      },
+      "reflections": [
+        {
+          "id": "ordinary-1",
+          "verse": "Whatever you do, do everything for the glory of God.",
+          "reference": "1 CORINTHIANS 10:31",
+          "reflection": "The holiness of a day is often hidden inside ordinary tasks done with love.",
+          "theme": "peace"
+        },
+        {
+          "id": "ordinary-2",
+          "verse": "My grace is sufficient for you.",
+          "reference": "2 CORINTHIANS 12:9",
+          "reflection": "You do not need extraordinary certainty to be faithful. Grace is already meeting you where you are.",
+          "theme": "strength"
+        }
+      ],
+      "saintQuote": {
+        "quote": "Do small things with great love.",
+        "saint": "St. Teresa of Calcutta",
+        "initials": "TC"
+      }
+    }
+  },
+  "celebrations": {
+    "HolyWeek_Tuesday": {
+      "title": "Tuesday of Holy Week",
+      "theme": "faith",
+      "body": "Holy Week draws us close to the Lord's final hours. Today the Church contemplates both betrayal and fidelity, inviting us to remain near Christ with humble love.",
+      "prayer": "Lord Jesus, keep me faithful when I am tested, and teach me to stay close to you in humility and love.",
+      "heroVerse": {
+        "text": "In you, O Lord, I take refuge; let me never be put to shame.",
+        "reference": "PSALM 71:1"
+      },
+      "reflections": [
+        {
+          "id": "holyweek-tuesday-1",
+          "verse": "The Lord called me from birth, from my mother's womb he gave me my name.",
+          "reference": "ISAIAH 49:1",
+          "reflection": "Even in sorrow and uncertainty, God remains faithful to his call. Let that faithfulness steady your own yes today.",
+          "theme": "faith"
+        },
+        {
+          "id": "holyweek-tuesday-2",
+          "verse": "Now is the Son of Man glorified, and God is glorified in him.",
+          "reference": "JOHN 13:31",
+          "reflection": "Christ reveals glory through surrender. Ask for courage to trust God's work even when the path feels costly.",
+          "theme": "strength"
+        }
+      ],
+      "saintQuote": {
+        "quote": "Fix your eyes on the crucified and nothing else will seem important.",
+        "saint": "St. Francis de Sales",
+        "initials": "FS"
+      }
+    }
+  }
+}

@@ -5,8 +5,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useTheme } from '../../src/hooks/useTheme';
 import { Header } from '../../src/components/ui/Header';
-
-// ─── Types & Data ─────────────────────────────────────────────────────────────
+import { useAppStore } from '../../src/store/useAppStore';
+import { getCalendar, getInspirations, getTodayIso } from '../../src/services/liturgicalData';
 
 interface Verse {
     id: string;
@@ -29,78 +29,33 @@ interface SaintQuote {
     initials: string;
 }
 
-const DAILY_VERSE: Verse = {
-    id: 'daily',
-    text: 'The Lord is my shepherd; I shall not want.',
-    reference: 'PSALM 23:1',
-};
-
-const REFLECTIONS: Reflection[] = [
-    {
-        id: '1',
-        verse: 'Be still, and know that I am God.',
-        reference: 'PSALM 46:10',
-        reflection: 'A quiet pause can become a prayer. Make space for stillness before the day rushes in.',
-        theme: 'peace',
-    },
-    {
-        id: '2',
-        verse: 'I can do all things through Christ who strengthens me.',
-        reference: 'PHILIPPIANS 4:13',
-        reflection: 'Whatever you are facing today, you do not face it alone. His strength is made perfect in your weakness.',
-        theme: 'strength',
-    },
-    {
-        id: '3',
-        verse: 'Faith is the substance of things hoped for.',
-        reference: 'HEBREWS 11:1',
-        reflection: 'Faith holds onto what is promised before it is visible. Let that hope shape your decisions today.',
-        theme: 'faith',
-    },
-];
-
-const SAINT_QUOTE: SaintQuote = {
-    quote: 'Pray as though everything depended on God. Work as though everything depended on you.',
-    saint: 'St. Augustine',
-    initials: 'SA',
-};
-
-// ─── Theme config per reflection type ────────────────────────────────────────
-
 const THEME_CONFIG = {
     peace: {
         bg: { light: '#EDE9F6', dark: '#2A2440' },
         text: { light: '#6B4E8A', dark: '#C9B8E8' },
         icon: 'sparkles-outline' as const,
-        iconColor: { light: '#6B4E8A', dark: '#C9B8E8' },
     },
     strength: {
         bg: { light: '#E6F2EC', dark: '#1E2D26' },
         text: { light: '#2F6A46', dark: '#7EC99A' },
         icon: 'partly-sunny-outline' as const,
-        iconColor: { light: '#2F6A46', dark: '#7EC99A' },
     },
     faith: {
         bg: { light: '#FBF3E4', dark: '#2C2515' },
         text: { light: '#9A7A43', dark: '#D4A853' },
         icon: 'flame-outline' as const,
-        iconColor: { light: '#9A7A43', dark: '#D4A853' },
     },
     hope: {
         bg: { light: '#E6EFF9', dark: '#1A2535' },
         text: { light: '#3A6EA5', dark: '#7AAED6' },
         icon: 'sunny-outline' as const,
-        iconColor: { light: '#3A6EA5', dark: '#7AAED6' },
     },
     love: {
         bg: { light: '#FAEAEC', dark: '#2C1A1D' },
         text: { light: '#B5303C', dark: '#E07880' },
         icon: 'heart-outline' as const,
-        iconColor: { light: '#B5303C', dark: '#E07880' },
     },
 } as const;
-
-// ─── Components ───────────────────────────────────────────────────────────────
 
 function HeroVerseCard({
     verse,
@@ -114,7 +69,7 @@ function HeroVerseCard({
     isDark: boolean;
 }) {
     const [favourited, setFavourited] = useState(false);
-    const accent = allColors.liturgical.christmasEaster; // gold
+    const accent = allColors.liturgical.christmasEaster;
 
     const handleShare = () => {
         Share.share({ message: `"${verse.text}" — ${verse.reference}` });
@@ -134,12 +89,10 @@ function HeroVerseCard({
                 marginBottom: 28,
             }}
         >
-            {/* Quotation mark */}
             <Text style={{ color: accent, fontSize: 48, fontFamily: 'Georgia', lineHeight: 48, marginBottom: 8, opacity: 0.7 }}>
                 "
             </Text>
 
-            {/* Verse text */}
             <Text
                 style={{
                     color: colors.textPrimary,
@@ -154,13 +107,11 @@ function HeroVerseCard({
                 {verse.text}
             </Text>
 
-            {/* Reference + divider */}
             <Text style={{ color: allColors.liturgical.ordinaryTime, fontSize: 11, fontWeight: '700', letterSpacing: 2.5, textTransform: 'uppercase', marginBottom: 10 }}>
                 {verse.reference}
             </Text>
             <View style={{ width: 40, height: 2, borderRadius: 1, backgroundColor: accent, marginBottom: 24 }} />
 
-            {/* Actions */}
             <View style={{ flexDirection: 'row', gap: 14 }}>
                 <ActionButton
                     icon={favourited ? 'heart' : 'heart-outline'}
@@ -328,11 +279,36 @@ function SaintQuoteCard({
     );
 }
 
-// ─── Screen ───────────────────────────────────────────────────────────────────
-
 export default function InspirationScreen() {
     const { colors, allColors, isDark } = useTheme();
     const router = useRouter();
+    const { selectedDate, setSource } = useAppStore();
+    const effectiveDate = getCalendar(selectedDate) ? selectedDate : getTodayIso();
+    const inspirationEntry = getInspirations(effectiveDate)?.inspiration;
+
+    const heroVerse: Verse = {
+        id: 'daily',
+        text: inspirationEntry?.heroVerse?.text ?? 'The Lord is my shepherd; I shall not want.',
+        reference: inspirationEntry?.heroVerse?.reference ?? 'PSALM 23:1',
+    };
+
+    const reflections: Reflection[] =
+        inspirationEntry?.reflections ?? [
+            {
+                id: 'fallback-1',
+                verse: 'Be still, and know that I am God.',
+                reference: 'PSALM 46:10',
+                reflection: inspirationEntry?.body ?? 'The Lord is present in the quiet places of today.',
+                theme: 'peace',
+            },
+        ];
+
+    const saintQuote: SaintQuote =
+        inspirationEntry?.saintQuote ?? {
+            quote: 'Pray as though everything depended on God. Work as though everything depended on you.',
+            saint: 'St. Augustine',
+            initials: 'SA',
+        };
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
@@ -344,7 +320,13 @@ export default function InspirationScreen() {
                     </Text>
                 }
                 rightElement={
-                    <TouchableOpacity onPress={() => router.push('/calendar')} className="p-2 mr-2">
+                    <TouchableOpacity
+                        onPress={() => {
+                            setSource('inspirations');
+                            router.push('/calendar');
+                        }}
+                        className="p-2 mr-2"
+                    >
                         <Ionicons name="calendar-outline" size={24} color={allColors.liturgical.ordinaryTime} />
                     </TouchableOpacity>
                 }
@@ -354,9 +336,8 @@ export default function InspirationScreen() {
                 contentContainerStyle={{ paddingHorizontal: 20, paddingTop: 16, paddingBottom: 60 }}
                 showsVerticalScrollIndicator={false}
             >
-                <HeroVerseCard verse={DAILY_VERSE} colors={colors} allColors={allColors} isDark={isDark} />
+                <HeroVerseCard verse={heroVerse} colors={colors} allColors={allColors} isDark={isDark} />
 
-                {/* Reflections header */}
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 16 }}>
                     <View>
                         <Text style={{ color: allColors.liturgical.ordinaryTime, fontSize: 10, fontWeight: '700', letterSpacing: 2, textTransform: 'uppercase', marginBottom: 2 }}>
@@ -373,12 +354,12 @@ export default function InspirationScreen() {
                     </TouchableOpacity>
                 </View>
 
-                {REFLECTIONS.map((item) => (
+                {reflections.map((item) => (
                     <ReflectionCard key={item.id} item={item} colors={colors} isDark={isDark} />
                 ))}
 
                 <View style={{ height: 10 }} />
-                <SaintQuoteCard quote={SAINT_QUOTE} colors={colors} allColors={allColors} />
+                <SaintQuoteCard quote={saintQuote} colors={colors} allColors={allColors} />
             </ScrollView>
         </SafeAreaView>
     );

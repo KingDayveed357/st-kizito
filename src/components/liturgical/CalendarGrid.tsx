@@ -7,6 +7,9 @@ export interface CalendarDay {
     dayNum: number;
     season?: string;
     isToday?: boolean;
+    isSunday?: boolean;
+    celebration?: string;
+    celebrationType?: string;
 }
 
 interface CalendarGridProps {
@@ -39,9 +42,11 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({
                     }
 
                     const isSelected = selectedDate === day.date;
+                    const isFeastDay = !!day.celebrationType && day.celebrationType !== 'WEEKDAY';
                     let dotColor: string = allColors.liturgical.ordinaryTime;
                     if (day.season?.toLowerCase()?.includes('easter')) dotColor = allColors.liturgical.christmasEaster;
                     else if (day.season?.toLowerCase()?.includes('lent')) dotColor = allColors.liturgical.adventLent;
+                    const dayTextColor = day.isSunday || isFeastDay ? colors.accent : colors.textPrimary;
 
                     return (
                         <TouchableOpacity
@@ -51,7 +56,7 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({
                         >
                             <View className={`w-9 h-9 items-center justify-center rounded-full ${isSelected ? 'border border-gray-300' : ''}`}
                                 style={isSelected ? { borderColor: colors.accent, borderWidth: 1 } : {}}>
-                                <Text style={{ color: colors.textPrimary }} className={`font-serif text-lg ${day.isToday ? 'font-bold' : ''}`}>
+                                <Text style={{ color: dayTextColor }} className={`font-serif text-lg ${day.isToday ? 'font-bold' : ''}`}>
                                     {day.dayNum}
                                 </Text>
                                 {day.season && (

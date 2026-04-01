@@ -8,11 +8,18 @@ import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 import { Button } from '../../src/components/ui/Button';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useAppStore } from '../../src/store/useAppStore';
+import { getCalendar, getDatePresentation, getDivineOfficePrayer, getInspirations, getTodayIso } from '../../src/services/liturgicalData';
 
 export default function DivineOfficeScreen() {
     const { colors, allColors } = useTheme();
-    const { data, isLoading } = useDivineOffice();
     const router = useRouter();
+    const { selectedDate, setSource } = useAppStore();
+    const effectiveDate = getCalendar(selectedDate) ? selectedDate : getTodayIso();
+    const { data, isLoading } = useDivineOffice(effectiveDate);
+    const presentation = getDatePresentation(effectiveDate);
+    const morningPrayer = getDivineOfficePrayer(effectiveDate, 'morningPrayer');
+    const inspiration = getInspirations(effectiveDate);
 
     if (isLoading) return <View style={{ flex: 1, backgroundColor: colors.background }} />;
 
@@ -25,7 +32,13 @@ export default function DivineOfficeScreen() {
                     </View>
                 }
                 rightElement={
-                    <TouchableOpacity onPress={() => router.push('/calendar')} className="p-2 mr-2">
+                    <TouchableOpacity
+                        onPress={() => {
+                            setSource('divineOffice');
+                            router.push('/calendar');
+                        }}
+                        className="p-2 mr-2"
+                    >
                         <Ionicons name="calendar-outline" size={24} color={allColors.liturgical.ordinaryTime} />
                     </TouchableOpacity>
                 }
@@ -36,7 +49,7 @@ export default function DivineOfficeScreen() {
                     LITURGY OF THE HOURS
                 </Text>
                 <Text style={{ color: colors.textPrimary }} className="font-serif font-bold text-3xl mb-6">
-                    Divine Office
+                    {presentation?.formattedDate ?? 'Divine Office'}
                 </Text>
 
                 <View style={{ backgroundColor: colors.surfaceElevated }} className="rounded-2xl p-4 mb-6 relative flex-row items-center border border-gray-100 shadow-sm">
@@ -45,12 +58,14 @@ export default function DivineOfficeScreen() {
                     </View>
                     <View className="flex-1">
                         <Text style={{ color: colors.textPrimary }} className="font-serif font-bold text-lg mb-1">Morning Prayer</Text>
-                        <Text style={{ color: colors.textSecondary }} className="font-serif italic text-sm">"O Lord, open my lips, and my mouth shall declare your praise."</Text>
+                        <Text style={{ color: colors.textSecondary }} className="font-serif italic text-sm">
+                            {morningPrayer?.readingText?.slice(0, 120) ?? '"O Lord, open my lips, and my mouth shall declare your praise."'}
+                        </Text>
                     </View>
                 </View>
 
                 <View className="mb-6">
-                    {data.map((prayer: any, idx: number) => {
+                    {data?.map((prayer: any) => {
                         const isCurrent = prayer.isCurrent;
                         return (
                             <TouchableOpacity
@@ -96,9 +111,9 @@ export default function DivineOfficeScreen() {
                         </View>
                         <Text style={{ color: colors.textPrimary }} className="font-serif font-bold text-xl mb-2">Meditation of the Day</Text>
                         <Text style={{ color: colors.textSecondary }} className="font-sans italic text-sm mb-6 leading-relaxed">
-                            "The Divine Office is the voice of the Church, of the whole Mystical Body, publicly praising God."
+                            {`"${inspiration?.inspiration?.body ?? 'The Divine Office is the voice of the Church, publicly praising God.'}"`}
                         </Text>
-                        <Button size="sm" variant="primary" onPress={() => { }} className="self-start">
+                        <Button size="sm" variant="primary" onPress={() => router.push('/inspiration')} className="self-start">
                             Read Reflection
                         </Button>
                     </View>

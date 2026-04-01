@@ -1,0 +1,380 @@
+{
+  "__meta": {
+    "design": "Reference-first structure with psalter rotation and seasonal override hooks",
+    "generatedAt": "2026-03-31T22:55:12.264Z",
+    "locale": "en-US",
+    "schemaVersion": 1
+  },
+  "commons": {
+    "gospelCanticles": {
+      "benedictus": {
+        "reference": "Luke 1:68-79",
+        "scriptureKey": "Luke.1",
+        "verseRange": "68-79"
+      },
+      "magnificat": {
+        "reference": "Luke 1:46-55",
+        "scriptureKey": "Luke.1",
+        "verseRange": "46-55"
+      },
+      "nuncDimittis": {
+        "reference": "Luke 2:29-32",
+        "scriptureKey": "Luke.2",
+        "verseRange": "29-32"
+      }
+    },
+    "placeholders": {
+      "benedictusAntiphon": "Resolve from season, celebration, or commons.",
+      "invitatoryPsalm": "Psalm 95",
+      "magnificatAntiphon": "Resolve from season, celebration, or commons.",
+      "officeOfReadingsResponsory": "Use proper or common responsory by season/feast."
+    }
+  },
+  "complineByDay": {
+    "Friday": {
+      "psalms": [
+        "Psalm 88"
+      ]
+    },
+    "Monday": {
+      "psalms": [
+        "Psalm 86"
+      ]
+    },
+    "Saturday": {
+      "psalms": [
+        "Psalm 4",
+        "Psalm 134"
+      ]
+    },
+    "Sunday": {
+      "psalms": [
+        "Psalm 91"
+      ]
+    },
+    "Thursday": {
+      "psalms": [
+        "Psalm 16"
+      ]
+    },
+    "Tuesday": {
+      "psalms": [
+        "Psalm 143"
+      ]
+    },
+    "Wednesday": {
+      "psalms": [
+        "Psalm 31:1-6"
+      ]
+    }
+  },
+  "psalter": {
+    "week1": {
+      "eveningPrayer": {
+        "sunday": {
+          "psalms": [
+            "Psalm 110",
+            "Psalm 114",
+            "Revelation 19:1-7"
+          ]
+        },
+        "weekday": {
+          "psalms": [
+            "Psalm 141",
+            "Psalm 142",
+            "Philippians 2:6-11"
+          ]
+        }
+      },
+      "morningPrayer": {
+        "sunday": {
+          "psalms": [
+            "Psalm 63",
+            "Daniel 3:57-88, 56",
+            "Psalm 149"
+          ]
+        },
+        "weekday": {
+          "psalms": [
+            "Psalm 51",
+            "Tobit 13:1-8",
+            "Psalm 147"
+          ]
+        }
+      },
+      "nightPrayer": {
+        "sunday": {
+          "psalms": [
+            "Psalm 4",
+            "Psalm 134"
+          ]
+        },
+        "weekday": {
+          "psalms": [
+            "Psalm 91"
+          ]
+        }
+      },
+      "officeOfReadings": {
+        "sunday": {
+          "psalms": [
+            "Psalm 1",
+            "Psalm 2",
+            "Psalm 3"
+          ]
+        },
+        "weekday": {
+          "psalms": [
+            "Psalm 24",
+            "Psalm 26",
+            "Psalm 28"
+          ]
+        }
+      }
+    },
+    "week2": {
+      "eveningPrayer": {
+        "sunday": {
+          "psalms": [
+            "Psalm 110",
+            "Psalm 113A",
+            "Revelation 4:11; 5:9-10, 12"
+          ]
+        },
+        "weekday": {
+          "psalms": [
+            "Psalm 45",
+            "Psalm 46",
+            "Ephesians 1:3-10"
+          ]
+        }
+      },
+      "morningPrayer": {
+        "sunday": {
+          "psalms": [
+            "Psalm 118:1-24",
+            "Daniel 3:52-57",
+            "Psalm 150"
+          ]
+        },
+        "weekday": {
+          "psalms": [
+            "Psalm 42",
+            "Sirach 36:1-7, 13-16",
+            "Psalm 19"
+          ]
+        }
+      },
+      "nightPrayer": {
+        "sunday": {
+          "psalms": [
+            "Psalm 91"
+          ]
+        },
+        "weekday": {
+          "psalms": [
+            "Psalm 16"
+          ]
+        }
+      },
+      "officeOfReadings": {
+        "sunday": {
+          "psalms": [
+            "Psalm 18",
+            "Psalm 33",
+            "Psalm 36"
+          ]
+        },
+        "weekday": {
+          "psalms": [
+            "Psalm 39",
+            "Psalm 40",
+            "Psalm 42"
+          ]
+        }
+      }
+    },
+    "week3": {
+      "eveningPrayer": {
+        "sunday": {
+          "psalms": [
+            "Psalm 110",
+            "Psalm 111",
+            "Colossians 1:12-20"
+          ]
+        },
+        "weekday": {
+          "psalms": [
+            "Psalm 126",
+            "Psalm 127",
+            "Revelation 15:3-4"
+          ]
+        }
+      },
+      "morningPrayer": {
+        "sunday": {
+          "psalms": [
+            "Psalm 63",
+            "Isaiah 61:10-62:5",
+            "Psalm 149"
+          ]
+        },
+        "weekday": {
+          "psalms": [
+            "Psalm 57",
+            "Jeremiah 31:10-14",
+            "Psalm 48"
+          ]
+        }
+      },
+      "nightPrayer": {
+        "sunday": {
+          "psalms": [
+            "Psalm 86"
+          ]
+        },
+        "weekday": {
+          "psalms": [
+            "Psalm 31:1-6"
+          ]
+        }
+      },
+      "officeOfReadings": {
+        "sunday": {
+          "psalms": [
+            "Psalm 76",
+            "Psalm 84",
+            "Psalm 85"
+          ]
+        },
+        "weekday": {
+          "psalms": [
+            "Psalm 68",
+            "Psalm 71",
+            "Psalm 72"
+          ]
+        }
+      }
+    },
+    "week4": {
+      "eveningPrayer": {
+        "sunday": {
+          "psalms": [
+            "Psalm 110",
+            "Psalm 112",
+            "Revelation 19:1-7"
+          ]
+        },
+        "weekday": {
+          "psalms": [
+            "Psalm 135",
+            "Psalm 136",
+            "1 Timothy 3:16"
+          ]
+        }
+      },
+      "morningPrayer": {
+        "sunday": {
+          "psalms": [
+            "Psalm 118:1-24",
+            "Daniel 3:52-57",
+            "Psalm 150"
+          ]
+        },
+        "weekday": {
+          "psalms": [
+            "Psalm 90",
+            "Isaiah 26:1-4, 7-9, 12",
+            "Psalm 67"
+          ]
+        }
+      },
+      "nightPrayer": {
+        "sunday": {
+          "psalms": [
+            "Psalm 4",
+            "Psalm 134"
+          ]
+        },
+        "weekday": {
+          "psalms": [
+            "Psalm 130"
+          ]
+        }
+      },
+      "officeOfReadings": {
+        "sunday": {
+          "psalms": [
+            "Psalm 24",
+            "Psalm 47",
+            "Psalm 96"
+          ]
+        },
+        "weekday": {
+          "psalms": [
+            "Psalm 77",
+            "Psalm 78",
+            "Psalm 80"
+          ]
+        }
+      }
+    }
+  },
+  "seasons": {
+    "Advent": {
+      "antiphons": {
+        "eveningPrayer": "Use Advent weekday or Sunday antiphons by week.",
+        "morningPrayer": "Use Advent weekday or Sunday antiphons by week."
+      },
+      "readings": {
+        "eveningPrayer": "Philippians 4:4-5; James 5:7-8",
+        "morningPrayer": "Romans 13:11-12; Isaiah 2:3",
+        "officeOfReadings": "Isaiah cycle with patristic Advent readings"
+      }
+    },
+    "Christmas": {
+      "antiphons": {
+        "eveningPrayer": "Nativity / Octave / Epiphany proper antiphons",
+        "morningPrayer": "Nativity / Octave / Epiphany proper antiphons"
+      },
+      "readings": {
+        "eveningPrayer": "Hebrews 1:1-2; 1 John 1:1-3",
+        "morningPrayer": "Isaiah 9:6; Titus 3:4-7",
+        "officeOfReadings": "Hebrews 1; Johannine Prologue patterns"
+      }
+    },
+    "Easter": {
+      "antiphons": {
+        "eveningPrayer": "Alleluia antiphons through Pentecost",
+        "morningPrayer": "Alleluia antiphons through Pentecost"
+      },
+      "readings": {
+        "eveningPrayer": "Hebrews 10:12-14; 1 Peter 2:9-10",
+        "morningPrayer": "Acts 10:40-43; Romans 6:8-11",
+        "officeOfReadings": "Acts, Revelation, and mystagogical Fathers"
+      }
+    },
+    "Lent": {
+      "antiphons": {
+        "eveningPrayer": "Penitential antiphons; omit Alleluia",
+        "morningPrayer": "Penitential antiphons; omit Alleluia"
+      },
+      "readings": {
+        "eveningPrayer": "2 Corinthians 6:1-4a; James 5:16, 19-20",
+        "morningPrayer": "Joel 2:12-13; Ezekiel 36:25-27",
+        "officeOfReadings": "Exodus, Hebrews, and Lenten Fathers"
+      }
+    },
+    "OrdinaryTime": {
+      "antiphons": {
+        "eveningPrayer": "Use psalter and weekday antiphons",
+        "morningPrayer": "Use psalter and weekday antiphons"
+      },
+      "readings": {
+        "eveningPrayer": "Colossians 1:23; 1 Thessalonians 2:13",
+        "morningPrayer": "Ephesians 4:29-32; Romans 8:35, 37",
+        "officeOfReadings": "Continuous biblical and patristic cycle"
+      }
+    }
+  }
+}
