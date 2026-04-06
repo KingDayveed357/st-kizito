@@ -1,11 +1,13 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import { ScrollView, Switch, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 import { Header } from '../../src/components/ui/Header';
 import { useTheme } from '../../src/hooks/useTheme';
 import { useThemeStore, LineSpacing, ThemeMode } from '../../src/store/useThemeStore';
 import { PreferenceThemeCard } from '../../src/components/more/PreferenceThemeCard';
+import { useNotifications } from '../../src/hooks/useNotifications';
 
 const APPEARANCE_OPTIONS: Array<{
     key: ThemeMode;
@@ -44,9 +46,9 @@ const TEXT_SCALE_STEPS = [0.9, 1, 1.1, 1.2, 1.3];
 
 export default function SettingsScreen() {
     const { colors, mode, textScale, lineSpacing, lineHeightScale } = useTheme();
+    const router = useRouter();
     const { setMode, setTextScale, setLineSpacing } = useThemeStore();
-    const [massUpdates, setMassUpdates] = useState(true);
-    const [announcementUpdates, setAnnouncementUpdates] = useState(false);
+    const { preferences, setNotificationPreference } = useNotifications();
 
     const activeTextScaleLabel = useMemo(() => {
         if (textScale <= 0.95) return 'Small';
@@ -57,31 +59,7 @@ export default function SettingsScreen() {
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
-            <Header
-                showBack
-                title="Settings"
-                rightElement={
-                    <View className="flex-row items-center">
-                        <Text style={{ color: colors.textSecondary }} className="font-sans text-[11px] uppercase tracking-[1.4px] mr-2">
-                            Profile
-                        </Text>
-                        <View
-                            style={{
-                                width: 34,
-                                height: 34,
-                                borderRadius: 17,
-                                backgroundColor: '#9FD3AA',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                            }}
-                        >
-                            <Text style={{ color: colors.textPrimary }} className="font-sans text-[12px] font-semibold">
-                                SK
-                            </Text>
-                        </View>
-                    </View>
-                }
-            />
+            <Header showBack title="Settings" />
 
             <ScrollView contentContainerStyle={{ paddingHorizontal: 24, paddingTop: 20, paddingBottom: 56 }} showsVerticalScrollIndicator={false}>
                 <Text style={{ color: colors.accent }} className="font-sans text-[11px] font-bold uppercase tracking-[2px]">
@@ -222,7 +200,7 @@ export default function SettingsScreen() {
                 <Text style={{ color: colors.accent, marginTop: 20 }} className="font-sans text-[11px] font-bold uppercase tracking-[2px]">
                     Alerts
                 </Text>
-                <Text style={{ color: colors.textPrimary, fontSize: 18}} className="font-serif text-[30px] font-bold mt-3">
+                <Text style={{ color: colors.textPrimary, fontSize: 18 }} className="font-serif text-[30px] font-bold mt-3">
                     Notifications
                 </Text>
 
@@ -246,7 +224,14 @@ export default function SettingsScreen() {
                                 Changes to liturgy times or special Mass notices.
                             </Text>
                         </View>
-                        <Switch value={massUpdates} onValueChange={setMassUpdates} trackColor={{ true: colors.accentSoft, false: '#D5CBB9' }} thumbColor={massUpdates ? colors.accent : '#FFFFFF'} />
+                        <Switch
+                            value={preferences.massUpdates}
+                            onValueChange={(value) => {
+                                setNotificationPreference('massUpdates', value);
+                            }}
+                            trackColor={{ true: colors.accentSoft, false: '#D5CBB9' }}
+                            thumbColor={preferences.massUpdates ? colors.accent : '#FFFFFF'}
+                        />
                     </View>
 
                     <View className="flex-row items-center justify-between">
@@ -258,11 +243,44 @@ export default function SettingsScreen() {
                                 Events, bulletins, and community updates.
                             </Text>
                         </View>
-                        <Switch value={announcementUpdates} onValueChange={setAnnouncementUpdates} trackColor={{ true: colors.accentSoft, false: '#D5CBB9' }} thumbColor={announcementUpdates ? colors.accent : '#FFFFFF'} />
+                        <Switch
+                            value={preferences.parishAnnouncements}
+                            onValueChange={(value) => {
+                                setNotificationPreference('parishAnnouncements', value);
+                            }}
+                            trackColor={{ true: colors.accentSoft, false: '#D5CBB9' }}
+                            thumbColor={preferences.parishAnnouncements ? colors.accent : '#FFFFFF'}
+                        />
                     </View>
+
+                    <TouchableOpacity
+                        activeOpacity={0.86}
+                        onPress={() => router.push('/settings/reminder')}
+                        style={{
+                            borderRadius: 16,
+                            borderWidth: 1,
+                            borderColor: colors.border,
+                            backgroundColor: colors.surfaceElevated,
+                            paddingHorizontal: 14,
+                            paddingVertical: 12,
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                        }}
+                    >
+                        <View style={{ flex: 1, paddingRight: 10 }}>
+                            <Text style={{ color: colors.textPrimary }} className="font-sans text-[14px] font-semibold">
+                                Prayer Reminders
+                            </Text>
+                            <Text style={{ color: colors.textSecondary }} className="font-sans text-[12px] mt-1">
+                                Set morning, afternoon, and evening reminders.
+                            </Text>
+                        </View>
+                        <Ionicons name="chevron-forward" size={18} color={colors.textMuted} />
+                    </TouchableOpacity>
                 </View>
 
-                <Text style={{ color: colors.accent, marginTop: 20}} className="font-sans text-[11px] font-bold uppercase tracking-[2px] mt-10">
+                <Text style={{ color: colors.accent, marginTop: 20 }} className="font-sans text-[11px] font-bold uppercase tracking-[2px]">
                     Information
                 </Text>
                 <Text style={{ color: colors.textPrimary, fontSize: 18 }} className="font-serif text-[30px] font-bold mt-3">
@@ -305,14 +323,14 @@ export default function SettingsScreen() {
                     ))}
                 </View>
 
-                 <View style={{ marginTop: 32, alignItems: 'center', gap: 4 }}>
-                                    <Text style={{ color: colors.textMuted, fontSize: 11, letterSpacing: 1.2, textTransform: 'uppercase', fontWeight: '600' }}>
-                                        St. Kizito Parish App <Text  style={{ color: colors.textMuted, fontSize: 30 }}>.</Text> Version 1.0.0
-                                    </Text>
-                                    <Text style={{ color: colors.textMuted, fontSize: 11 }}>
-                                        BUILT FOR THE COMMUNITY OF FAITH
-                                    </Text>
-                                </View>
+                <View style={{ marginTop: 32, alignItems: 'center', gap: 4 }}>
+                    <Text style={{ color: colors.textMuted, fontSize: 11, letterSpacing: 1.2, textTransform: 'uppercase', fontWeight: '600' }}>
+                        St. Kizito Parish App . Version 1.0.0
+                    </Text>
+                    <Text style={{ color: colors.textMuted, fontSize: 11 }}>
+                        Built for the community of faith
+                    </Text>
+                </View>
             </ScrollView>
         </SafeAreaView>
     );

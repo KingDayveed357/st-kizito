@@ -1,5 +1,5 @@
-import React, { useMemo, useRef, useState } from 'react';
-import { View, ScrollView, Text, TouchableOpacity } from 'react-native';
+import React, { useMemo, useRef, useState, useCallback } from 'react';
+import { View, ScrollView, Text, TouchableOpacity, FlatList, useWindowDimensions } from 'react-native';
 import { useTheme } from '../src/hooks/useTheme';
 import { Header } from '../src/components/ui/Header';
 import { CalendarGrid, CalendarDay } from '../src/components/liturgical/CalendarGrid';
@@ -63,17 +63,47 @@ export default function CalendarScreen() {
     const { selectedDate, source, setLiturgicalContext } = useAppStore();
     const effectiveDate = calendarData[selectedDate] ? selectedDate : todayIso;
     const [visibleMonth, setVisibleMonth] = useState(Number(effectiveDate.slice(5, 7)) - 1);
-    const monthData = useMemo(() => buildMonthData(visibleMonth, effectiveDate), [visibleMonth, effectiveDate]);
+    
+    // Pre-calculate all 12 months data to allow smooth swiping
+    const allMonthsData = useMemo(() => {
+        return Array.from({ length: 12 }).map((_, i) => ({
+            monthIndex: i,
+            data: buildMonthData(i, effectiveDate)
+        }));
+    }, [effectiveDate]);
+
     const detailDate = calendarData[effectiveDate] ? effectiveDate : todayIso;
     const detail = calendarData[detailDate];
     const presentation = getDatePresentation(detailDate);
+    const { width: screenWidth } = useWindowDimensions();
+    const flatListRef = useRef<FlatList>(null);
 
     const handleDatePress = (date: string) => {
         setLiturgicalContext(date, source);
         bottomSheetRef.current?.expand();
     };
 
+    const handleViewableItemsChanged = useCallback(({ viewableItems }: any) => {
+        if (viewableItems && viewableItems.length > 0) {
+            setVisibleMonth(viewableItems[0].item.monthIndex);
+        }
+    }, []);
+
+    const viewabilityConfig = useRef({ itemVisiblePercentThreshold: 50 }).current;
+
+    const navigateMonth = (index: number) => {
+        if (index >= 0 && index <= 11) {
+            flatListRef.current?.scrollToIndex({ index, animated: true });
+            setVisibleMonth(index);
+        }
+    };
+
     const navigateToContextScreen = () => {
+        if (source === 'readings') {
+            router.push({ pathname: routeBySource.readings, params: { date: detailDate } });
+            return;
+        }
+
         router.push(routeBySource[source]);
     };
 
@@ -90,12 +120,11 @@ export default function CalendarScreen() {
                             setLiturgicalContext(todayIso, source);
                             bottomSheetRef.current?.expand();
                         }}
-                        className="flex-row items-center mr-2"
+                        className="mr-2"
                     >
-                        <View style={{ backgroundColor: colors.surfaceElevated }} className="px-3 py-1.5 rounded-3xl mr-3">
+                        <View style={{ backgroundColor: colors.surfaceElevated }} className="px-3 py-1.5 rounded-3xl">
                             <Text style={{ color: colors.textPrimary }} className="font-sans font-bold text-xs uppercase tracking-wider">TODAY</Text>
                         </View>
-                        <Ionicons name="calendar-outline" size={24} color={allColors.liturgical.ordinaryTime} />
                     </TouchableOpacity>
                 }
             />
@@ -112,22 +141,38 @@ export default function CalendarScreen() {
                             </Text>
                         </View>
                         <View className="flex-row items-center">
-                            <TouchableOpacity className="p-2" onPress={() => setVisibleMonth((current) => Math.max(0, current - 1))}>
+                            <TouchableOpacity className="p-2" onPress={() => navigateMonth(visibleMonth - 1)}>
                                 <Ionicons name="chevron-back" size={20} color={colors.textPrimary} />
                             </TouchableOpacity>
-                            <TouchableOpacity className="p-2 pl-4" onPress={() => setVisibleMonth((current) => Math.min(11, current + 1))}>
+                            <TouchableOpacity className="p-2 pl-4" onPress={() => navigateMonth(visibleMonth + 1)}>
                                 <Ionicons name="chevron-forward" size={20} color={colors.textPrimary} />
                             </TouchableOpacity>
                         </View>
                     </View>
                 </View>
 
-                <CalendarGrid
-                    month={getMonthLabel(visibleMonth)}
-                    year={2026}
-                    selectedDate={effectiveDate}
-                    onDatePress={handleDatePress}
-                    calendarData={monthData}
+                <FlatList
+                    ref={flatListRef}
+                    data={allMonthsData}
+                    keyExtractor={item => `month-${item.monthIndex}`}
+                    horizontal
+                    pagingEnabled
+                    showsHorizontalScrollIndicator={false}
+                    initialScrollIndex={visibleMonth}
+                    getItemLayout={(data, index) => ({ length: screenWidth, offset: screenWidth * index, index })}
+                    onViewableItemsChanged={handleViewableItemsChanged}
+                    viewabilityConfig={viewabilityConfig}
+                    renderItem={({ item }) => (
+                        <View style={{ width: screenWidth }}>
+                            <CalendarGrid
+                                month={getMonthLabel(item.monthIndex)}
+                                year={2026}
+                                selectedDate={effectiveDate}
+                                onDatePress={handleDatePress}
+                                calendarData={item.data}
+                            />
+                        </View>
+                    )}
                 />
 
                 <View className="px-screen py-4 flex-row justify-center items-center" />
@@ -185,3 +230,4 @@ export default function CalendarScreen() {
         </SafeAreaView>
     );
 }
+

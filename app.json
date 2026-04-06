@@ -31,7 +31,8 @@
     "plugins": [
       "expo-router",
       "expo-sqlite",
-      "expo-image"
+      "expo-image",
+      "expo-notifications"
     ]
   }
 }

@@ -6,149 +6,231 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const repoRoot = path.resolve(__dirname, '..');
 
-const bibleRoot = path.join(repoRoot, 'tmp', 'Bible-kjv-1611-main', 'Bible-kjv-1611-main');
+const biblePath = path.join(repoRoot, 'tmp', 'eng-web-c_vpl', 'eng-web-c_vpl.txt');
 const readingsPath = path.join(repoRoot, 'data', 'readings.json');
 const officePath = path.join(repoRoot, 'data', 'divineOffice.json');
 const outputPath = path.join(repoRoot, 'data', 'passageCache.json');
 
-const BOOK_ALIASES = {
-  Amos: 'Amos',
-  Acts: 'Acts',
-  Bar: 'Baruch',
-  Baruch: 'Baruch',
-  Bel: 'Bel and the Dragon',
-  Col: 'Colossians',
-  Colossians: 'Colossians',
-  Dan: 'Daniel',
-  Daniel: 'Daniel',
-  Deut: 'Deuteronomy',
-  Deuteronomy: 'Deuteronomy',
-  Eccl: 'Ecclesiastes',
-  Ecclesiastes: 'Ecclesiastes',
-  Ecclesiasticus: 'Ecclesiasticus',
-  Eph: 'Ephesians',
-  Ephesians: 'Ephesians',
-  Est: 'Esther',
-  Esther: 'Esther',
-  Exod: 'Exodus',
-  Exodus: 'Exodus',
-  Ezek: 'Ezekiel',
-  Ezekiel: 'Ezekiel',
-  Ezra: 'Ezra',
-  Gal: 'Galatians',
-  Galatians: 'Galatians',
-  Gen: 'Genesis',
-  Genesis: 'Genesis',
-  Hab: 'Habakkuk',
-  Habakkuk: 'Habakkuk',
-  Haggai: 'Haggai',
-  Heb: 'Hebrews',
-  Hebrews: 'Hebrews',
-  Hos: 'Hosea',
-  Hosea: 'Hosea',
-  Isa: 'Isaiah',
-  Isaiah: 'Isaiah',
-  Jas: 'James',
-  James: 'James',
-  Jer: 'Jeremiah',
-  Jeremiah: 'Jeremiah',
-  Job: 'Job',
-  Joel: 'Joel',
-  John: 'John',
-  Jon: 'Jonah',
-  Jonah: 'Jonah',
-  Josh: 'Joshua',
-  Joshua: 'Joshua',
-  Jude: 'Jude',
-  Judges: 'Judges',
-  Judith: 'Judith',
-  Kgs: 'Kings',
-  Kings: 'Kings',
-  Lam: 'Lamentations',
-  Lamentations: 'Lamentations',
-  Lev: 'Leviticus',
-  Leviticus: 'Leviticus',
-  Luke: 'Luke',
-  Mal: 'Malachi',
-  Malachi: 'Malachi',
-  Mark: 'Mark',
-  Matt: 'Matthew',
-  Matthew: 'Matthew',
-  Mic: 'Micah',
-  Micah: 'Micah',
-  Macc: 'Maccabees',
-  Nah: 'Nahum',
-  Nahum: 'Nahum',
-  Neh: 'Nehemiah',
-  Nehemiah: 'Nehemiah',
-  Num: 'Numbers',
-  Numbers: 'Numbers',
-  Peter: 'Peter',
-  Pet: 'Peter',
-  Cor: 'Corinthians',
-  Phil: 'Philippians',
-  Phiippians: 'Philippians',
-  Philippians: 'Philippians',
-  Phlm: 'Philemon',
-  Philemon: 'Philemon',
-  Prov: 'Proverbs',
-  Proverbs: 'Proverbs',
-  Ps: 'Psalms',
-  Psalm: 'Psalms',
-  Psalms: 'Psalms',
-  Rev: 'Revelation',
-  Revelation: 'Revelation',
-  Rom: 'Romans',
-  Romans: 'Romans',
-  Ruth: 'Ruth',
-  Sam: 'Samuel',
-  Samuel: 'Samuel',
-  Sir: 'Ecclesiasticus',
-  Sirach: 'Ecclesiasticus',
-  SongofSongs: 'Song of Solomon',
-  SongofSolomon: 'Song of Solomon',
-  SongofSongs: 'Song of Solomon',
-  Song: 'Song of Solomon',
-  Thess: 'Thessalonians',
-  Thessalonians: 'Thessalonians',
-  Tim: 'Timothy',
-  Timothy: 'Timothy',
-  Titus: 'Titus',
-  Tobit: 'Tobit',
-  Wisdom: 'Wisdom of Solomon',
-  WisdomofSolomon: 'Wisdom of Solomon',
-  Wis: 'Wisdom of Solomon',
-  Zech: 'Zechariah',
-  Zechariah: 'Zechariah',
-  Zeph: 'Zephaniah',
-  Zephaniah: 'Zephaniah',
+const BOOK_CODES = {
+  Amos: 'AMO',
+  '1 Chronicles': '1CH',
+  '2 Chronicles': '2CH',
+  Acts: 'ACT',
+  Bar: 'BAR',
+  Baruch: 'BAR',
+  Bel: 'BEL',
+  Col: 'COL',
+  Colossians: 'COL',
+  '1 Corinthians': '1CO',
+  '2 Corinthians': '2CO',
+  Dan: 'DAN',
+  Daniel: 'DAN',
+  Deut: 'DEU',
+  Deuteronomy: 'DEU',
+  Eccl: 'ECC',
+  Ecclesiastes: 'ECC',
+  Ecclesiasticus: 'SIR',
+  Eph: 'EPH',
+  Ephesians: 'EPH',
+  Est: 'EST',
+  Esther: 'EST',
+  Exod: 'EXO',
+  Exodus: 'EXO',
+  Ezek: 'EZK',
+  Ezekiel: 'EZK',
+  Ezra: 'EZR',
+  Gal: 'GAL',
+  Galatians: 'GAL',
+  Gen: 'GEN',
+  Genesis: 'GEN',
+  Hab: 'HAB',
+  Habakkuk: 'HAB',
+  Haggai: 'HAG',
+  Heb: 'HEB',
+  Hebrews: 'HEB',
+  '1 John': '1JN',
+  '2 John': '2JN',
+  '3 John': '3JN',
+  Hos: 'HOS',
+  Hosea: 'HOS',
+  Isa: 'ISA',
+  Isaiah: 'ISA',
+  Jas: 'JAS',
+  James: 'JAS',
+  Jer: 'JER',
+  Jeremiah: 'JER',
+  Job: 'JOB',
+  Joel: 'JOL',
+  John: 'JOH',
+  Jon: 'JON',
+  Jonah: 'JON',
+  Josh: 'JOS',
+  Joshua: 'JOS',
+  Jude: 'JUD',
+  Judges: 'JDG',
+  Judith: 'JDT',
+  Kgs: 'KGS',
+  Kings: 'KGS',
+  '1 Kings': '1KI',
+  '2 Kings': '2KI',
+  Lam: 'LAM',
+  Lamentations: 'LAM',
+  Lev: 'LEV',
+  Leviticus: 'LEV',
+  Luke: 'LUK',
+  Mal: 'MAL',
+  Malachi: 'MAL',
+  Mark: 'MRK',
+  Matt: 'MAT',
+  Matthew: 'MAT',
+  Mic: 'MIC',
+  Micah: 'MIC',
+  Macc: 'MAC',
+  '1 Maccabees': '1MA',
+  '2 Maccabees': '2MA',
+  Nah: 'NAM',
+  Nahum: 'NAM',
+  Neh: 'NEH',
+  Nehemiah: 'NEH',
+  Num: 'NUM',
+  Numbers: 'NUM',
+  Peter: 'PE',
+  Pet: 'PE',
+  '1 Peter': '1PE',
+  '2 Peter': '2PE',
+  Phil: 'PHP',
+  Phiippians: 'PHP',
+  Philippians: 'PHP',
+  Phlm: 'PHM',
+  Philemon: 'PHM',
+  Prov: 'PRO',
+  Proverbs: 'PRO',
+  Ps: 'PSA',
+  Psalm: 'PSA',
+  Psalms: 'PSA',
+  Rev: 'REV',
+  Revelation: 'REV',
+  Rom: 'ROM',
+  Romans: 'ROM',
+  Ruth: 'RUT',
+  Sam: 'SAM',
+  Samuel: 'SAM',
+  '1 Samuel': '1SA',
+  '2 Samuel': '2SA',
+  Sir: 'SIR',
+  Sirach: 'SIR',
+  SongofSongs: 'SNG',
+  SongofSolomon: 'SNG',
+  Song: 'SNG',
+  '1 Thessalonians': '1TH',
+  '2 Thessalonians': '2TH',
+  Thess: 'THS',
+  Thessalonians: 'THS',
+  '1 Timothy': '1TI',
+  '2 Timothy': '2TI',
+  Tim: 'TIM',
+  Timothy: 'TIM',
+  Titus: 'TIT',
+  Tobit: 'TOB',
+  Wisdom: 'WIS',
+  WisdomofSolomon: 'WIS',
+  Wis: 'WIS',
+  Zech: 'ZEC',
+  Zechariah: 'ZEC',
+  Zeph: 'ZEP',
+  Zephaniah: 'ZEP',
 };
 
 function normalizeBookAlias(value) {
   const cleaned = value.replace(/\./g, '').replace(/\s+/g, ' ').trim();
-  const compact = cleaned.replace(/\s+/g, '');
-
-  if (BOOK_ALIASES[cleaned]) {
-    return BOOK_ALIASES[cleaned];
-  }
-
-  if (BOOK_ALIASES[compact]) {
-    return BOOK_ALIASES[compact];
-  }
-
   const prefixedMatch = cleaned.match(/^([1-3])\s+(.+)$/);
   if (prefixedMatch) {
-    const [, prefix, base] = prefixedMatch;
-    const normalizedBase =
-      BOOK_ALIASES[base] ||
-      BOOK_ALIASES[base.replace(/\s+/g, '')] ||
-      BOOK_ALIASES[base.replace(/\./g, '')] ||
-      BOOK_ALIASES[base.replace(/\./g, '').replace(/\s+/g, '')] ||
-      base;
-    return `${prefix} ${normalizedBase}`;
+    const [, prefix, baseRaw] = prefixedMatch;
+    const base = baseRaw
+      .replace(/^Cor(inthians)?$/i, 'Corinthians')
+      .replace(/^Thess(alonians)?$/i, 'Thessalonians')
+      .replace(/^Tim(othy)?$/i, 'Timothy')
+      .replace(/^Pet(er)?$/i, 'Peter')
+      .replace(/^Sam(uel)?$/i, 'Samuel')
+      .replace(/^Kgs$/i, 'Kings')
+      .replace(/^Chr(onicles)?$/i, 'Chronicles')
+      .replace(/^Macc(abees)?$/i, 'Maccabees')
+      .replace(/^John$/i, 'John')
+      .replace(/^John$/i, 'John');
+    return `${prefix} ${base}`;
   }
 
-  return cleaned;
+  return cleaned
+    .replace(/^Ps(alms?)?$/i, 'Psalms')
+    .replace(/^Psalm$/i, 'Psalms')
+    .replace(/^Gen$/i, 'Genesis')
+    .replace(/^Exod$/i, 'Exodus')
+    .replace(/^Lev$/i, 'Leviticus')
+    .replace(/^Num$/i, 'Numbers')
+    .replace(/^Deut$/i, 'Deuteronomy')
+    .replace(/^Josh$/i, 'Joshua')
+    .replace(/^Judg(es)?$/i, 'Judges')
+    .replace(/^Sam$/i, 'Samuel')
+    .replace(/^Kgs$/i, 'Kings')
+    .replace(/^Chr(onicles)?$/i, 'Chronicles')
+    .replace(/^Ezra$/i, 'Ezra')
+    .replace(/^Neh$/i, 'Nehemiah')
+    .replace(/^Est$/i, 'Esther')
+    .replace(/^Job$/i, 'Job')
+    .replace(/^Prov$/i, 'Proverbs')
+    .replace(/^Eccl$/i, 'Ecclesiastes')
+    .replace(/^Song$/i, 'Song of Solomon')
+    .replace(/^Wis$/i, 'Wisdom')
+    .replace(/^Sir$/i, 'Sirach')
+    .replace(/^Isa$/i, 'Isaiah')
+    .replace(/^Jer$/i, 'Jeremiah')
+    .replace(/^Lam$/i, 'Lamentations')
+    .replace(/^Ezek$/i, 'Ezekiel')
+    .replace(/^Dan$/i, 'Daniel')
+    .replace(/^Hos$/i, 'Hosea')
+    .replace(/^Joel$/i, 'Joel')
+    .replace(/^Amos$/i, 'Amos')
+    .replace(/^Obad$/i, 'Obadiah')
+    .replace(/^Jon$/i, 'Jonah')
+    .replace(/^Mic$/i, 'Micah')
+    .replace(/^Nah$/i, 'Nahum')
+    .replace(/^Hab$/i, 'Habakkuk')
+    .replace(/^Zeph$/i, 'Zephaniah')
+    .replace(/^Hag$/i, 'Haggai')
+    .replace(/^Zech$/i, 'Zechariah')
+    .replace(/^Mal$/i, 'Malachi')
+    .replace(/^Matt$/i, 'Matthew')
+    .replace(/^Mark$/i, 'Mark')
+    .replace(/^Luke$/i, 'Luke')
+    .replace(/^Acts$/i, 'Acts')
+    .replace(/^Rom$/i, 'Romans')
+    .replace(/^Cor$/i, 'Corinthians')
+    .replace(/^Gal$/i, 'Galatians')
+    .replace(/^Eph$/i, 'Ephesians')
+    .replace(/^Phil$/i, 'Philippians')
+    .replace(/^Col$/i, 'Colossians')
+    .replace(/^Thess$/i, 'Thessalonians')
+    .replace(/^Tim$/i, 'Timothy')
+    .replace(/^Titus$/i, 'Titus')
+    .replace(/^Phlm$/i, 'Philemon')
+    .replace(/^Heb$/i, 'Hebrews')
+    .replace(/^Jas$/i, 'James')
+    .replace(/^Pet$/i, 'Peter')
+    .replace(/^John$/i, 'John')
+    .replace(/^Jude$/i, 'Jude')
+    .replace(/^Rev$/i, 'Revelation');
+}
+
+function normalizeText(text) {
+  return String(text)
+    .replace(/\u00a0/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function resolveBookCode(referenceBook) {
+  const normalized = normalizeBookAlias(referenceBook);
+  return BOOK_CODES[normalized] ?? null;
 }
 
 function cleanReference(ref) {
@@ -184,13 +266,16 @@ function expandRange(start, end) {
 }
 
 function buildVerseList(chapters, chapterNumber, verseSpec) {
-  const chapter = chapters.get(chapterNumber);
+  const chapter = chapters[chapterNumber];
   if (!chapter) {
     return [];
   }
 
   if (!verseSpec) {
-    return chapter.map((entry) => entry.text);
+    return Object.keys(chapter)
+      .map(Number)
+      .sort((a, b) => a - b)
+      .map((verseNumber) => chapter[verseNumber]);
   }
 
   const tokens = parseVerseToken(
@@ -207,7 +292,7 @@ function buildVerseList(chapters, chapterNumber, verseSpec) {
       const endChapter = Number(crossChapter[2]);
       const endVerse = Number(crossChapter[3]);
       const currentChapter = chapterNumber;
-      verses.push(...buildVerseList(chapters, currentChapter, `${startVerse}-${chapter.length}`));
+      verses.push(...buildVerseList(chapters, currentChapter, `${startVerse}-${Object.keys(chapter).length}`));
       for (let next = currentChapter + 1; next < endChapter; next += 1) {
         verses.push(...buildVerseList(chapters, next));
       }
@@ -218,9 +303,9 @@ function buildVerseList(chapters, chapterNumber, verseSpec) {
     const rangeMatch = token.match(/^(\d+)-(\d+)$/);
     if (rangeMatch) {
       for (const verseNumber of expandRange(Number(rangeMatch[1]), Number(rangeMatch[2]))) {
-        const verse = chapter.find((entry) => entry.verse === verseNumber);
+        const verse = chapter[verseNumber];
         if (verse) {
-          verses.push(verse.text);
+          verses.push(verse);
         }
       }
       continue;
@@ -228,9 +313,9 @@ function buildVerseList(chapters, chapterNumber, verseSpec) {
 
     const verseNumber = Number(token);
     if (Number.isFinite(verseNumber)) {
-      const verse = chapter.find((entry) => entry.verse === verseNumber);
+      const verse = chapter[verseNumber];
       if (verse) {
-        verses.push(verse.text);
+        verses.push(verse);
       }
     }
   }
@@ -286,19 +371,28 @@ function parsePassage(reference, chapters) {
   };
 }
 
-async function readBook(bookName) {
-  const filePath = path.join(bibleRoot, `${bookName}.json`);
-  const raw = JSON.parse(await fs.readFile(filePath, 'utf8'));
-  const chapters = new Map(
-    raw.chapters.map((chapter) => [
-      Number(chapter.chapter),
-      chapter.verses.map((verse) => ({
-        verse: Number(verse.verse),
-        text: String(verse.text).replace(/\s+/g, ' ').trim(),
-      })),
-    ]),
-  );
-  return chapters;
+async function loadBooks() {
+  const raw = await fs.readFile(biblePath, 'utf8');
+  const books = {};
+  const lines = raw.split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
+
+  for (const line of lines) {
+    const match = line.match(/^([1-3]?[A-Z]{3})\s+(\d+):(\d+)\s+(.+)$/);
+    if (!match) {
+      continue;
+    }
+
+    const [, code, chapterRaw, verseRaw, textRaw] = match;
+    const chapter = Number(chapterRaw);
+    const verse = Number(verseRaw);
+    const text = normalizeText(textRaw);
+
+    books[code] ??= {};
+    books[code][chapter] ??= {};
+    books[code][chapter][verse] = text;
+  }
+
+  return books;
 }
 
 function collectReferencesFromReadings(readings) {
@@ -350,32 +444,16 @@ function collectReferencesFromOffice(office) {
 async function main() {
   const readings = JSON.parse(await fs.readFile(readingsPath, 'utf8'));
   const office = JSON.parse(await fs.readFile(officePath, 'utf8'));
+  const books = await loadBooks();
 
   const references = [...new Set([
     ...collectReferencesFromReadings(readings),
     ...collectReferencesFromOffice(office),
   ])];
 
-  const booksNeeded = new Set();
-  for (const reference of references) {
-    const cleaned = cleanReference(reference);
-    const match = cleaned.match(/^([1-3]?\s?[A-Za-z][A-Za-z\s]+?)\s+(.+)$/);
-    if (!match) continue;
-    booksNeeded.add(normalizeBookAlias(match[1]));
-  }
-
-  const books = {};
-  for (const bookName of booksNeeded) {
-    try {
-      books[bookName] = await readBook(bookName);
-    } catch (error) {
-      console.warn(`Skipping ${bookName}: ${error.message}`);
-    }
-  }
-
   const output = {
     __meta: {
-      translation: 'King James Bible 1611 public-domain JSON',
+      translation: 'World English Bible',
       generatedAt: new Date().toISOString(),
       references: references.length,
     },
@@ -385,8 +463,8 @@ async function main() {
     const cleaned = cleanReference(reference);
     const match = cleaned.match(/^([1-3]?\s?[A-Za-z][A-Za-z\s]+?)\s+(.+)$/);
     if (!match) continue;
-    const bookName = normalizeBookAlias(match[1]);
-    const chapters = books[bookName];
+    const bookCode = resolveBookCode(match[1]);
+    const chapters = bookCode ? books[bookCode] : null;
     if (!chapters) continue;
     const passage = parsePassage(reference, chapters);
     if (passage) {

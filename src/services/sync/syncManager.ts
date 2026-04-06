@@ -1,30 +1,26 @@
 import { AppState, AppStateStatus } from 'react-native';
-import { getDb } from '../offline/database';
-// import NetInfo from '@react-native-community/netinfo';
 import { useAppStore } from '../../store/useAppStore';
+import { syncPendingSubmissions, syncPaymentDetails } from '../offline/syncService';
+import { checkInternetConnection } from '../network/connectivity';
 
 let isSyncing = false;
 
 const startSync = async () => {
     if (isSyncing) return;
 
-    // const netInfo = await NetInfo.fetch();
-    // if (!netInfo.isConnected) return;
+    const isOnline = await checkInternetConnection();
+    if (!isOnline) {
+        return;
+    }
 
     isSyncing = true;
     console.log('[Sync] Starting background sync...');
 
     try {
-        const db = await getDb();
-        const now = Date.now();
+        await syncPendingSubmissions();
+        await syncPaymentDetails(false);
 
-        // Stub:
-        // 1. Fetch from API
-        // const response = await apiClient.get('/readings/sync', { params: { window: 30 } });
-        // 2. Upsert to DB
-        // await db.execAsync(...)
-
-        useAppStore.getState().setLastSyncTime(now);
+        useAppStore.getState().setLastSyncTime(Date.now());
         console.log('[Sync] Sync complete.');
     } catch (err) {
         console.error('[Sync] Sync failed:', err);
@@ -36,7 +32,7 @@ const startSync = async () => {
 export const initSyncManager = () => {
     let appState = AppState.currentState;
 
-    AppState.addEventListener('change', (nextAppState: AppStateStatus) => {
+    const subscription = AppState.addEventListener('change', (nextAppState: AppStateStatus) => {
         if (appState.match(/inactive|background/) && nextAppState === 'active') {
             startSync();
         }
@@ -45,4 +41,8 @@ export const initSyncManager = () => {
 
     // initial sync on launch
     startSync();
+
+    return () => {
+        subscription.remove();
+    };
 };

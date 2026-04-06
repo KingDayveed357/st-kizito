@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { FlatList, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 import { Header } from '../../src/components/ui/Header';
 import { useTheme } from '../../src/hooks/useTheme';
 import { EmptyState } from '../../src/components/ui/EmptyState';
@@ -22,8 +22,14 @@ const formatSavedAt = (savedAt: string) =>
         year: 'numeric',
     }).format(new Date(savedAt));
 
+const previewText = (body: string) => {
+    if (body.length <= 120) return body;
+    return `${body.slice(0, 117)}...`;
+};
+
 export default function FavouritesScreen() {
     const { colors, textScale, lineHeightScale } = useTheme();
+    const router = useRouter();
     const { allItems, removeFavourite } = useFavourites();
     const [activeFilter, setActiveFilter] = useState<(typeof FILTERS)[number]['key']>('all');
 
@@ -37,51 +43,58 @@ export default function FavouritesScreen() {
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
-            <Header
-                showBack
-                title="Favourites"
-                rightElement={<Ionicons name="calendar-outline" className='px-screen' size={24} color={colors.accent} />}
-            />
+            <Header showBack title="Saved Readings Library" />
 
             <FlatList
                 data={filteredItems}
                 keyExtractor={(item) => item.id}
                 contentContainerStyle={{ paddingHorizontal: 24, paddingTop: 16, paddingBottom: 56 }}
                 ListHeaderComponent={
-                    <View
-                        style={{
-                            backgroundColor: colors.surface,
-                            borderRadius: 22,
-                            borderWidth: 1,
-                            borderColor: colors.border,
-                            padding: 6,
-                            flexDirection: 'row',
-                            marginBottom: 20,
-                        }}
-                    >
-                        {FILTERS.map((filter) => {
-                            const active = filter.key === activeFilter;
-                            return (
-                                <TouchableOpacity
-                                    key={filter.key}
-                                    activeOpacity={0.9}
-                                    onPress={() => setActiveFilter(filter.key)}
-                                    style={{
-                                        flex: 1,
-                                        minHeight: 44,
-                                        borderRadius: 16,
-                                        backgroundColor: active ? colors.accent : 'transparent',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                    }}
-                                >
-                                    <Text style={{ color: active ? '#FFFFFF' : colors.textPrimary }} className="font-sans text-[13px] font-semibold">
-                                        {filter.label}
-                                    </Text>
-                                </TouchableOpacity>
-                            );
-                        })}
-                    </View>
+                    <>
+                        <View className="flex-row items-center justify-between" style={{ marginBottom: 12 }}>
+                            <Text style={{ color: colors.textSecondary, fontSize: 13 }}>
+                                Prayerful passages you have saved for later reflection.
+                            </Text>
+                            <TouchableOpacity onPress={() => setActiveFilter('all')}>
+                                <Text style={{ color: colors.accent, fontSize: 13, fontWeight: '700' }}>View All</Text>
+                            </TouchableOpacity>
+                        </View>
+
+                        <View
+                            style={{
+                                backgroundColor: colors.surface,
+                                borderRadius: 22,
+                                borderWidth: 1,
+                                borderColor: colors.border,
+                                padding: 6,
+                                flexDirection: 'row',
+                                marginBottom: 20,
+                            }}
+                        >
+                            {FILTERS.map((filter) => {
+                                const active = filter.key === activeFilter;
+                                return (
+                                    <TouchableOpacity
+                                        key={filter.key}
+                                        activeOpacity={0.9}
+                                        onPress={() => setActiveFilter(filter.key)}
+                                        style={{
+                                            flex: 1,
+                                            minHeight: 44,
+                                            borderRadius: 16,
+                                            backgroundColor: active ? colors.accent : 'transparent',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                        }}
+                                    >
+                                        <Text style={{ color: active ? '#FFFFFF' : colors.textPrimary }} className="font-sans text-[13px] font-semibold">
+                                            {filter.label}
+                                        </Text>
+                                    </TouchableOpacity>
+                                );
+                            })}
+                        </View>
+                    </>
                 }
                 ListEmptyComponent={
                     <EmptyState
@@ -93,11 +106,11 @@ export default function FavouritesScreen() {
                 renderItem={({ item }) => (
                     <View
                         style={{
-                            borderRadius: 28,
+                            borderRadius: 24,
                             backgroundColor: colors.surface,
                             borderWidth: 1,
                             borderColor: colors.border,
-                            padding: 22,
+                            padding: 20,
                         }}
                     >
                         <View className="flex-row items-center justify-between">
@@ -112,9 +125,9 @@ export default function FavouritesScreen() {
                         <Text
                             style={{
                                 color: colors.textPrimary,
-                                fontSize: 19 * textScale,
+                                fontSize: 20 * textScale,
                                 lineHeight: 27 * textScale * lineHeightScale,
-                                marginTop: 18,
+                                marginTop: 14,
                             }}
                             className="font-serif font-bold"
                         >
@@ -122,25 +135,31 @@ export default function FavouritesScreen() {
                         </Text>
                         <Text
                             style={{
-                                color: colors.textPrimary,
-                                fontSize: 16 * textScale,
-                                lineHeight: 28 * textScale * lineHeightScale,
-                                marginTop: 14,
+                                color: colors.textSecondary,
+                                fontSize: 14 * textScale,
+                                lineHeight: 22 * textScale * lineHeightScale,
+                                marginTop: 10,
                             }}
-                            className="font-serif italic"
+                            className="font-sans"
                         >
-                            {item.body}
+                            {previewText(item.body)}
                         </Text>
 
                         <View className="flex-row items-center justify-between mt-6">
-                            <View className="flex-row items-center">
-                                <Ionicons name="bookmark-outline" size={18} color={colors.textSecondary} />
-                                <Text style={{ color: colors.textSecondary }} className="font-sans text-[13px] ml-2">
-                                    {item.subtitle}
-                                </Text>
-                            </View>
-                            <TouchableOpacity activeOpacity={0.86} onPress={() => removeFavourite(item.id)}>
+                            <TouchableOpacity
+                                activeOpacity={0.86}
+                                onPress={() => {
+                                    if (item.route) {
+                                        router.push(item.route as never);
+                                    }
+                                }}
+                            >
                                 <Text style={{ color: colors.accent }} className="font-sans text-[13px] font-semibold">
+                                    Open Full Reading
+                                </Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity activeOpacity={0.86} onPress={() => removeFavourite(item.id)}>
+                                <Text style={{ color: colors.textSecondary }} className="font-sans text-[13px] font-semibold">
                                     Remove
                                 </Text>
                             </TouchableOpacity>

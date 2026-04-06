@@ -25,7 +25,10 @@ export const Header: React.FC<HeaderProps> = ({
     const handleBack = () => {
         if (router.canGoBack()) {
             router.back();
+            return;
         }
+
+        router.replace('/(tabs)/more');
     };
 
     return (

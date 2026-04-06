@@ -9,7 +9,7 @@ import { useRouter } from 'expo-router';
 import { Button } from '../../src/components/ui/Button';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAppStore } from '../../src/store/useAppStore';
-import { getCalendar, getDatePresentation, getDivineOfficePrayer, getInspirations, getTodayIso } from '../../src/services/liturgicalData';
+import { getCalendar, getDailyInspiration, getDatePresentation, getDivineOfficePrayer, getTodayIso } from '../../src/services/liturgicalData';
 
 export default function DivineOfficeScreen() {
     const { colors, allColors } = useTheme();
@@ -19,7 +19,7 @@ export default function DivineOfficeScreen() {
     const { data, isLoading } = useDivineOffice(effectiveDate);
     const presentation = getDatePresentation(effectiveDate);
     const morningPrayer = getDivineOfficePrayer(effectiveDate, 'morningPrayer');
-    const inspiration = getInspirations(effectiveDate);
+    const inspiration = getDailyInspiration(effectiveDate);
 
     if (isLoading) return <View style={{ flex: 1, backgroundColor: colors.background }} />;
 
@@ -59,7 +59,7 @@ export default function DivineOfficeScreen() {
                     <View className="flex-1">
                         <Text style={{ color: colors.textPrimary }} className="font-serif font-bold text-lg mb-1">Morning Prayer</Text>
                         <Text style={{ color: colors.textSecondary }} className="font-serif italic text-sm">
-                            {morningPrayer?.readingText?.slice(0, 120) ?? '"O Lord, open my lips, and my mouth shall declare your praise."'}
+                            {morningPrayer?.parts?.reading?.text?.slice(0, 120) ?? '"O Lord, open my lips, and my mouth shall declare your praise."'}
                         </Text>
                     </View>
                 </View>
@@ -78,7 +78,7 @@ export default function DivineOfficeScreen() {
                                     borderLeftWidth: isCurrent ? 4 : 1
                                 }}
                             >
-                                <View style={{ backgroundColor: colors.surfaceElevated }} className="w-10 h-10 rounded-xl items-center justify-center mr-4">
+                                <View style={{ backgroundColor: colors.surfaceElevated, borderRadius: 10, padding: 8 }} className="w-10 h-10 items-center justify-center mr-4">
                                     <Ionicons name={prayer.icon} size={18} color={isCurrent ? allColors.liturgical.ordinaryTime : colors.textPrimary} />
                                 </View>
                                 <View className="flex-1">
@@ -111,7 +111,7 @@ export default function DivineOfficeScreen() {
                         </View>
                         <Text style={{ color: colors.textPrimary }} className="font-serif font-bold text-xl mb-2">Meditation of the Day</Text>
                         <Text style={{ color: colors.textSecondary }} className="font-sans italic text-sm mb-6 leading-relaxed">
-                            {`"${inspiration?.inspiration?.body ?? 'The Divine Office is the voice of the Church, publicly praising God.'}"`}
+                            {`"${inspiration?.body ?? 'The Divine Office is the voice of the Church, publicly praising God.'}"`}
                         </Text>
                         <Button size="sm" variant="primary" onPress={() => router.push('/inspiration')} className="self-start">
                             Read Reflection

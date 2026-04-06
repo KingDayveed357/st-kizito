@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { View, ScrollView, Text, TouchableOpacity, RefreshControl } from 'react-native';
 import { useTheme } from '../../src/hooks/useTheme';
 import { Header } from '../../src/components/ui/Header';
@@ -12,25 +12,33 @@ import { useEvents } from '../../src/hooks/useEvents';
 import { useMassTimes } from '../../src/hooks/useMassTimes';
 import { useGallery } from '../../src/hooks/useGallery';
 import { OfflineBanner } from '../../src/components/ui/OfflineBanner';
-import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const PARISH_TABS = ['Announcements', 'Events', 'Mass Times', 'Gallery'] as const;
-const MASS_TABLE_COLUMNS = {
-    day: { width: '30%' as const },
-    morning: { width: '35%' as const },
-    evening: { width: '35%' as const },
-};
 
 export default function ParishScreen() {
     const { colors, allColors } = useTheme();
     const [activeTab, setActiveTab] = useState<(typeof PARISH_TABS)[number]>('Announcements');
-    const router = useRouter();
 
-    const { data: announcements, isLoading: loadingA } = useAnnouncements();
-    const { data: events, isLoading: loadingE } = useEvents();
-    const { data: massTimes, isLoading: loadingM } = useMassTimes();
-    const { data: gallery, isLoading: loadingG } = useGallery();
+    const { data: announcements, isLoading: loadingA, refetch: refetchAnnouncements } = useAnnouncements();
+    const { data: events, isLoading: loadingE, refetch: refetchEvents } = useEvents();
+    const { data: massTimes, isLoading: loadingM, refetch: refetchMassTimes } = useMassTimes();
+    const { data: gallery, isLoading: loadingG, refetch: refetchGallery } = useGallery();
+    const [isRefreshing, setIsRefreshing] = useState(false);
+
+    const onRefresh = useCallback(async () => {
+        setIsRefreshing(true);
+        try {
+            await Promise.allSettled([
+                refetchAnnouncements(),
+                refetchEvents(),
+                refetchMassTimes(),
+                refetchGallery(),
+            ]);
+        } finally {
+            setIsRefreshing(false);
+        }
+    }, [refetchAnnouncements, refetchEvents, refetchMassTimes, refetchGallery]);
 
     const renderContent = () => {
         switch (activeTab) {
@@ -42,9 +50,9 @@ export default function ParishScreen() {
                             style={{ backgroundColor: colors.surface, borderLeftColor: allColors.liturgical.ordinaryTime, borderLeftWidth: 4 }}
                         >
                             <View className="flex-1">
-                                <Text style={{ color: allColors.liturgical.adventLent }} className="font-sans font-bold text-[10px] tracking-widest uppercase mb-1">UPCOMING LITURGY</Text>
-                                <Text style={{ color: colors.textPrimary }} className="font-serif font-bold text-lg leading-tight mb-1">Evening Benediction & Vespers</Text>
-                                <Text style={{ color: colors.textSecondary }} className="font-sans text-[11px]">Starts in 45 minutes • Main Sanctuary</Text>
+                                <Text style={{ color: allColors.liturgical.adventLent }} className="font-sans font-bold text-[10px] tracking-widest uppercase mb-1">Upcoming Liturgy</Text>
+                                <Text style={{ color: colors.textPrimary }} className="font-serif font-bold text-lg leading-tight mb-1">Evening Benediction and Vespers</Text>
+                                <Text style={{ color: colors.textSecondary }} className="font-sans text-[11px]">Starts in 45 minutes, Main Sanctuary</Text>
                             </View>
                             <View
                                 style={{
@@ -55,8 +63,6 @@ export default function ParishScreen() {
                                     alignItems: 'center',
                                     justifyContent: 'center',
                                     alignSelf: 'center',
-                                    aspectRatio: 1,
-                                    overflow: 'hidden',
                                 }}
                                 className="ml-4"
                             >
@@ -65,11 +71,7 @@ export default function ParishScreen() {
                         </View>
 
                         <View className="flex-row justify-between items-end mb-4">
-                            <Text style={{ color: colors.textPrimary }} className="font-serif font-bold text-2xl leading-none">Latest{'\n'}Announcements</Text>
-                            <TouchableOpacity className="flex-row items-center mb-1">
-                                <Text style={{ color: allColors.liturgical.ordinaryTime }} className="font-sans font-bold text-xs uppercase mr-1">View{'\n'}Archive</Text>
-                                <Ionicons name="arrow-forward" size={14} color={allColors.liturgical.ordinaryTime} />
-                            </TouchableOpacity>
+                            <Text style={{ color: colors.textPrimary }} className="font-serif font-bold text-2xl leading-none">Latest{`\n`}Announcements</Text>
                         </View>
 
                         {loadingA ? <View className="h-40" /> : announcements.map((announcement) => (
@@ -91,30 +93,13 @@ export default function ParishScreen() {
                     <View>
                         <Text style={{ color: colors.textPrimary }} className="font-serif font-bold text-2xl leading-none mb-2">Weekly Mass Schedule</Text>
                         <Text style={{ color: colors.textSecondary }} className="font-sans text-[13px] leading-[20px] mb-6">
-                            Clear service times for weekdays, vigil, and Sunday celebrations.
+                            Grouped by day for clear, comfortable reading.
                         </Text>
-                        <View
-                            style={{ backgroundColor: colors.surface, borderRadius: 20, borderWidth: 1, borderColor: colors.surfaceElevated }}
-                            className="mb-3 overflow-hidden"
-                        >
-                            <View
-                                className="flex-row px-5 py-4"
-                                style={{ backgroundColor: colors.background, borderBottomWidth: 1, borderBottomColor: colors.surfaceElevated }}
-                            >
-                                <View style={MASS_TABLE_COLUMNS.day} className="pr-3">
-                                    <Text style={{ color: '#8C827A' }} className="font-sans font-bold text-[10px] tracking-[1.5px] uppercase">Day</Text>
-                                </View>
-                                <View style={MASS_TABLE_COLUMNS.morning} className="pr-3">
-                                    <Text style={{ color: '#8C827A' }} className="font-sans font-bold text-[10px] tracking-[1.5px] uppercase">Morning</Text>
-                                </View>
-                                <View style={MASS_TABLE_COLUMNS.evening}>
-                                    <Text style={{ color: '#8C827A' }} className="font-sans font-bold text-[10px] tracking-[1.5px] uppercase">Evening</Text>
-                                </View>
-                            </View>
-                            {loadingM ? <View className="h-40" /> : massTimes.map((massTime, index) => (
-                                <MassTimeRow key={massTime.id} massTime={massTime} isLast={index === massTimes.length - 1} />
-                            ))}
-                        </View>
+
+                        {loadingM ? <View className="h-40" /> : massTimes.map((massTime) => (
+                            <MassTimeRow key={massTime.id} massTime={massTime} />
+                        ))}
+
                         <Text style={{ color: colors.textSecondary }} className="font-sans text-[11px] leading-[16px] mb-8">
                             * Saturday evening is the Sunday vigil Mass.
                         </Text>
@@ -125,10 +110,6 @@ export default function ParishScreen() {
                     <View>
                         <View className="flex-row justify-between items-center mb-6">
                             <Text style={{ color: colors.textPrimary }} className="font-serif font-bold text-2xl leading-none">Parish Gallery</Text>
-                            <TouchableOpacity className="flex-row items-center">
-                                <Text style={{ color: allColors.liturgical.ordinaryTime }} className="font-sans font-bold text-xs uppercase mr-1">See All</Text>
-                                <Ionicons name="grid" size={12} color={allColors.liturgical.ordinaryTime} />
-                            </TouchableOpacity>
                         </View>
                         {loadingG ? <View className="h-40" /> : <GalleryGrid items={gallery} onImagePress={() => { }} />}
                     </View>
@@ -140,12 +121,7 @@ export default function ParishScreen() {
         <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
             <Header
                 showBack
-                centerElement={<Text style={{ color: allColors.liturgical.ordinaryTime }} className="font-serif font-bold text-xl text-center">St. Kizito{'\n'}Parish</Text>}
-                rightElement={
-                    <TouchableOpacity onPress={() => router.push('/calendar')} className="p-2 mr-2">
-                        <Ionicons name="calendar-outline" size={24} color={allColors.liturgical.ordinaryTime} />
-                    </TouchableOpacity>
-                }
+                centerElement={<Text style={{ color: allColors.liturgical.ordinaryTime }} className="font-serif font-bold text-xl text-center">St. Kizito{`\n`}Parish</Text>}
             />
 
             <View className="px-screen pt-3 pb-2">
@@ -185,7 +161,7 @@ export default function ParishScreen() {
             <ScrollView
                 className="flex-1 px-screen pt-4"
                 showsVerticalScrollIndicator={false}
-                refreshControl={<RefreshControl refreshing={false} onRefresh={() => { }} />}
+                refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={onRefresh} />}
             >
                 {renderContent()}
                 <View className="h-20" />

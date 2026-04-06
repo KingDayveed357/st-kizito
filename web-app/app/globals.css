@@ -1,0 +1,239 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  /* The Sacred Library Design System */
+  /* Surface Hierarchy - from warm parchment to pure white */
+  --surface: #fcf9f3;
+  --surface-container-low: #f6f3ed;
+  --surface-container-lowest: #ffffff;
+  --surface-container-highest: #e5e2dc;
+  
+  /* Primary: Deep Navy-Black (the Infinite) */
+  --primary: #000000;
+  --on-primary: #ffffff;
+  --primary-container: #191b22;
+  --on-primary-container: #ffffff;
+  
+  /* Secondary: Emerald Green */
+  --secondary: #376847;
+  --on-secondary: #ffffff;
+  --secondary-container: #e8f5e9;
+  --on-secondary-container: #376847;
+  
+  /* Tertiary: Divine Gold */
+  --tertiary: #c9a84c;
+  --on-tertiary: #1c1c18;
+  --tertiary-fixed: #c9a84c;
+  --tertiary-fixed-dim: #adb377;
+  
+  /* Status Colors */
+  --error: #b3261e;
+  --on-error: #f1f1f1;
+  --success: #2e7d32;
+  --on-success: #ffffff;
+  --warning: #f57c00;
+  --on-warning: #ffffff;
+  --outline: #79747e;
+  --outline-variant: #cac4d0;
+  
+  /* Semantic assignments for compatibility */
+  --background: var(--surface);
+  --foreground: #1c1c18;
+  --card: var(--surface-container-lowest);
+  --card-foreground: #1c1c18;
+  --popover: var(--surface-container-lowest);
+  --popover-foreground: #1c1c18;
+  --muted: var(--surface-container-low);
+  --muted-foreground: #79747e;
+  --accent: var(--tertiary);
+  --accent-foreground: #1c1c18;
+  --destructive: var(--error);
+  --destructive-foreground: var(--on-error);
+  --success: var(--success);
+  --success-foreground: var(--on-success);
+  --warning: var(--warning);
+  --warning-foreground: var(--on-warning);
+  --border: var(--outline-variant);
+  --input: var(--surface-container-low);
+  --ring: var(--primary);
+  
+  /* Chart colors using design system palette */
+  --chart-1: var(--primary);
+  --chart-2: var(--tertiary);
+  --chart-3: var(--secondary);
+  --chart-4: var(--warning);
+  --chart-5: var(--primary-container);
+  
+  --radius: 1.5rem;
+  
+  /* Sidebar */
+  --sidebar: #0f1523;
+  --sidebar-foreground: #ffffff;
+  --sidebar-primary: var(--tertiary);
+  --sidebar-primary-foreground: #0f1523;
+  --sidebar-accent: #376847;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: #1a2332;
+  --sidebar-ring: var(--tertiary);
+}
+
+.dark {
+  --surface: #1a1d24;
+  --surface-container-low: #232931;
+  --surface-container-lowest: #0f1219;
+  --surface-container-highest: #45464f;
+  
+  --primary: #ffffff;
+  --on-primary: #000000;
+  --primary-container: #b8c5ff;
+  --on-primary-container: #000000;
+  
+  --secondary: #b8e6cc;
+  --on-secondary: #1b542e;
+  --secondary-container: #245942;
+  --on-secondary-container: #b8e6cc;
+  
+  --tertiary: #f1d6a8;
+  --on-tertiary: #3f2f0f;
+  --tertiary-fixed: #f1d6a8;
+  --tertiary-fixed-dim: #d4b77a;
+  
+  --error: #f2b8b5;
+  --on-error: #601410;
+  --success: #8fce7f;
+  --on-success: #0d3a1a;
+  --warning: #ffb74d;
+  --on-warning: #331900;
+  --outline: #928f99;
+  --outline-variant: #49454e;
+  
+  --background: var(--surface);
+  --foreground: #e6e0e9;
+  --card: var(--surface-container-lowest);
+  --card-foreground: #e6e0e9;
+  --popover: var(--surface-container-lowest);
+  --popover-foreground: #e6e0e9;
+  --muted: var(--surface-container-low);
+  --muted-foreground: #c7c6cc;
+  --accent: var(--tertiary);
+  --accent-foreground: #3f2f0f;
+  --destructive: var(--error);
+  --destructive-foreground: var(--on-error);
+  --success: var(--success);
+  --success-foreground: var(--on-success);
+  --warning: var(--warning);
+  --warning-foreground: var(--on-warning);
+  --border: var(--outline-variant);
+  --input: var(--surface-container-low);
+  --ring: var(--primary);
+  
+  --chart-1: #f1d6a8;
+  --chart-2: #b8e6cc;
+  --chart-3: #ffb74d;
+  --chart-4: #f2b8b5;
+  --chart-5: #8fce7f;
+}
+
+@theme inline {
+  --font-sans: 'Inter', 'Inter Fallback';
+  --font-serif: 'Noto Serif', 'Noto Serif Fallback';
+  --font-mono: 'Inter Mono', 'Inter Mono Fallback';
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-on-primary: var(--on-primary);
+  --color-secondary: var(--secondary);
+  --color-on-secondary: var(--on-secondary);
+  --color-tertiary: var(--tertiary);
+  --color-on-tertiary: var(--on-tertiary);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+@layer base {
+  * {
+    @apply outline-ring/50;
+  }
+  
+  html {
+    @apply scroll-smooth;
+  }
+  
+  body {
+    @apply bg-background text-foreground font-sans;
+  }
+  
+  /* Typography - Noto Serif for Headlines, Inter for Body */
+  h1 {
+    @apply font-serif text-5xl lg:text-6xl font-bold tracking-[-0.02em] leading-tight;
+  }
+  
+  h2 {
+    @apply font-serif text-4xl lg:text-5xl font-semibold tracking-[-0.02em] leading-tight;
+  }
+  
+  h3 {
+    @apply font-serif text-3xl lg:text-4xl font-semibold tracking-[-0.01em] leading-tight;
+  }
+  
+  h4 {
+    @apply font-serif text-2xl lg:text-3xl font-semibold;
+  }
+  
+  h5 {
+    @apply font-sans text-lg lg:text-xl font-semibold uppercase tracking-[0.05em];
+  }
+  
+  h6 {
+    @apply font-sans text-base font-semibold uppercase tracking-[0.05em];
+  }
+  
+  p {
+    @apply leading-relaxed text-base lg:text-lg;
+  }
+  
+  /* Remove default border colors - Sacred Library uses only tonal shifts */
+  input, textarea, select {
+    @apply border-0 bg-muted rounded-lg focus:outline-none focus:ring-2 focus:ring-tertiary transition-shadow;
+  }
+  
+  /* Accessibility */
+  a {
+    @apply underline-offset-4 hover:underline;
+  }
+}

@@ -5,6 +5,7 @@ import { Header } from '../../src/components/ui/Header';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { ParishContact, useParishContacts } from '../../src/hooks/useParishContacts';
 
 // ─── Data ────────────────────────────────────────────────────────────────────
 
@@ -41,6 +42,14 @@ const QUICK_ACTIONS = [
 
 const PARISH_SERVICES = [
     {
+        id: 'requests',
+        title: 'My Requests',
+        subtitle: 'Track donation and booking status',
+        icon: 'time-outline' as const,
+        route: '/requests',
+        accent: '#5E6F8E',
+    },
+    {
         id: 'mass',
         title: 'Book a Mass',
         subtitle: 'Mass intentions & thanksgiving',
@@ -52,7 +61,7 @@ const PARISH_SERVICES = [
         id: 'history',
         title: 'Parish History',
         subtitle: 'Our story, witness & growth',
-        icon: 'time-outline' as const,
+        icon: 'library-outline' as const,
         route: '/history',
         accent: '#C9A84C',
     },
@@ -124,6 +133,7 @@ const QuickActionCard = ({
 export default function MoreScreen() {
     const { colors, allColors, mode } = useTheme();
     const router = useRouter();
+    const { data: contacts, isLoading: contactsLoading } = useParishContacts();
 
     const isDarkMode = mode === 'dark' || mode === 'high-contrast';
     const parishBadgeBg = isDarkMode ? colors.surfaceElevated : '#E8F0E6';
@@ -181,7 +191,7 @@ export default function MoreScreen() {
                     </Text>
                 </View>
 
-                <View className='flex justify-between flex-row flex-wrap gap-3 mb-28'>
+                <View className='flex justify-between flex-row flex-wrap gap-6 mb-28'>
                     {QUICK_ACTIONS.map((item) => (
                         <QuickActionCard
                             key={item.title}
@@ -261,7 +271,7 @@ export default function MoreScreen() {
                     </Text>
                 </View>
 
-                <ContactSection colors={colors} allColors={allColors} />
+                <ContactSection colors={colors} allColors={allColors} contacts={contacts} isLoading={contactsLoading} />
 
                 {/* ── Footer ── */}
                 <View style={{ marginTop: 32, alignItems: 'center', gap: 4 }}>
@@ -279,43 +289,51 @@ export default function MoreScreen() {
 
 // ─── Contact Section ──────────────────────────────────────────────────────────
 
-const CONTACTS = [
-    {
-        id: 'secretary',
-        role: 'Parish Secretary',
-        name: 'Mrs. Adaeze Okonkwo',
-        detail: 'Sacramental documents & certificates',
-        phone: '+2348012345678',
-        icon: 'document-text-outline' as const,
-        accent: '#5E6F8E',
-    },
-    {
-        id: 'catechist',
-        role: 'Catechist',
-        name: 'Mr. Chukwuemeka Eze',
-        detail: 'RCIA, baptism prep & faith formation',
-        phone: '+2348087654321',
-        icon: 'book-outline' as const,
-        accent: '#C9A84C',
-    },
-    {
-        id: 'counselling',
-        role: 'Pastoral Counsellor',
-        name: 'Fr. Emmanuel Nwosu',
-        detail: 'Private sessions with a priest',
-        phone: '+2348023456789',
-        icon: 'heart-circle-outline' as const,
-        accent: '#B5303C',
-    },
-];
+const DEFAULT_CONTACT_ICON: React.ComponentProps<typeof Ionicons>['name'] = 'call-outline';
+const ALLOWED_CONTACT_ICONS = new Set<React.ComponentProps<typeof Ionicons>['name']>([
+    'document-text-outline',
+    'book-outline',
+    'heart-circle-outline',
+    'call-outline',
+    'person-outline',
+    'people-outline',
+]);
+
+const resolveContactIcon = (icon: string | null) => {
+    if (!icon) return DEFAULT_CONTACT_ICON;
+    if (ALLOWED_CONTACT_ICONS.has(icon as React.ComponentProps<typeof Ionicons>['name'])) {
+        return icon as React.ComponentProps<typeof Ionicons>['name'];
+    }
+    return DEFAULT_CONTACT_ICON;
+};
 
 function ContactSection({
     colors,
     allColors,
+    contacts,
+    isLoading,
 }: {
     colors: ReturnType<typeof useTheme>['colors'];
     allColors: ReturnType<typeof useTheme>['allColors'];
+    contacts: ParishContact[];
+    isLoading: boolean;
 }) {
+    if (isLoading) {
+        return (
+            <View
+                style={{
+                    borderRadius: 24,
+                    backgroundColor: colors.surface,
+                    borderWidth: 1,
+                    borderColor: colors.border,
+                    padding: 18,
+                }}
+            >
+                <Text style={{ color: colors.textSecondary, fontSize: 13 }}>Loading parish contacts...</Text>
+            </View>
+        );
+    }
+
     return (
         <View
             style={{
@@ -326,11 +344,11 @@ function ContactSection({
                 overflow: 'hidden',
             }}
         >
-            {CONTACTS.map((contact, index) => (
+            {contacts.map((contact, index) => (
                 <View
                     key={contact.id}
                     style={{
-                        borderBottomWidth: index === CONTACTS.length - 1 ? 0 : 1,
+                        borderBottomWidth: index === contacts.length - 1 ? 0 : 1,
                         borderBottomColor: colors.border,
                         paddingHorizontal: 18,
                         paddingVertical: 16,
@@ -342,23 +360,23 @@ function ContactSection({
                                 width: 44,
                                 height: 44,
                                 borderRadius: 14,
-                                backgroundColor: `${contact.accent}18`,
+                                backgroundColor: `${contact.accent ?? allColors.liturgical.ordinaryTime}18`,
                                 alignItems: 'center',
                                 justifyContent: 'center',
                                 marginTop: 2,
                             }}
                         >
-                            <Ionicons name={contact.icon} size={21} color={contact.accent} />
+                            <Ionicons name={resolveContactIcon(contact.icon)} size={21} color={contact.accent ?? allColors.liturgical.ordinaryTime} />
                         </View>
                         <View style={{ flex: 1 }}>
-                            <Text style={{ color: contact.accent, fontSize: 10, fontWeight: '700', letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 2 }}>
+                            <Text style={{ color: contact.accent ?? allColors.liturgical.ordinaryTime, fontSize: 10, fontWeight: '700', letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 2 }}>
                                 {contact.role}
                             </Text>
                             <Text style={{ color: colors.textPrimary, fontSize: 15, fontFamily: 'Georgia', fontWeight: '700' }}>
                                 {contact.name}
                             </Text>
                             <Text style={{ color: colors.textSecondary, fontSize: 12, marginTop: 2, lineHeight: 17 }}>
-                                {contact.detail}
+                                {contact.detail ?? 'Contact parish office for support.'}
                             </Text>
 
                             {/* Action buttons */}
@@ -373,17 +391,17 @@ function ContactSection({
                                         paddingHorizontal: 14,
                                         paddingVertical: 8,
                                         borderRadius: 12,
-                                        backgroundColor: `${contact.accent}18`,
+                                        backgroundColor: `${contact.accent ?? allColors.liturgical.ordinaryTime}18`,
                                     }}
                                 >
-                                    <Ionicons name="call-outline" size={14} color={contact.accent} />
-                                    <Text style={{ color: contact.accent, fontSize: 12, fontWeight: '700' }}>
+                                    <Ionicons name="call-outline" size={14} color={contact.accent ?? allColors.liturgical.ordinaryTime} />
+                                    <Text style={{ color: contact.accent ?? allColors.liturgical.ordinaryTime, fontSize: 12, fontWeight: '700' }}>
                                         Call
                                     </Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity
                                     activeOpacity={0.8}
-                                    onPress={() => Linking.openURL(`https://wa.me/${contact.phone.replace('+', '')}`)}
+                                    onPress={() => Linking.openURL(`https://wa.me/${(contact.whatsapp_phone ?? contact.phone).replace('+', '')}`)}
                                     style={{
                                         flexDirection: 'row',
                                         alignItems: 'center',
