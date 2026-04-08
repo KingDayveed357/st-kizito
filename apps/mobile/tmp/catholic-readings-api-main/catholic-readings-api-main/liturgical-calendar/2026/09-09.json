@@ -1,0 +1,12 @@
+{
+  "date": "2026-09-09",
+  "monthDay": "9/9",
+  "season": "Ordinary Time",
+  "celebration": {
+    "name": "Saint Peter Claver, Priest",
+    "type": "OPT_MEMORIAL",
+    "quote": "We must speak to them with our hands by giving, before we try to speak to them with our lips.",
+    "description": "A Jesuit who spent 40 years in Colombia ministering to enslaved Africans arriving on slave ships."
+  },
+  "apiEndpoint": "https://cpbjr.github.io/catholic-readings-api/liturgical-calendar/2026/09-09.json"
+}

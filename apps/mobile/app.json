@@ -1,0 +1,53 @@
+{
+  "expo": {
+    "name": "st-kizito",
+    "slug": "st-kizito",
+    "scheme": "st-kizito",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.dave.js.stkizito"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#E6F4FE",
+        "foregroundImage": "./assets/android-icon.png"
+      },
+      "predictiveBackGestureEnabled": false,
+      "package": "com.dave.js.stkizito"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-sqlite",
+      "expo-image",
+      "expo-notifications",
+       
+      "expo-font"
+    ],
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "b843ec8a-4ccf-4218-bdfb-e9816aa38a5d"
+      }
+    },
+    "owner": "dave.js",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/b843ec8a-4ccf-4218-bdfb-e9816aa38a5d"
+    }
+  }
+}

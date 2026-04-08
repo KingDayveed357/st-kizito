@@ -1,0 +1,13 @@
+{
+  "date": "2026-06-04",
+  "monthDay": "6/4",
+  "season": "Ordinary Time",
+  "historicalNote": "Traditional date of Corpus Christi",
+  "celebration": {
+    "name": "Thursday of the 9th week of Ordinary Time",
+    "type": "FERIA",
+    "quote": "",
+    "description": ""
+  },
+  "apiEndpoint": "https://cpbjr.github.io/catholic-readings-api/liturgical-calendar/2026/06-04.json"
+}

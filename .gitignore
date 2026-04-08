@@ -2,12 +2,20 @@
 
 # dependencies
 node_modules/
+apps/*/node_modules/
+apps/web/node_modules.pre-reorg-backup/
 
 # Expo
 .expo/
+apps/*/.expo/
 dist/
+apps/*/dist/
 web-build/
 expo-env.d.ts
+
+# Next.js
+.next/
+apps/*/.next/
 
 # Native
 .kotlin/
@@ -17,6 +25,9 @@ expo-env.d.ts
 *.p12
 *.key
 *.mobileprovision
+.eas.json
+.app.json
+.easignore
 
 # Metro
 .metro-health-check*

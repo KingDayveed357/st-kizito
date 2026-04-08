@@ -1,0 +1,12 @@
+{
+  "date": "2026-11-23",
+  "monthDay": "11/23",
+  "season": "Ordinary Time",
+  "celebration": {
+    "name": "Saint Clement I, Pope and Martyr/Saint Columban, Religious",
+    "type": "OPT_MEMORIAL",
+    "quote": "Let us fix our eyes on the blood of Christ and understand how precious it is to His Father.",
+    "description": "The fourth Pope, whose letter to the Corinthians remains one of the earliest and most important documents of the early Church."
+  },
+  "apiEndpoint": "https://cpbjr.github.io/catholic-readings-api/liturgical-calendar/2026/11-23.json"
+}

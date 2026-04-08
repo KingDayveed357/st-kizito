@@ -1,0 +1,12 @@
+{
+  "date": "2026-06-06",
+  "monthDay": "6/6",
+  "season": "Ordinary Time",
+  "celebration": {
+    "name": "Saint Norbert, Bishop",
+    "type": "OPT_MEMORIAL",
+    "quote": "A talkative, over-curious person is like an oven which is open and exposed on all sides.",
+    "description": "After a dramatic conversion, he founded the Premonstratensian Order and became Archbishop of Magdeburg."
+  },
+  "apiEndpoint": "https://cpbjr.github.io/catholic-readings-api/liturgical-calendar/2026/06-06.json"
+}

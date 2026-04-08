@@ -1,0 +1,12 @@
+{
+  "date": "2026-01-22",
+  "monthDay": "1/22",
+  "season": "Ordinary Time",
+  "celebration": {
+    "name": "Saint Vincent, Deacon and Martyr",
+    "type": "OPT_MEMORIAL",
+    "quote": "The most powerful weapon to conquer the devil is humility.",
+    "description": "A deacon and martyr of Spain, known for his unwavering faith and his eloquent testimony before his executioners."
+  },
+  "apiEndpoint": "https://cpbjr.github.io/catholic-readings-api/liturgical-calendar/2026/01-22.json"
+}

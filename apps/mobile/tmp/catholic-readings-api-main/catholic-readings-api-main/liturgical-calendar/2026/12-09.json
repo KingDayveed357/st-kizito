@@ -1,0 +1,12 @@
+{
+  "date": "2026-12-09",
+  "monthDay": "12/9",
+  "season": "Advent",
+  "celebration": {
+    "name": "Saint Juan Diego Cuauhtlatoatzin",
+    "type": "OPT_MEMORIAL",
+    "quote": "Am I not here, who am your Mother?",
+    "description": "An indigenous Mexican layman to whom Our Lady of Guadalupe appeared, leaving her miraculous image on his tilma."
+  },
+  "apiEndpoint": "https://cpbjr.github.io/catholic-readings-api/liturgical-calendar/2026/12-09.json"
+}

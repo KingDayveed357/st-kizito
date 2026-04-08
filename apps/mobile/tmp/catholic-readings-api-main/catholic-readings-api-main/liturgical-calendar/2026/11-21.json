@@ -1,0 +1,13 @@
+{
+  "date": "2026-11-21",
+  "monthDay": "11/21",
+  "season": "Ordinary Time",
+  "celebration": {
+    "name": "Presentation of The Blessed Virgin Mary",
+    "type": "MEMORIAL",
+    "quote": "",
+    "description": "",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/Titian_-_Presentation_of_the_Virgin_Mary_-_WGA22773.jpg/500px-Titian_-_Presentation_of_the_Virgin_Mary_-_WGA22773.jpg"
+  },
+  "apiEndpoint": "https://cpbjr.github.io/catholic-readings-api/liturgical-calendar/2026/11-21.json"
+}
