@@ -1,48 +1,78 @@
-# St. Kizito Parish App
+# St. Kizito Mobile: The Parishioner App
 
-## Pre-requisites
-- Expo SDK 55
-- NativeWind v4
-- Expo Router v3
-- Zustand
-- TanStack Query v5
+A premium, offline-first mobile experience built with Expo and React Native, designed to bring the liturgical life of St. Kizito Parish into the pockets of its parishioners.
 
-## Architecture & Extensibility Guide
+## 📱 Overview
 
-## Dev Builds
+The mobile application serves as the "Digital Sanctuary" for the faithful. It emphasizes speed, reverence, and reliability, ensuring that daily prayers and parish updates are accessible even without an active internet connection.
 
-Use EAS development builds for testing on physical devices without Expo Go.
+## ✨ Features (Mobile-Only)
 
-1. Install dependencies with `npm install`.
-2. Create an Android dev build with `eas build -p android --profile development`.
-3. Create an iOS dev build with `eas build -p ios --profile development`.
-4. Share the Android install link or QR code from the EAS build page with testers.
-5. Share the iOS install flow through the EAS link or TestFlight, depending on the Apple distribution setup.
-6. Start Metro in dev-client mode with `npm run dev` and open the installed dev build instead of Expo Go.
+- **Daily Readings**: Beautifully typeset Gospel and scripture readings synchronized with the liturgical calendar.
+- **Divine Office**: Structured prayer experience for Morning, Midday, Evening, and Night prayers.
+- **Offline-First Architecture**: Uses SQLite to store liturgical data locally, ensuring 100% availability for prayer.
+- **Smart Mass Bookings**: Integrated flow for requesting mass intentions with real-time status updates.
+- **Parish Announcements**: Push-notification-enabled updates on parish life and community events.
+- **Liturgical Calendar**: Interactive calendar highlighting feast days, seasons, and parish-specific events.
 
-Rebuild the dev client whenever native dependencies or app configuration changes.
+## 🏗️ Tech Stack
 
-### Adding a New Screen
-1. Create a new `.tsx` file in the appropriate `/app/` directory (e.g. `/app/settings/index.tsx`).
-2. If it belongs in the More tab, add the link to `menuItems` inside `app/(tabs)/more.tsx`.
-3. Use primitive components from `/src/components/ui/` only - do not duplicate base styling logic.
-4. Import colors via `const { colors } = useTheme();` and stick exclusively to semantic color references. Never hardcode hex values outside of `colors.ts`.
+- **Framework**: Expo 55 (Managed Workflow)
+- **Navigation**: Expo Router (File-based routing)
+- **Styling**: NativeWind v4 (Tailwind CSS for React Native)
+- **State Management**: Zustand
+- **Data Fetching**: TanStack Query v5
+- **Local Database**: `expo-sqlite`
+- **Backend**: Supabase (`@supabase/supabase-js`)
+- **Animation**: React Native Reanimated
 
-### Adding a New API service
-1. Create `filename.api.ts` inside `/src/services/api/`.
-2. Define typescript interfaces inside `/src/types/`.
-3. Create a custom hook `useFile.ts` in `/src/hooks/` utilizing TanStack logic to fetch and cache responses.
-4. No network fetching should occur outside of `/services/api/`.
+## ⚙️ Setup Instructions
 
-### Adding a New Offline Data Type
-1. Add the SQLite CREATE TABLE statement inside `src/services/offline/database.ts` via `execAsync`.
-2. Create an offline service file (e.g., `events.offline.ts`) handling CRUD ops for that table.
-3. Update `src/services/offline/seed.ts` if JSON seeding is required on first launch.
-4. Incorporate this flow within the domain's custom hook: First verify SQLite records. If no record, try network API and fetch it locally into the SQL Table. If offline, return `isOffline: true`.
+### 1. Install Dependencies
+```bash
+npm install
+```
 
-### Primitive UI Component Use
-- `<Button variant="...">`: Variants available: `primary`, `secondary`, `outline`, `ghost`.
-- `<Card elevated accentColor="...">`: Semantic wrapper creating uniform padding and radiuses.
-- `<Header showBack leftElement="...">`: Fixed height Top navigation bar. Handle routing internally via router.
-- Skeleton loaders: `<SkeletonLoader width="100%" height={24} lines={3} />` Animates opacity.
-- Dynamic colors are supplied via NativeWind variables mapping to our `colors` file alongside inline dynamic styling leveraging `useTheme()`.
+### 2. Environment Setup
+Create a `.env` file in `apps/mobile/`:
+```env
+EXPO_PUBLIC_SUPABASE_URL=your_project_url
+EXPO_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
+```
+
+### 3. Run Locally
+```bash
+# Start Metro bundler
+npm run start
+
+# Open in simulator
+# Press 'i' for iOS or 'a' for Android
+```
+
+### 4. Development Builds (EAS)
+For physical device testing with custom native modules:
+```bash
+eas build -p android --profile development
+eas build -p ios --profile development
+```
+
+## 📁 Project Structure (Local)
+
+```text
+apps/mobile/
+├── app/                # Expo Router screens (Tabs, Modals, Stacks)
+├── src/
+│   ├── components/     # UI Primitives & Domain components
+│   ├── services/       # API (Supabase) and Offline (SQLite) layers
+│   ├── hooks/          # Custom hooks for data and theme logic
+│   ├── types/          # Centralized TypeScript interfaces
+│   └── theme/          # Design system tokens (colors.ts, etc.)
+├── data/               # Static JSON seed data for offline use
+└── assets/             # Images, fonts, and splash screens
+```
+
+## 🧱 Architecture Notes
+
+- **Service Layer Pattern**: All network requests must occur within `/src/services/api/`.
+- **Theme Consistency**: UI components must use `useTheme()` for semantic color mapping to support system-wide dark/light mode transitions.
+- **Data Seeding**: First launch triggers an automated SQLite seeding process from `/data/` to ensure immediate offline availability.

@@ -13,5 +13,8 @@
     "web:dev": "npm --prefix apps/web run dev",
     "web:build": "npm --prefix apps/web run build",
     "web:start": "npm --prefix apps/web run start"
+  },
+  "dependencies": {
+    "framer-motion": "^12.38.0"
   }
 }
