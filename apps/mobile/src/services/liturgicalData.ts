@@ -17,6 +17,8 @@ import type {
     PsalmVerse,
 } from '../types/readings.types';
 
+import { getLiturgicalDay } from './liturgicalEngine';
+
 const calendarData = calendar2026 as Record<string, any>;
 const readingsData = readings as Record<string, any>;
 const officeData = divineOffice as Record<string, any>;
@@ -25,11 +27,29 @@ const passages = passageCache as Record<string, any>;
 const usccbData = usccbDataRaw as Record<string, { readings?: any, readingsList?: any[], masses?: any[] }>;
 
 export const getTodayIso = () => {
-    const today = new Date().toISOString().slice(0, 10);
-    return calendarData[today] ? today : '2026-01-01';
+    return new Date().toISOString().slice(0, 10);
 };
 
-export const getCalendar = (date: string) => calendarData[date] ?? null;
+export const getCalendar = (date: string) => {
+    if (calendarData[date]) return calendarData[date];
+    // Fallback to dynamic engine
+    try {
+        const dynamic = getLiturgicalDay(date);
+        return {
+            date: dynamic.date,
+            celebration: dynamic.celebration,
+            celebrationType: dynamic.celebrationType,
+            season: dynamic.season,
+            color: dynamic.color,
+            liturgicalYear: dynamic.year,
+            week: dynamic.week,
+            day: dynamic.dayOfWeek,
+            key: `ot-week-${dynamic.week}-${dynamic.dayOfWeek.toLowerCase()}` // Fallback key
+        };
+    } catch (e) {
+        return null;
+    }
+};
 
 const sanitizeText = (text?: string | null) =>
     (text ?? '')

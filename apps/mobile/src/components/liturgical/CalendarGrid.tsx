@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useTheme } from '../../hooks/useTheme';
 
 export interface CalendarDay {
@@ -10,6 +10,7 @@ export interface CalendarDay {
     isSunday?: boolean;
     celebration?: string;
     celebrationType?: string;
+    color?: string;
 }
 
 interface CalendarGridProps {
@@ -18,12 +19,10 @@ interface CalendarGridProps {
     selectedDate: string | null;
     onDatePress: (date: string) => void;
     calendarData: CalendarDay[];
-    onPrevMonth?: () => void;
-    onNextMonth?: () => void;
 }
 
 export const CalendarGrid: React.FC<CalendarGridProps> = ({
-    month, year, selectedDate, onDatePress, calendarData, onPrevMonth, onNextMonth
+    selectedDate, onDatePress, calendarData
 }) => {
     const { colors, allColors } = useTheme();
     const days = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
@@ -38,29 +37,39 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({
             <View className="flex-row flex-wrap">
                 {calendarData.map((day, idx) => {
                     if (!day.dayNum) {
-                        return <View key={idx} className="w-[14.28%] h-12" />; // Empty cell
+                        return <View key={idx} className="w-[14.28%] h-14" />; // Empty cell
                     }
 
                     const isSelected = selectedDate === day.date;
-                    const isFeastDay = !!day.celebrationType && day.celebrationType !== 'WEEKDAY';
-                    let dotColor: string = allColors.liturgical.ordinaryTime;
-                    if (day.season?.toLowerCase()?.includes('easter')) dotColor = allColors.liturgical.christmasEaster;
-                    else if (day.season?.toLowerCase()?.includes('lent')) dotColor = allColors.liturgical.adventLent;
+                    const isFeastDay = !!day.celebrationType && day.celebrationType !== 'Weekday';
+                    
+                    let dotColor: string = day.color || colors.textSecondary;
+                    if (day.season?.toLowerCase()?.includes('easter') || day.season?.toLowerCase()?.includes('christmas')) dotColor = allColors.liturgical.christmasEaster;
+                    else if (day.season?.toLowerCase()?.includes('lent') || day.season?.toLowerCase()?.includes('advent')) dotColor = allColors.liturgical.adventLent;
+                    else if (day.season?.toLowerCase()?.includes('ordinary')) dotColor = allColors.liturgical.ordinaryTime;
+
                     const dayTextColor = day.isSunday || isFeastDay ? colors.accent : colors.textPrimary;
 
                     return (
                         <TouchableOpacity
                             key={day.date}
                             onPress={() => onDatePress(day.date)}
-                            className="w-[14.28%] h-12 items-center justify-center relative"
+                            className="w-[14.28%] h-14 items-center justify-center relative"
                         >
-                            <View className={`w-9 h-9 items-center justify-center rounded-full ${isSelected ? 'border border-gray-300' : ''}`}
-                                style={isSelected ? { borderColor: colors.accent, borderWidth: 1 } : {}}>
-                                <Text style={{ color: dayTextColor }} className={`font-serif text-lg ${day.isToday ? 'font-bold' : ''}`}>
-                                    {day.dayNum}
+                            <View 
+                                style={[
+                                    styles.dayCircle,
+                                    isSelected && { borderColor: colors.accent, borderWidth: 1.5, backgroundColor: colors.surface }
+                                ]}
+                            >
+                                <Text 
+                                    style={{ color: dayTextColor, opacity: day.dayNum === 0 ? 0 : 1 }} 
+                                    className={`font-serif text-[17px] ${day.isToday ? 'font-black' : ''}`}
+                                >
+                                    {day.dayNum || ''}
                                 </Text>
-                                {day.season && (
-                                    <View style={{ backgroundColor: dotColor }} className="w-[4px] h-[4px] rounded-full absolute bottom-1" />
+                                {day.dayNum !== 0 && (
+                                    <View style={{ backgroundColor: dotColor }} className="w-[4px] h-[4px] rounded-full absolute bottom-1.5" />
                                 )}
                             </View>
                         </TouchableOpacity>
@@ -70,3 +79,14 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({
         </View>
     );
 };
+
+const styles = StyleSheet.create({
+    dayCircle: {
+        width: 40,
+        height: 40,
+        justifyContent: 'center',
+        borderRadius: 20,
+        alignItems: 'center',
+        position: 'relative'
+    }
+});

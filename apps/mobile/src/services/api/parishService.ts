@@ -35,6 +35,8 @@ const normalizeStatus = (value: unknown): BookingStatus => {
   return 'pending'
 }
 
+const normalizeRequestId = (value: unknown) => String(value ?? '').trim().toLowerCase()
+
 export const parishService = {
   fetchAnnouncements: async () => {
     return supabase
@@ -152,46 +154,76 @@ export const parishService = {
       return { data: [] as RemoteRequestStatusRow[], error: null as unknown }
     }
 
-    const rpcAttempt = await supabase.rpc('public_fetch_request_statuses', {
-      request_ids: requestIds,
-    })
+    const normalizedRequestIds = requestIds
+      .map(normalizeRequestId)
+      .filter((value) => value.length > 0)
 
-    if (!rpcAttempt.error && Array.isArray(rpcAttempt.data)) {
-      return { data: rpcAttempt.data as RemoteRequestStatusRow[], error: null as unknown }
+    if (!normalizedRequestIds.length) {
+      return { data: [] as RemoteRequestStatusRow[], error: null as unknown }
     }
 
+    // Try RPC first
+    const rpcAttempt = await supabase.rpc('public_fetch_request_statuses', {
+      request_ids: normalizedRequestIds,
+    })
+
+    const rpcRows = (!rpcAttempt.error && Array.isArray(rpcAttempt.data))
+      ? (rpcAttempt.data as any[]).map((row) => ({
+          client_request_id: normalizeRequestId(row?.client_request_id),
+          status: normalizeStatus(row?.status),
+          source: row?.source === 'donation' ? 'donation' : 'booking',
+          updated_at: row?.updated_at ?? null,
+        })).filter((row) => row.client_request_id.length > 0)
+      : []
+
+    // Even if RPC succeeds, we check directly if anything is missing
+    // This handles cases where RPC might be outdated or only looking at one table
     const [bookingsResult, donationsResult] = await Promise.all([
       supabase
         .from('bookings')
         .select('client_request_id, status, updated_at, created_at')
-        .in('client_request_id', requestIds),
+        .in('client_request_id', normalizedRequestIds),
       supabase
         .from('donations')
         .select('client_request_id, status, updated_at, created_at')
-        .in('client_request_id', requestIds),
+        .in('client_request_id', normalizedRequestIds),
     ])
 
     const bookingsRows = Array.isArray(bookingsResult.data)
       ? bookingsResult.data.map((row: any) => ({
-          client_request_id: row.client_request_id,
+          client_request_id: normalizeRequestId(row.client_request_id),
           status: normalizeStatus(row.status),
           source: 'booking' as const,
           updated_at: row.updated_at ?? row.created_at ?? null,
-        }))
+        })).filter((row) => row.client_request_id.length > 0)
       : []
 
     const donationsRows = Array.isArray(donationsResult.data)
       ? donationsResult.data.map((row: any) => ({
-          client_request_id: row.client_request_id,
+          client_request_id: normalizeRequestId(row.client_request_id),
           status: normalizeStatus(row.status),
           source: 'donation' as const,
           updated_at: row.updated_at ?? row.created_at ?? null,
-        }))
+        })).filter((row) => row.client_request_id.length > 0)
       : []
 
+    const resultByRequestId = new Map<string, RemoteRequestStatusRow>()
+    
+    // Add indirect query rows first
+    ;[...bookingsRows, ...donationsRows].forEach(row => {
+        resultByRequestId.set(row.client_request_id, row as RemoteRequestStatusRow)
+    })
+    
+    // Add/Overwrite with RPC rows
+    rpcRows.forEach(row => {
+        resultByRequestId.set(row.client_request_id, row as RemoteRequestStatusRow)
+    })
+
+    const finalRows = Array.from(resultByRequestId.values())
+
     return {
-      data: [...bookingsRows, ...donationsRows],
-      error: rpcAttempt.error ?? bookingsResult.error ?? donationsResult.error,
+      data: finalRows,
+      error: finalRows.length > 0 ? null : (bookingsResult.error ?? donationsResult.error ?? rpcAttempt.error),
     }
   },
 }

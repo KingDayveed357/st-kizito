@@ -8,7 +8,7 @@
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash-icon.png",
+      "image": "./assets/splash-icon-dark.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -33,7 +33,9 @@
       "expo-sqlite",
       "expo-image",
       "expo-notifications",
-       
+      {
+        "sounds": ["./assets/sounds/notification.wav"]
+      },
       "expo-font"
     ],
     "extra": {

@@ -1,233 +1,307 @@
-import React, { useMemo, useRef, useState, useCallback } from 'react';
-import { View, ScrollView, Text, TouchableOpacity, FlatList, useWindowDimensions } from 'react-native';
+import React, { useMemo, useRef, useState, useCallback, memo, useEffect } from 'react';
+import { View, Text, TouchableOpacity, FlatList, useWindowDimensions, StyleSheet, Modal } from 'react-native';
 import { useTheme } from '../src/hooks/useTheme';
 import { Header } from '../src/components/ui/Header';
-import { CalendarGrid, CalendarDay } from '../src/components/liturgical/CalendarGrid';
 import { Ionicons } from '@expo/vector-icons';
 import { Button } from '../src/components/ui/Button';
-import { Image } from 'expo-image';
-import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import { useRouter } from 'expo-router';
 import { LiturgicalBadge } from '../src/components/liturgical/LiturgicalBadge';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import calendar2026 from '../data/calendar/2026.json';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAppStore } from '../src/store/useAppStore';
-import { getCalendarDescription, getDatePresentation, getTodayIso } from '../src/services/liturgicalData';
+import { getCalendar, getDatePresentation, getTodayIso, getCalendarDescription } from '../src/services/liturgicalData';
 
-const calendarData = calendar2026 as Record<string, any>;
 const todayIso = getTodayIso();
+const DAY_MILLIS = 24 * 60 * 60 * 1000;
+const INITIAL_DAYS = 365 * 2; // Show 2 years of context by default
 
-const getMonthLabel = (monthIndex: number) =>
-    new Intl.DateTimeFormat('en-US', { month: 'long', year: 'numeric' }).format(new Date(2026, monthIndex, 1));
+// --- Sub-Components ---
 
-const buildMonthData = (monthIndex: number, selectedDate: string): CalendarDay[] => {
-    const firstDay = new Date(2026, monthIndex, 1);
-    const daysInMonth = new Date(2026, monthIndex + 1, 0).getDate();
-    const prefixEmptyRows: CalendarDay[] = Array.from({ length: firstDay.getDay() }).map((_, i) => ({ date: `emp-${monthIndex}-${i}`, dayNum: 0 }));
+const TimelineRow = memo(({ date, isSelected, onSelect }: { date: string, isSelected: boolean, onSelect: (d: string) => void }) => {
+    const { colors, allColors } = useTheme();
+    const info = getCalendar(date);
+    if (!info) return null;
 
-    const days: CalendarDay[] = Array.from({ length: daysInMonth }).map((_, i) => {
-        const day = i + 1;
-        const date = `2026-${String(monthIndex + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-        const entry = calendarData[date];
+    const d = new Date(`${date}T12:00:00`);
+    const dayNum = d.getDate();
+    const dayName = d.toLocaleDateString('en-US', { weekday: 'short' });
+    const isSunday = d.getDay() === 0;
 
-        return {
-            date,
-            dayNum: day,
-            season: entry?.season,
-            isToday: date === todayIso,
-            isSunday: entry?.day === 'Sunday',
-            celebration: entry?.celebration,
-            celebrationType: entry?.celebrationType,
-        };
-    });
+    const isSpecial = info.celebrationType === 'Solemnity' || info.celebrationType === 'Feast';
+    const liturgicalColor = info.color === 'white' ? allColors.liturgical.ordinaryTime : (info.color === 'gold' ? allColors.liturgical.christmasEaster : info.color);
 
-    return [...prefixEmptyRows, ...days];
-};
-
-const routeBySource = {
-    readings: '/readings',
-    divineOffice: '/divine-office',
-    inspirations: '/inspiration',
-} as const;
-
-const badgeColor = (season?: string) => {
-    if (season === 'Lent' || season === 'Advent') return 'purple';
-    if (season === 'Easter' || season === 'Christmas') return 'gold';
-    return 'green';
-};
+    return (
+        <TouchableOpacity 
+            onPress={() => onSelect(date)}
+            style={[
+                styles.rowContainer, 
+                { borderBottomColor: colors.border },
+                isSelected && { backgroundColor: `${colors.accent}08` }
+            ]}
+        >
+            <View style={styles.dateColumn}>
+                <Text style={{ color: isSunday ? colors.accent : colors.textSecondary }} className="font-sans font-bold text-[10px] uppercase tracking-tighter">
+                    {dayName}
+                </Text>
+                <Text style={{ color: colors.textPrimary }} className="font-serif font-black text-xl">
+                    {dayNum}
+                </Text>
+            </View>
+            <View style={styles.contentColumn}>
+                <Text 
+                    style={{ 
+                        color: isSunday || isSpecial ? colors.textPrimary : colors.textSecondary,
+                        fontWeight: isSunday || isSpecial ? '700' : '400',
+                        fontStyle: isSpecial ? 'italic' : 'normal'
+                    }} 
+                    className="font-serif text-[18px] leading-tight"
+                    numberOfLines={1}
+                >
+                    {info.celebration}
+                </Text>
+                {info.celebrationType !== 'Weekday' && (
+                    <Text style={{ color: liturgicalColor }} className="font-sans text-[10px] font-bold uppercase tracking-[2px] mt-1 opacity-80">
+                        {info.celebrationType}
+                    </Text>
+                )}
+            </View>
+            {isSelected && (
+                <View style={{ backgroundColor: colors.accent, width: 4 }} className="h-2/3 absolute left-0 rounded-r-full" />
+            )}
+        </TouchableOpacity>
+    );
+});
 
 export default function CalendarScreen() {
     const { colors, allColors } = useTheme();
     const router = useRouter();
-    const bottomSheetRef = useRef<BottomSheet>(null);
+    const insets = useSafeAreaInsets();
     const { selectedDate, source, setLiturgicalContext } = useAppStore();
-    const effectiveDate = calendarData[selectedDate] ? selectedDate : todayIso;
-    const [visibleMonth, setVisibleMonth] = useState(Number(effectiveDate.slice(5, 7)) - 1);
+    const listRef = useRef<FlatList>(null);
     
-    // Pre-calculate all 12 months data to allow smooth swiping
-    const allMonthsData = useMemo(() => {
-        return Array.from({ length: 12 }).map((_, i) => ({
-            monthIndex: i,
-            data: buildMonthData(i, effectiveDate)
-        }));
-    }, [effectiveDate]);
+    const [isPickerVisible, setPickerVisible] = useState(false);
 
-    const detailDate = calendarData[effectiveDate] ? effectiveDate : todayIso;
-    const detail = calendarData[detailDate];
-    const presentation = getDatePresentation(detailDate);
-    const { width: screenWidth } = useWindowDimensions();
-    const flatListRef = useRef<FlatList>(null);
+    // Timeline Data: 1 year before, 1 year after today
+    const timelineData = useMemo(() => {
+        const start = new Date(todayIso).getTime() - (INITIAL_DAYS / 2) * DAY_MILLIS;
+        return Array.from({ length: INITIAL_DAYS }).map((_, i) => {
+            return new Date(start + i * DAY_MILLIS).toISOString().slice(0, 10);
+        });
+    }, []);
 
-    const handleDatePress = (date: string) => {
-        setLiturgicalContext(date, source);
-        bottomSheetRef.current?.expand();
-    };
+    const selectedInfo = useMemo(() => getCalendar(selectedDate), [selectedDate]);
+    const presentation = useMemo(() => getDatePresentation(selectedDate), [selectedDate]);
 
-    const handleViewableItemsChanged = useCallback(({ viewableItems }: any) => {
-        if (viewableItems && viewableItems.length > 0) {
-            setVisibleMonth(viewableItems[0].item.monthIndex);
+    useEffect(() => {
+        const index = timelineData.indexOf(selectedDate);
+        if (index !== -1) {
+            setTimeout(() => {
+                listRef.current?.scrollToIndex({ index, animated: false, viewPosition: 0.3 });
+            }, 100);
         }
     }, []);
 
-    const viewabilityConfig = useRef({ itemVisiblePercentThreshold: 50 }).current;
-
-    const navigateMonth = (index: number) => {
-        if (index >= 0 && index <= 11) {
-            flatListRef.current?.scrollToIndex({ index, animated: true });
-            setVisibleMonth(index);
+    const handleJumpToToday = () => {
+        setLiturgicalContext(todayIso, source);
+        const index = timelineData.indexOf(todayIso);
+        if (index !== -1) {
+            listRef.current?.scrollToIndex({ index, animated: true, viewPosition: 0.3 });
         }
     };
 
-    const navigateToContextScreen = () => {
-        if (source === 'readings') {
-            router.push({ pathname: routeBySource.readings, params: { date: detailDate } });
-            return;
-        }
+    const handleDateSelect = (date: string) => {
+        setLiturgicalContext(date, source);
+    };
 
-        router.push(routeBySource[source]);
+    const [pickerYear, setPickerYear] = useState(new Date(selectedDate).getFullYear());
+    const [pickerMonth, setPickerMonth] = useState(new Date(selectedDate).getMonth());
+
+    // Update picker state when selectedDate changes from row taps or "Today"
+    useEffect(() => {
+        const d = new Date(`${selectedDate}T12:00:00`);
+        setPickerYear(d.getFullYear());
+        setPickerMonth(d.getMonth());
+    }, [selectedDate]);
+
+    const years = Array.from({ length: 41 }).map((_, i) => 2000 + i);
+    const months = [
+        "January", "February", "March", "April", "May", "June", 
+        "July", "August", "September", "October", "November", "December"
+    ];
+
+    const confirmPickerDate = () => {
+        // Use string construction to avoid timezone shifts from .toISOString()
+        const newDate = `${pickerYear}-${String(pickerMonth + 1).padStart(2, '0')}-01`;
+        setLiturgicalContext(newDate, source);
+        const index = timelineData.findIndex(d => d.startsWith(`${pickerYear}-${String(pickerMonth + 1).padStart(2, '0')}`));
+        if (index !== -1) {
+            listRef.current?.scrollToIndex({ index, animated: false, viewPosition: 0 });
+        }
+        setPickerVisible(false);
+    };
+
+    const navigateToReading = () => {
+        if (source === 'readings') router.push({ pathname: '/readings', params: { date: selectedDate } });
+        else if (source === 'divineOffice') router.push({ pathname: '/divine-office', params: { date: selectedDate } });
+        else router.push('/inspiration');
     };
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
             <Header
                 showBack
-                leftElement={<Ionicons name="menu" size={28} color={allColors.liturgical.ordinaryTime} className="ml-4" />}
-                centerElement={<Text style={{ color: allColors.liturgical.ordinaryTime }} className="font-serif font-bold text-xl text-center">St. Kizito{'\n'}Parish</Text>}
+                leftElement={
+                    <TouchableOpacity onPress={() => setPickerVisible(true)} className="flex-row items-center ml-4">
+                        <Text style={{ color: colors.textPrimary }} className="font-serif font-bold text-lg">
+                            {months[new Date(selectedDate).getMonth()]} {new Date(selectedDate).getFullYear()}
+                        </Text>
+                        <Ionicons name="chevron-down" size={18} color={colors.textPrimary} className="ml-1" />
+                    </TouchableOpacity>
+                }
                 rightElement={
-                    <TouchableOpacity
-                        onPress={() => {
-                            setVisibleMonth(Number(todayIso.slice(5, 7)) - 1);
-                            setLiturgicalContext(todayIso, source);
-                            bottomSheetRef.current?.expand();
-                        }}
-                        className="mr-2"
-                    >
-                        <View style={{ backgroundColor: colors.surfaceElevated }} className="px-3 py-1.5 rounded-3xl">
-                            <Text style={{ color: colors.textPrimary }} className="font-sans font-bold text-xs uppercase tracking-wider">TODAY</Text>
+                    <TouchableOpacity onPress={handleJumpToToday} className="mr-4">
+                        <View style={{ backgroundColor: colors.surfaceElevated }} className="px-6 py-3 rounded-3xl">
+                            <Text style={{ color: colors.textPrimary }} className="font-sans font-bold text-[10px] uppercase tracking-wider">Today</Text>
                         </View>
                     </TouchableOpacity>
                 }
             />
 
-            <ScrollView className="flex-1 pt-6" showsVerticalScrollIndicator={false}>
-                <View className="px-screen mb-4 items-center">
-                    <View className="flex-row justify-between w-full items-center mb-6">
-                        <View>
-                            <Text style={{ color: colors.textSecondary }} className="font-sans font-bold text-[10px] uppercase tracking-widest mb-1">
-                                {presentation?.liturgicalYearLabel ?? 'LITURGICAL YEAR'}
-                            </Text>
-                            <Text style={{ color: colors.textPrimary }} className="font-serif font-bold text-3xl">
-                                {getMonthLabel(visibleMonth)}
-                            </Text>
+            <View style={{ flex: 1 }}>
+                <FlatList
+                    ref={listRef}
+                    data={timelineData}
+                    keyExtractor={item => item}
+                    renderItem={({ item }) => (
+                        <TimelineRow 
+                            date={item} 
+                            isSelected={selectedDate === item} 
+                            onSelect={handleDateSelect} 
+                        />
+                    )}
+                    initialNumToRender={20}
+                    maxToRenderPerBatch={10}
+                    windowSize={5}
+                    getItemLayout={(data, index) => ({ length: 70, offset: 70 * index, index })}
+                    showsVerticalScrollIndicator={false}
+                />
+            </View>
+
+            {/* Detailed Selection Summary (Bottom Sticky) */}
+            <View 
+                style={[
+                    styles.selectionFooter, 
+                    { 
+                        backgroundColor: colors.surface, 
+                        borderTopColor: colors.border,
+                        shadowColor: '#000',
+                        paddingBottom: Math.max(insets.bottom, 40),
+                        paddingTop: Math.max(insets.top, 40),
+                    }
+                ]}
+                className="shadow-2xl"
+            >
+                <View className="flex-row justify-between items-center px-6 pt-5">
+                    <View style={{ flex: 1, marginRight: 16 }}>
+                        <LiturgicalBadge label={presentation?.badgeLabel ?? 'DAY'} color={selectedInfo?.color} />
+                        <Text style={{ color: colors.textPrimary }} className="font-serif font-bold text-xl mt-2" numberOfLines={1}>
+                            {selectedInfo?.celebration}
+                        </Text>
+                    </View>
+                    <Button onPress={navigateToReading} size="sm" className="px-7 rounded-2xl h-12">
+                        <Text className="font-sans font-black text-sm">Open Day</Text>
+                    </Button>
+                </View>
+            </View>
+
+            <Modal visible={isPickerVisible} transparent animationType="fade">
+                <View style={styles.modalOverlay}>
+                    <TouchableOpacity style={{ flex: 1 }} onPress={() => setPickerVisible(false)} />
+                    <View style={[styles.pickerContainer, { backgroundColor: colors.surface }]}>
+                        <View className="flex-row justify-between items-center p-4 border-b" style={{ borderBottomColor: colors.border }}>
+                            <TouchableOpacity onPress={() => setPickerVisible(false)}>
+                                <Text style={{ color: colors.textSecondary }} className="font-sans font-bold">Cancel</Text>
+                            </TouchableOpacity>
+                            <Text style={{ color: colors.textPrimary }} className="font-serif font-bold text-lg">Select Date</Text>
+                            <TouchableOpacity onPress={confirmPickerDate}>
+                                <Text style={{ color: colors.accent }} className="font-sans font-bold">Done</Text>
+                            </TouchableOpacity>
                         </View>
-                        <View className="flex-row items-center">
-                            <TouchableOpacity className="p-2" onPress={() => navigateMonth(visibleMonth - 1)}>
-                                <Ionicons name="chevron-back" size={20} color={colors.textPrimary} />
-                            </TouchableOpacity>
-                            <TouchableOpacity className="p-2 pl-4" onPress={() => navigateMonth(visibleMonth + 1)}>
-                                <Ionicons name="chevron-forward" size={20} color={colors.textPrimary} />
-                            </TouchableOpacity>
+                        
+                        <View className="flex-row h-64">
+                            <FlatList 
+                                data={months}
+                                keyExtractor={item => item}
+                                className="flex-1"
+                                renderItem={({ item, index }) => (
+                                    <TouchableOpacity 
+                                        onPress={() => setPickerMonth(index)}
+                                        className="h-12 justify-center items-center"
+                                        style={pickerMonth === index ? { backgroundColor: `${colors.accent}15` } : {}}
+                                    >
+                                        <Text style={{ color: pickerMonth === index ? colors.accent : colors.textPrimary }} className="font-serif text-lg">
+                                            {item}
+                                        </Text>
+                                    </TouchableOpacity>
+                                )}
+                            />
+                            <FlatList 
+                                data={years}
+                                keyExtractor={item => String(item)}
+                                className="flex-1"
+                                renderItem={({ item }) => (
+                                    <TouchableOpacity 
+                                        onPress={() => setPickerYear(item)}
+                                        className="h-12 justify-center items-center"
+                                        style={pickerYear === item ? { backgroundColor: `${colors.accent}15` } : {}}
+                                    >
+                                        <Text style={{ color: pickerYear === item ? colors.accent : colors.textPrimary }} className="font-serif text-lg">
+                                            {item}
+                                        </Text>
+                                    </TouchableOpacity>
+                                )}
+                            />
                         </View>
                     </View>
                 </View>
-
-                <FlatList
-                    ref={flatListRef}
-                    data={allMonthsData}
-                    keyExtractor={item => `month-${item.monthIndex}`}
-                    horizontal
-                    pagingEnabled
-                    showsHorizontalScrollIndicator={false}
-                    initialScrollIndex={visibleMonth}
-                    getItemLayout={(data, index) => ({ length: screenWidth, offset: screenWidth * index, index })}
-                    onViewableItemsChanged={handleViewableItemsChanged}
-                    viewabilityConfig={viewabilityConfig}
-                    renderItem={({ item }) => (
-                        <View style={{ width: screenWidth }}>
-                            <CalendarGrid
-                                month={getMonthLabel(item.monthIndex)}
-                                year={2026}
-                                selectedDate={effectiveDate}
-                                onDatePress={handleDatePress}
-                                calendarData={item.data}
-                            />
-                        </View>
-                    )}
-                />
-
-                <View className="px-screen py-4 flex-row justify-center items-center" />
-            </ScrollView>
-
-            <BottomSheet
-                ref={bottomSheetRef}
-                index={1}
-                snapPoints={['25%', '50%']}
-                enablePanDownToClose={false}
-                handleIndicatorStyle={{ backgroundColor: colors.surfaceElevated, width: 40 }}
-                backgroundStyle={{ backgroundColor: colors.surface, borderRadius: 32 }}
-            >
-                <BottomSheetView style={{ flex: 1, padding: 24 }}>
-                    <View className="flex-row justify-between mb-4 mt-2">
-                        <View style={{ flex: 1, paddingRight: 12 }}>
-                            <LiturgicalBadge label={presentation?.badgeLabel ?? 'LITURGICAL DAY'} color={badgeColor(detail?.season)} />
-                            <Text style={{ color: colors.textPrimary }} className="font-serif font-bold text-[22px] mt-4 mb-1">
-                                {presentation?.weekdayMonthDay ?? detailDate}
-                            </Text>
-                            <Text style={{ color: allColors.liturgical.ordinaryTime }} className="font-serif italic text-[16px]">
-                                {detail?.celebration ?? 'Liturgical observance'}
-                            </Text>
-                        </View>
-                        <Image
-                            source={{ uri: 'https://images.unsplash.com/photo-1548625361-ec853f65e4ff?q=80&w=600&auto=format&fit=crop' }}
-                            className="w-16 h-16 rounded-2xl"
-                            contentFit="cover"
-                        />
-                    </View>
-
-                    <Text style={{ color: colors.textPrimary }} className="font-sans text-sm leading-relaxed mb-6">
-                        {getCalendarDescription(detailDate)}
-                    </Text>
-
-                    <View className="flex-row">
-                        <Button className="flex-1 mr-2" onPress={navigateToContextScreen} leftIcon={<Ionicons name="book" size={18} color="#FFFFFF" />}>
-                            <Text className="text-center font-sans font-bold">Open{'\n'}Day</Text>
-                        </Button>
-                        <Button
-                            variant="secondary"
-                            className="flex-1 ml-2 bg-gray-100"
-                            onPress={() => {
-                                setLiturgicalContext(todayIso, source);
-                                setVisibleMonth(Number(todayIso.slice(5, 7)) - 1);
-                                bottomSheetRef.current?.expand();
-                            }}
-                            leftIcon={<Ionicons name="today" size={18} color={colors.textPrimary} />}
-                        >
-                            <Text className="text-center font-sans font-bold">Jump To{'\n'}Today</Text>
-                        </Button>
-                    </View>
-                </BottomSheetView>
-            </BottomSheet>
+            </Modal>
         </SafeAreaView>
     );
 }
 
+const styles = StyleSheet.create({
+    rowContainer: {
+        height: 70,
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingHorizontal: 20,
+        borderBottomWidth: StyleSheet.hairlineWidth,
+    },
+    dateColumn: {
+        width: 50,
+        alignItems: 'center',
+        marginRight: 10,
+    },
+    contentColumn: {
+        flex: 1,
+        justifyContent: 'center',
+    },
+    selectionFooter: {
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        borderTopWidth: StyleSheet.hairlineWidth,
+        elevation: 10,
+    },
+    modalOverlay: {
+        flex: 1,
+        backgroundColor: 'rgba(0,0,0,0.5)',
+        justifyContent: 'flex-end',
+    },
+    pickerContainer: {
+        borderTopLeftRadius: 24,
+        borderTopRightRadius: 24,
+        paddingBottom: 40,
+        maxHeight: '50%',
+    }
+});

@@ -53,6 +53,11 @@ const normalizeStatus = (value: unknown): BookingStatus => {
     return 'pending';
 };
 
+const normalizeRequestId = (value: unknown) =>
+    String(value ?? '')
+        .trim()
+        .toLowerCase();
+
 const loadItems = async () => parseItems(await AsyncStorage.getItem(STORAGE_KEYS.requestHistory));
 
 const saveItems = async (items: RequestHistoryItem[]) => {
@@ -88,45 +93,40 @@ export const updateRequestStatus = async (id: string, status: BookingStatus) => 
 export const refreshRequestHistory = async (): Promise<RequestHistoryItem[]> => {
     const items = await loadItems();
     const requestIds = items
-        .map((item) => item.clientRequestId)
-        .filter((value): value is string => typeof value === 'string' && value.trim().length > 0);
+        .map((item) => normalizeRequestId(item.clientRequestId))
+        .filter((value): value is string => value.length > 0);
 
     if (requestIds.length === 0) {
         return [...items].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
     }
 
     try {
-        const { data, error } = await parishService.fetchRequestStatuses(requestIds);
-        if (error || !Array.isArray(data) || data.length === 0) {
+        const { data: remoteRows, error } = await parishService.fetchRequestStatuses(requestIds);
+        if (error || !Array.isArray(remoteRows)) {
             return [...items].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
         }
 
-        const statusById = new Map(
-            data
-                .filter((entry) => typeof entry.client_request_id === 'string' && entry.client_request_id.trim().length > 0)
-                .map((entry) => [
-                    entry.client_request_id,
-                    { status: normalizeStatus(entry.status), source: entry.source, updatedAt: entry.updated_at },
-                ])
+        const remoteMap = new Map(
+            remoteRows.map((row) => [normalizeRequestId(row.client_request_id), row])
         );
 
         let didChange = false;
-        const next = items.map((item) => {
-            if (!item.clientRequestId) return item;
-            const remote = statusById.get(item.clientRequestId);
-            if (!remote) return item;
+        const next = items.map((local) => {
+            if (!local.clientRequestId) return local;
+            const remote = remoteMap.get(normalizeRequestId(local.clientRequestId));
+            if (!remote) return local;
 
-            if (remote.status !== normalizeStatus(item.status) || (remote.updatedAt && remote.updatedAt !== item.updatedAt)) {
+            const normalizedRemoteStatus = normalizeStatus(remote.status);
+            if (local.status !== normalizedRemoteStatus) {
                 didChange = true;
                 return {
-                    ...item,
-                    status: normalizeStatus(remote.status),
-                    source: remote.source,
-                    updatedAt: remote.updatedAt ?? new Date().toISOString(),
+                    ...local,
+                    status: normalizedRemoteStatus,
+                    updatedAt: remote.updated_at || new Date().toISOString(),
+                    source: remote.source || local.source,
                 };
             }
-
-            return item;
+            return local;
         });
 
         if (didChange) {
@@ -134,7 +134,8 @@ export const refreshRequestHistory = async (): Promise<RequestHistoryItem[]> => 
         }
 
         return [...next].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
-    } catch {
+    } catch (e) {
+        console.warn('[RequestStore] Auto-refresh failed:', e);
         return [...items].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
     }
 };
