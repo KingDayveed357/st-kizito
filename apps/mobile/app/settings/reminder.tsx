@@ -1,21 +1,23 @@
 import React from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { ScrollView, Switch, Text, TouchableOpacity, View } from 'react-native';
+import { ScrollView, Switch, Text, TouchableOpacity, View, StyleSheet } from 'react-native';
 import { Header } from '../../src/components/ui/Header';
 import { useTheme } from '../../src/hooks/useTheme';
 import { useNotifications } from '../../src/hooks/useNotifications';
 import { PrayerReminderKey } from '../../src/services/notifications/notificationService';
+import { Ionicons } from '@expo/vector-icons';
 
 type ReminderEntry = {
     key: PrayerReminderKey;
     title: string;
     helper: string;
+    icon: keyof typeof Ionicons.glyphMap;
 };
 
 const REMINDER_ENTRIES: ReminderEntry[] = [
-    { key: 'morning', title: 'Morning', helper: 'Begin your day with prayer.' },
-    { key: 'afternoon', title: 'Afternoon', helper: 'Pause and reconnect with God.' },
-    { key: 'evening', title: 'Evening', helper: 'Close your day in thanksgiving.' },
+    { key: 'morning', title: 'Morning', helper: 'Begin your day with prayer.', icon: 'sunny-outline' },
+    { key: 'afternoon', title: 'Afternoon', helper: 'Pause and reconnect with God.', icon: 'sunny' },
+    { key: 'evening', title: 'Evening', helper: 'Close your day in thanksgiving.', icon: 'moon-outline' },
 ];
 
 interface TimeStepperProps {
@@ -30,127 +32,239 @@ const TimeStepper: React.FC<TimeStepperProps> = ({ label, value, onChange, min, 
     const { colors } = useTheme();
 
     return (
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text style={{ color: colors.textSecondary, fontSize: 12, marginRight: 10 }}>{label}</Text>
-            <TouchableOpacity
-                onPress={() => onChange(value <= min ? max : value - 1)}
-                style={{ width: 28, height: 28, borderRadius: 14, backgroundColor: colors.surfaceElevated, alignItems: 'center', justifyContent: 'center' }}
-            >
-                <Text style={{ color: colors.textPrimary, fontSize: 16, fontWeight: '700' }}>-</Text>
-            </TouchableOpacity>
-            <Text style={{ color: colors.textPrimary, fontSize: 16, fontWeight: '700', marginHorizontal: 10, minWidth: 24, textAlign: 'center' }}>
-                {String(value).padStart(2, '0')}
-            </Text>
-            <TouchableOpacity
-                onPress={() => onChange(value >= max ? min : value + 1)}
-                style={{ width: 28, height: 28, borderRadius: 14, backgroundColor: colors.surfaceElevated, alignItems: 'center', justifyContent: 'center' }}
-            >
-                <Text style={{ color: colors.textPrimary, fontSize: 16, fontWeight: '700' }}>+</Text>
-            </TouchableOpacity>
+        <View style={styles.stepperContainer}>
+            <Text style={[styles.stepperLabel, { color: colors.textSecondary }]}>{label}</Text>
+            <View style={styles.stepperControls}>
+                <TouchableOpacity
+                    onPress={() => onChange(value <= min ? max : value - 1)}
+                    style={[styles.stepperButton, { backgroundColor: colors.surfaceElevated }]}
+                >
+                    <Ionicons name="remove" size={16} color={colors.textPrimary} />
+                </TouchableOpacity>
+                <Text style={[styles.stepperValue, { color: colors.textPrimary }]}>
+                    {String(value).padStart(2, '0')}
+                </Text>
+                <TouchableOpacity
+                    onPress={() => onChange(value >= max ? min : value + 1)}
+                    style={[styles.stepperButton, { backgroundColor: colors.surfaceElevated }]}
+                >
+                    <Ionicons name="add" size={16} color={colors.textPrimary} />
+                </TouchableOpacity>
+            </View>
         </View>
     );
 };
 
 export default function ReminderSettingsScreen() {
-    const { colors } = useTheme();
+    const { colors, allColors } = useTheme();
     const { prayerReminders, togglePrayerReminder, setPrayerReminderTime } = useNotifications();
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
             <Header showBack title="Prayer Reminders" />
 
-            <ScrollView contentContainerStyle={{ paddingHorizontal: 20, paddingTop: 14, paddingBottom: 44 }} showsVerticalScrollIndicator={false}>
-                <Text style={{ color: colors.textSecondary, fontSize: 13, lineHeight: 20, marginBottom: 16 }}>
-                    Gentle reminders to keep your day rooted in prayer.
-                </Text>
+            <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+                <View style={styles.introSection}>
+                    <Text style={[styles.introText, { color: colors.textSecondary }]}>
+                        Gentle reminders to keep your day rooted in prayer. The app will play a peaceful tone at your chosen times.
+                    </Text>
+                </View>
 
                 {REMINDER_ENTRIES.map((entry) => {
                     const reminder = prayerReminders[entry.key];
+                    const isEnabled = reminder.enabled;
 
                     return (
                         <View
                             key={entry.key}
-                            style={{
-                                borderRadius: 20,
-                                backgroundColor: colors.surface,
-                                borderWidth: 1,
-                                borderColor: colors.border,
-                                padding: 16,
-                                marginBottom: 14,
-                            }}
+                            style={[
+                                styles.card,
+                                {
+                                    backgroundColor: colors.surface,
+                                    borderColor: isEnabled ? colors.accent : colors.border,
+                                    elevation: isEnabled ? 4 : 1,
+                                    shadowOpacity: isEnabled ? 0.1 : 0.05,
+                                }
+                            ]}
                         >
-                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <View style={{ flex: 1, paddingRight: 10 }}>
-                                    <Text style={{ color: colors.textPrimary, fontSize: 17, fontWeight: '700' }} className="font-serif">
+                            <View style={styles.cardHeader}>
+                                <View style={[styles.iconContainer, { backgroundColor: isEnabled ? `${colors.accent}15` : colors.surfaceElevated }]}>
+                                    <Ionicons
+                                        name={entry.icon}
+                                        size={24}
+                                        color={isEnabled ? colors.accent : colors.textSecondary}
+                                    />
+                                </View>
+                                <View style={styles.titleContainer}>
+                                    <Text style={[styles.cardTitle, { color: colors.textPrimary }]} className="font-serif">
                                         {entry.title}
                                     </Text>
-                                    <Text style={{ color: colors.textSecondary, fontSize: 13, marginTop: 3 }}>
+                                    <Text style={[styles.cardHelper, { color: colors.textSecondary }]}>
                                         {entry.helper}
                                     </Text>
                                 </View>
-
                                 <Switch
                                     value={reminder.enabled}
-                                    onValueChange={(value) => {
-                                        togglePrayerReminder(entry.key, value);
-                                    }}
+                                    onValueChange={(value) => { togglePrayerReminder(entry.key, value); }}
                                     trackColor={{ true: colors.accentSoft, false: '#D5CBB9' }}
                                     thumbColor={reminder.enabled ? colors.accent : '#FFFFFF'}
                                 />
                             </View>
 
-                            <View
-                                style={{
-                                    marginTop: 12,
-                                    borderRadius: 16,
-                                    backgroundColor: colors.surfaceElevated,
-                                    paddingHorizontal: 12,
-                                    paddingVertical: 12,
-                                }}
-                            >
-                                <Text style={{ color: colors.textSecondary, fontSize: 12, marginBottom: 10 }}>
-                                    Reminder time: {reminder.label}
-                                </Text>
-                                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                                    <TimeStepper
-                                        label="Hour"
-                                        value={reminder.hour}
-                                        min={0}
-                                        max={23}
-                                        onChange={(value) => {
-                                            setPrayerReminderTime(entry.key, value, reminder.minute);
-                                        }}
-                                    />
-                                    <TimeStepper
-                                        label="Minute"
-                                        value={reminder.minute}
-                                        min={0}
-                                        max={59}
-                                        onChange={(value) => {
-                                            setPrayerReminderTime(entry.key, reminder.hour, value);
-                                        }}
-                                    />
+                            {isEnabled && (
+                                <View style={[styles.timePickerSection, { backgroundColor: colors.surfaceElevated }]}>
+                                    <View style={styles.timeLabelContainer}>
+                                        <Ionicons name="time-outline" size={14} color={colors.textSecondary} style={{ marginRight: 6 }} />
+                                        <Text style={[styles.timeLabel, { color: colors.textSecondary }]}>
+                                            Reminder scheduled for {reminder.label}
+                                        </Text>
+                                    </View>
+                                    <View style={styles.steppersWrapper}>
+                                        <TimeStepper
+                                            label="HOUR"
+                                            value={reminder.hour}
+                                            min={0}
+                                            max={23}
+                                            onChange={(val) => setPrayerReminderTime(entry.key, val, reminder.minute)}
+                                        />
+                                        <View style={[styles.divider, { backgroundColor: colors.border }]} />
+                                        <TimeStepper
+                                            label="MINUTE"
+                                            value={reminder.minute}
+                                            min={0}
+                                            max={59}
+                                            onChange={(val) => setPrayerReminderTime(entry.key, reminder.hour, val)}
+                                        />
+                                    </View>
                                 </View>
-                            </View>
+                            )}
                         </View>
                     );
                 })}
 
-                <View
-                    style={{
-                        borderRadius: 16,
-                        backgroundColor: colors.surface,
-                        borderWidth: 1,
-                        borderColor: colors.border,
-                        padding: 14,
-                        marginTop: 4,
-                    }}
-                >
-                    <Text style={{ color: colors.textSecondary, fontSize: 13, lineHeight: 20 }}>
-                        Notification tone: Time to pray. Take a quiet moment with God.
+                <View style={[styles.infoFooter, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+                    <Ionicons name="musical-notes-outline" size={20} color={colors.accent} style={{ marginBottom: 8 }} />
+                    <Text style={[styles.footerText, { color: colors.textSecondary }]}>
+                        Custom notification tone is enabled. Rebuild the app if you updated the sound file.
                     </Text>
                 </View>
             </ScrollView>
         </SafeAreaView>
     );
 }
+
+const styles = StyleSheet.create({
+    scrollContent: {
+        paddingHorizontal: 20,
+        paddingTop: 10,
+        paddingBottom: 40,
+    },
+    introSection: {
+        marginBottom: 24,
+        paddingHorizontal: 4,
+    },
+    introText: {
+        fontSize: 14,
+        lineHeight: 22,
+        fontWeight: '500',
+    },
+    card: {
+        borderRadius: 24,
+        borderWidth: 1.5,
+        padding: 20,
+        marginBottom: 16,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowRadius: 8,
+    },
+    cardHeader: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    iconContainer: {
+        width: 48,
+        height: 48,
+        borderRadius: 16,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginRight: 16,
+    },
+    titleContainer: {
+        flex: 1,
+    },
+    cardTitle: {
+        fontSize: 18,
+        fontWeight: '700',
+    },
+    cardHelper: {
+        fontSize: 13,
+        marginTop: 2,
+    },
+    timePickerSection: {
+        marginTop: 20,
+        borderRadius: 16,
+        padding: 16,
+    },
+    timeLabelContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 16,
+    },
+    timeLabel: {
+        fontSize: 12,
+        fontWeight: '600',
+        letterSpacing: 0.5,
+    },
+    steppersWrapper: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+    stepperContainer: {
+        flex: 1,
+        alignItems: 'center',
+    },
+    stepperLabel: {
+        fontSize: 10,
+        fontWeight: 'bold',
+        marginBottom: 8,
+        letterSpacing: 1,
+    },
+    stepperControls: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    stepperButton: {
+        width: 32,
+        height: 32,
+        borderRadius: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    stepperValue: {
+        fontSize: 18,
+        fontWeight: '800',
+        marginHorizontal: 12,
+        minWidth: 28,
+        textAlign: 'center',
+    },
+    divider: {
+        width: 1,
+        height: 30,
+        marginHorizontal: 10,
+    },
+    infoFooter: {
+        marginTop: 8,
+        borderRadius: 20,
+        borderWidth: 1,
+        padding: 20,
+        alignItems: 'center',
+    },
+    footerText: {
+        fontSize: 12,
+        lineHeight: 18,
+        textAlign: 'center',
+        opacity: 0.8,
+    },
+});
+

@@ -43,7 +43,7 @@ export default function FavouritesScreen() {
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
-            <Header showBack title="Saved Readings Library" />
+            <Header showBack title="Favourites" />
 
             <FlatList
                 data={filteredItems}
@@ -53,7 +53,8 @@ export default function FavouritesScreen() {
                     <>
                         <View className="flex-row items-center justify-between" style={{ marginBottom: 12 }}>
                             <Text style={{ color: colors.textSecondary, fontSize: 13 }}>
-                                Prayerful passages you have saved for later reflection.
+{filteredItems.length} {filteredItems.length === 1 ? 'Sacred Treasure' : 'Sacred Treasures'}
+
                             </Text>
                             <TouchableOpacity onPress={() => setActiveFilter('all')}>
                                 <Text style={{ color: colors.accent, fontSize: 13, fontWeight: '700' }}>View All</Text>

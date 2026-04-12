@@ -4,6 +4,7 @@ import divineOffice from '../../data/divineOffice.json';
 import inspirations from '../../data/inspirations.json';
 import passageCache from '../../data/passageCache.json';
 import { formatPremiumDate } from '../utils/formatters';
+import { extractBibleText } from '../utils/bibleExtractor';
 
 // Import scraped USCCB API data if generated. (Optional fallback structure avoids missing text issues)
 import usccbDataRaw from '../../data/usccb-readings-dataset.json';
@@ -26,16 +27,22 @@ const inspirationData = inspirations as Record<string, any>;
 const passages = passageCache as Record<string, any>;
 const usccbData = usccbDataRaw as Record<string, { readings?: any, readingsList?: any[], masses?: any[] }>;
 
+const calendarCache: Record<string, any> = {};
+
 export const getTodayIso = () => {
     return new Date().toISOString().slice(0, 10);
 };
 
 export const getCalendar = (date: string) => {
-    if (calendarData[date]) return calendarData[date];
+    if (calendarCache[date]) return calendarCache[date];
+    if (calendarData[date]) {
+        calendarCache[date] = calendarData[date];
+        return calendarData[date];
+    }
     // Fallback to dynamic engine
     try {
         const dynamic = getLiturgicalDay(date);
-        return {
+        const result = {
             date: dynamic.date,
             celebration: dynamic.celebration,
             celebrationType: dynamic.celebrationType,
@@ -44,8 +51,10 @@ export const getCalendar = (date: string) => {
             liturgicalYear: dynamic.year,
             week: dynamic.week,
             day: dynamic.dayOfWeek,
-            key: `ot-week-${dynamic.week}-${dynamic.dayOfWeek.toLowerCase()}` // Fallback key
+            key: dynamic.key
         };
+        calendarCache[date] = result;
+        return result;
     } catch (e) {
         return null;
     }
@@ -116,6 +125,16 @@ const getPassage = (reference?: string | null) => {
         }
     }
 
+    // New offline fallback using the Bible extraction logic
+    const backup = extractBibleText(normalizedReference);
+    if (backup.text) {
+        return {
+            reference: backup.reference,
+            text: backup.text,
+            verses: backup.verses
+        };
+    }
+
     return null;
 };
 
@@ -153,34 +172,38 @@ const buildPsalmBlock = (date: string, reference?: string | null): LiturgicalBlo
 const parseUSCCBPsalmText = (rawText: string): { response: string | null, verses: PsalmVerse[] } => {
     if (!rawText) return { response: null, verses: [] };
 
-    const lines = rawText.split('\n');
+    const lines = rawText.split('\n').map(l => l.trim()).filter(Boolean);
     const verses: PsalmVerse[] = [];
     let response: string | null = null;
-    let currentVerseText = '';
+    let currentStanza: string[] = [];
+
+    const flushStanza = () => {
+        if (currentStanza.length > 0) {
+            verses.push({ type: 'verse', text: currentStanza.join('\n') });
+            currentStanza = [];
+        }
+    };
 
     for (const line of lines) {
-        if (line.trim().startsWith('R.') || line.trim().startsWith('R ')) {
-            if (currentVerseText.trim()) {
-                verses.push({ type: 'verse', text: currentVerseText.trim() });
-                currentVerseText = '';
-            }
-            const cleanResponse = line.replace(/^R\.\s*(?:\([^)]+\)\s*)?|^R\s*(?:\([^)]+\)\s*)?/, '').trim();
-            if (cleanResponse) {
-                if (!response) response = cleanResponse; // Set initial generic response
-                // Add the response inline as a verse type so React renders it nicely
-                verses.push({ type: 'response', text: cleanResponse });
-            }
-        } else {
-            currentVerseText += (currentVerseText ? '\n' : '') + line.trim();
+        const responseMatch = line.match(/^R\.?\s*(?:\([^)]*\)\s*)?(.+)/i);
+        if (responseMatch) {
+            flushStanza();
+            const cleanResponse = responseMatch[1].trim();
+            if (!response) response = cleanResponse;
+            verses.push({ type: 'response', text: cleanResponse });
+            continue;
         }
+
+        if (line.toLowerCase() === 'or:') continue;
+
+        currentStanza.push(line);
     }
 
-    if (currentVerseText.trim()) {
-        verses.push({ type: 'verse', text: currentVerseText.trim() });
-    }
+    flushStanza();
 
-    if (verses.length === 0) {
-        return { response: null, verses: [{ type: 'verse', text: rawText }] };
+    if (!response && verses.length > 1) {
+        response = verses[0].text;
+        verses[0].type = 'response';
     }
 
     return { response, verses };
@@ -489,48 +512,70 @@ export const getInspirations = (date: string) => {
 
 export const getDailyInspiration = (date: string): DailyInspirationCard | null => {
     const missalDay = getReadings(date);
-    const inspiration = getInspirations(date);
-
-    if (!missalDay || !inspiration) return null;
+    if (!missalDay) return null;
 
     const gospelBlock = missalDay.readings.find(b => b.type === 'gospel');
+    const psalmBlock = missalDay.readings.find(b => b.type === 'psalm');
     const firstReadingBlock = missalDay.readings.find(b => b.type === 'first_reading');
 
-    const sourceHeroVerse = inspiration.inspiration?.heroVerse ??
-        (gospelBlock && gospelBlock.text
-            ? { text: gospelBlock.text.slice(0, 120), reference: gospelBlock.reference || 'Gospel' }
-            : (firstReadingBlock && firstReadingBlock.text
-                ? { text: firstReadingBlock.text.slice(0, 120), reference: firstReadingBlock.reference || 'Reading' }
-                : { text: 'The Lord is my shepherd, there is nothing I shall want.', reference: 'Psalm 23' }));
+    // Create a seed from the date to keep it deterministic (same inspiration for everyone on same day)
+    const dateSeed = date.split('-').reduce((acc, val) => acc + parseInt(val), 0);
 
-    const reflections = inspiration.inspiration?.reflections ?? [
-        firstReadingBlock && firstReadingBlock.text ? {
-            id: `${date}-first-reading`,
-            verse: firstReadingBlock.text.slice(0, 120),
-            reference: firstReadingBlock.reference || 'First Reading',
-            reflection: `The first reading anchors the day's prayer in ${missalDay.feastName.toLowerCase()}.`,
-            theme: 'faith' as const,
-        } : null,
-        gospelBlock && gospelBlock.text ? {
-            id: `${date}-gospel`,
-            verse: gospelBlock.text.slice(0, 120),
+    // 1. SELECT HERO VERSE (Gospel preferred, then Psalm response)
+    let heroText = 'The Lord is my shepherd, there is nothing I shall want.';
+    let heroRef = 'Psalm 23';
+
+    if (gospelBlock?.text) {
+        // Grab first sentence or meaningful chunk
+        const sentences = gospelBlock.text.match(/[^.!?]+[.!?]+/g) || [gospelBlock.text];
+        heroText = sentences[0].trim();
+        heroRef = gospelBlock.reference || 'Gospel';
+    } else if (psalmBlock?.response) {
+        heroText = psalmBlock.response;
+        heroRef = psalmBlock.reference || 'Psalm';
+    }
+
+    // 2. SYNTHESIZE REFLECTIONS
+    const reflections: any[] = [];
+
+    if (gospelBlock?.text) {
+        reflections.push({
+            id: `${date}-gospel-reflection`,
+            verse: gospelBlock.text.split('\n')[0].slice(0, 100) + '...',
             reference: gospelBlock.reference || 'Gospel',
-            reflection: `The Gospel brings the day's liturgical meaning into focus and asks for a concrete response.`,
-            theme: 'hope' as const,
-        } : null,
-    ].filter(Boolean);
+            reflection: `In today's Gospel, we encounter the heart of Christ's message for ${missalDay.feastName.toLowerCase()}. Let his words penetrate your heart and guide your decisions today.`,
+            theme: (['faith', 'hope', 'love'][dateSeed % 3]) as any,
+        });
+    }
+
+    if (firstReadingBlock?.text) {
+        reflections.push({
+            id: `${date}-first-reading-reflection`,
+            verse: firstReadingBlock.text.split('\n')[0].slice(0, 100) + '...',
+            reference: firstReadingBlock.reference || 'First Reading',
+            reflection: `The first reading reminds us of the long history of God's faithfulness to His people. As we celebrate ${missalDay.feastName}, we are called to trust in that same providence.`,
+            theme: (['strength', 'peace'][dateSeed % 2]) as any,
+        });
+    }
+
+    // 3. SAINT QUOTE (Deterministic rotation from a small high-quality bank)
+    const saintBank = [
+        { quote: "Pray as though everything depended on God. Work as though everything depended on you.", saint: "St. Augustine", initials: "SA" },
+        { quote: "Let nothing disturb you; let nothing frighten you. All things are passing; God only is changeless.", saint: "St. Teresa of Avila", initials: "ST" },
+        { quote: "The world offers you comfort, but you were not made for comfort. You were made for greatness.", saint: "Pope Benedict XVI", initials: "PB" },
+        { quote: "Be who God meant you to be and you will set the world on fire.", saint: "St. Catherine of Siena", initials: "SC" },
+        { quote: "God loves each of us as if there were only one of us.", saint: "St. Augustine", initials: "SA" },
+        { quote: "Christ has no body now but yours. No hands, no feet on earth but yours.", saint: "St. Teresa of Avila", initials: "ST" }
+    ];
+
+    const saintQuote = saintBank[dateSeed % saintBank.length];
 
     return {
-        title: inspiration.inspiration?.title ?? missalDay.feastName,
-        body: inspiration.inspiration?.body ??
-            `Today the Church celebrates ${missalDay.feastName}. Let the proclaimed word shape your prayer and action.`,
-        heroVerse: sourceHeroVerse,
+        title: missalDay.feastName,
+        body: `Today we celebrate ${missalDay.feastName}. Amidst the busyness of life, take a moment to rest in the Word.`,
+        heroVerse: { text: heroText, reference: heroRef },
         reflections,
-        saintQuote: inspiration.inspiration?.saintQuote ?? {
-            quote: 'Let the word of Christ dwell in you richly.',
-            saint: 'Scripture',
-            initials: 'SC',
-        },
+        saintQuote,
         sourceReadings: missalDay.readings,
     };
 };

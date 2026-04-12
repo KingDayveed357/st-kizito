@@ -12,12 +12,14 @@ export interface LiturgicalDay {
     date: string; // ISO format YYYY-MM-DD
     season: LiturgicalSeason;
     year: LiturgicalYear;
+    cycle: 'I' | 'II';
     week: number;
     dayOfWeek: string;
     celebration: string;
     celebrationType: CelebrationType;
     color: string;
     rank: number; // For conflict resolution
+    key: string;  // Canonical key for readings.json
 }
 
 /**
@@ -71,22 +73,22 @@ export function getLiturgicalDay(dateStr: string): LiturgicalDay {
     const year = date.getFullYear();
     const month = date.getMonth();
     const day = date.getDate();
-    
+
     // 1. Determine Liturgical Year (Starts first Sunday of Advent of the previous calendar year)
     const adventStartCurrent = getAdventStart(year);
     const liturgicalYearInt = (date >= adventStartCurrent) ? year + 1 : year;
     const yearCycle: LiturgicalYear[] = ['C', 'A', 'B']; // (2022+1)%3 = 2 -> B (2022 is C). Wait. 
     // Let's use 2023 as A. (2023 - 2023) % 3 = 0 -> A.
     const yearType = yearCycle[(liturgicalYearInt - 2022) % 3];
-    
+
     // 2. Determine Season
     const easter = getEasterSunday(year);
     const ashWednesday = new Date(easter);
     ashWednesday.setDate(easter.getDate() - 46);
-    
+
     const pentecost = new Date(easter);
     pentecost.setDate(easter.getDate() + 49);
-    
+
     const baptismOfTheLord = new Date(year, 0, 13); // Simple approximation
     // Adjust Baptism of the Lord: Sunday after Epiphany (Jan 6)
     const epiphany = new Date(year, 0, 6);
@@ -99,12 +101,18 @@ export function getLiturgicalDay(dateStr: string): LiturgicalDay {
 
     const adventPrev = getAdventStart(year - 1);
     const christmasPrev = new Date(year - 1, 11, 25);
-    
+
+    // Days of the week
+    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const dayName = days[date.getDay()];
+
     let season: LiturgicalSeason = 'Ordinary Time';
     let celebration = '';
     let celebrationType: CelebrationType = 'Weekday';
     let color = 'green';
     let week = 1;
+
+    let key = '';
 
     // Check Seasons sequentially
     if (isBetween(date, adventPrev, new Date(year - 1, 11, 24))) {
@@ -112,46 +120,49 @@ export function getLiturgicalDay(dateStr: string): LiturgicalDay {
         color = 'purple';
         const diff = Math.floor((date.getTime() - adventPrev.getTime()) / (1000 * 60 * 60 * 24 * 7));
         week = diff + 1;
+        key = `Advent_Week${week}_${dayName}`;
     } else if (isBetween(date, christmasPrev, actualBaptism)) {
         season = 'Christmas';
         color = 'white';
-        week = 1; // Simplify
+        week = 1;
+        key = `Christmas_Day_${day}`; // Simplified
     } else if (isBetween(date, ashWednesday, new Date(easter.getTime() - 1000 * 60 * 60 * 24))) {
         season = 'Lent';
         color = 'purple';
         const diff = Math.floor((date.getTime() - ashWednesday.getTime()) / (1000 * 60 * 60 * 24 * 7));
         week = diff + 1;
+        key = `Lent_Week${week}_${dayName}`;
     } else if (isBetween(date, easter, pentecost)) {
         season = 'Easter';
         color = 'white';
         const diff = Math.floor((date.getTime() - easter.getTime()) / (1000 * 60 * 60 * 24 * 7));
         week = diff + 1;
+        key = `Easter_Week${week}_${dayName}`;
     } else if (isBetween(date, adventStartCurrent, new Date(year, 11, 24))) {
         season = 'Advent';
         color = 'purple';
         const diff = Math.floor((date.getTime() - adventStartCurrent.getTime()) / (1000 * 60 * 60 * 24 * 7));
         week = diff + 1;
+        // Special case for Dec 17-24
+        if (month === 11 && day >= 17) {
+            key = `Advent_Dec${day}`;
+        } else {
+            key = `Advent_Week${week}_${dayName}`;
+        }
     } else {
         season = 'Ordinary Time';
         color = 'green';
-        // OT has two parts. 
         if (date < ashWednesday) {
-            // Part 1
             const diff = Math.floor((date.getTime() - actualBaptism.getTime()) / (1000 * 60 * 60 * 24 * 7));
             week = diff + 1;
         } else {
-            // Part 2
-            // Week 34 is always the week before Advent.
             const nextAdvent = getAdventStart(year);
             const diffFromEnd = Math.floor((nextAdvent.getTime() - date.getTime()) / (1000 * 60 * 60 * 24 * 7));
             week = 34 - diffFromEnd;
         }
+        key = `OrdinaryTime_Week${week}_${dayName}`;
     }
 
-    // Days of the week
-    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-    const dayName = days[date.getDay()];
-    
     // Title construction
     if (dayName === 'Sunday') {
         celebration = `${week}${getOrdinal(week)} Sunday in ${season}`;
@@ -164,42 +175,47 @@ export function getLiturgicalDay(dateStr: string): LiturgicalDay {
     // Basic Solemnities (Fixed)
     const monthDay = `${month + 1}-${day}`;
     const fixedFeasts: any = {
-        '1-1': { title: 'Solemnity of Mary, Mother of God', type: 'Solemnity', color: 'white' },
-        '1-6': { title: 'Epiphany of the Lord', type: 'Solemnity', color: 'white' },
-        '2-2': { title: 'Presentation of the Lord', type: 'Feast', color: 'white' },
-        '3-19': { title: 'St. Joseph, Spouse of the Blessed Virgin Mary', type: 'Solemnity', color: 'white' },
-        '3-25': { title: 'Annunciation of the Lord', type: 'Solemnity', color: 'white' },
-        '6-24': { title: 'Nativity of St. John the Baptist', type: 'Solemnity', color: 'white' },
-        '6-29': { title: 'Sts. Peter and Paul, Apostles', type: 'Solemnity', color: 'red' },
-        '8-6': { title: 'Transfiguration of the Lord', type: 'Feast', color: 'white' },
-        '8-15': { title: 'Assumption of the Blessed Virgin Mary', type: 'Solemnity', color: 'white' },
-        '9-14': { title: 'Exaltation of the Holy Cross', type: 'Feast', color: 'red' },
-        '11-1': { title: 'All Saints', type: 'Solemnity', color: 'white' },
-        '11-2': { title: 'The Commemoration of All the Faithful Departed (All Souls)', type: 'Solemnity', color: 'purple' },
-        '11-9': { title: 'Dedication of the Lateran Basilica', type: 'Feast', color: 'white' },
-        '12-8': { title: 'Immaculate Conception of the Blessed Virgin Mary', type: 'Solemnity', color: 'white' },
-        '12-25': { title: 'The Nativity of the Lord (Christmas)', type: 'Solemnity', color: 'white' },
-        '12-26': { title: 'St. Stephen, First Martyr', type: 'Feast', color: 'red' },
-        '12-27': { title: 'St. John, Apostle and Evangelist', type: 'Feast', color: 'white' },
-        '12-28': { title: 'The Holy Innocents, Martyrs', type: 'Feast', color: 'red' },
+        '1-1': { title: 'Solemnity of Mary, Mother of God', type: 'Solemnity', color: 'white', key: 'Mary_MotherOfGod' },
+        '1-6': { title: 'Epiphany of the Lord', type: 'Solemnity', color: 'white', key: 'Epiphany' },
+        '2-2': { title: 'Presentation of the Lord', type: 'Feast', color: 'white', key: 'PresentationOfTheLord' },
+        '3-19': { title: 'St. Joseph, Spouse of the Blessed Virgin Mary', type: 'Solemnity', color: 'white', key: 'JosephHusbandOfMary' },
+        '3-25': { title: 'Annunciation of the Lord', type: 'Solemnity', color: 'white', key: 'Annunciation' },
+        '6-24': { title: 'Nativity of St. John the Baptist', type: 'Solemnity', color: 'white', key: 'BirthOfJohnTheBaptist' },
+        '6-29': { title: 'Sts. Peter and Paul, Apostles', type: 'Solemnity', color: 'red', key: 'PeterAndPaulApostles' },
+        '8-6': { title: 'Transfiguration of the Lord', type: 'Feast', color: 'white', key: 'Transfiguration' },
+        '8-15': { title: 'Assumption of the Blessed Virgin Mary', type: 'Solemnity', color: 'white', key: 'AssumptionOfTheBlessedVirginMary' },
+        '9-14': { title: 'Exaltation of the Holy Cross', type: 'Feast', color: 'red', key: 'ExaltationOfTheHolyCross' },
+        '11-1': { title: 'All Saints', type: 'Solemnity', color: 'white', key: 'AllSaints' },
+        '11-2': { title: 'The Commemoration of All the Faithful Departed (All Souls)', type: 'Solemnity', color: 'purple', key: 'AllSouls' },
+        '11-9': { title: 'Dedication of the Lateran Basilica', type: 'Feast', color: 'white', key: 'DedicationOfTheLateranBasilica' },
+        '12-8': { title: 'Immaculate Conception of the Blessed Virgin Mary', type: 'Solemnity', color: 'white', key: 'ImmaculateConception' },
+        '12-25': { title: 'The Nativity of the Lord (Christmas)', type: 'Solemnity', color: 'white', key: 'NativityOfTheLord' },
+        '12-26': { title: 'St. Stephen, First Martyr', type: 'Feast', color: 'red', key: 'Stephen' },
+        '12-27': { title: 'St. John, Apostle and Evangelist', type: 'Feast', color: 'white', key: 'John' },
+        '12-28': { title: 'The Holy Innocents, Martyrs', type: 'Feast', color: 'red', key: 'HolyInnocents' },
     };
 
     if (fixedFeasts[monthDay]) {
         celebration = fixedFeasts[monthDay].title;
         celebrationType = fixedFeasts[monthDay].type;
         color = fixedFeasts[monthDay].color;
+        key = fixedFeasts[monthDay].key;
     }
+
+    const cycleId = year % 2 === 0 ? 'II' : 'I';
 
     return {
         date: dateStr,
         season,
         year: yearType,
+        cycle: cycleId,
         week,
         dayOfWeek: dayName,
         celebration,
         celebrationType,
         color,
-        rank: getRankValue(celebrationType)
+        rank: getRankValue(celebrationType),
+        key
     };
 }
 

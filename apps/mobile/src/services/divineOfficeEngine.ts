@@ -2,6 +2,8 @@ import { getCalendar } from './liturgicalData';
 import { resolveCelebration } from './calendarEngine';
 import divineOfficeData from '../../data/divineOffice.json';
 import passageCache from '../../data/passageCache.json';
+import { extractBibleText } from '../utils/bibleExtractor';
+import { PSALTER_ANTIPHONS, COMMON_RESPONSORIES } from '../data/divineOfficeExtras';
 
 // ─── Cycle data (keyed by liturgical key, not date) ───────────────────────
 // This file is built by: node scripts/scrape-divine-office-cycle.mjs
@@ -83,6 +85,15 @@ const getPassage = (reference?: string | null): { text: string; verses?: string[
             };
         }
     }
+    // New offline fallback using the Bible extraction logic
+    const backup = extractBibleText(normalized);
+    if (backup.text) {
+        return {
+            text: backup.text,
+            verses: backup.verses
+        };
+    }
+
     return null;
 };
 
@@ -281,12 +292,16 @@ export function buildStructuredOffice(date: string, officeKey: string): Structur
         : 'O God, come to our aid.\nO Lord, make haste to help us.\nGlory be to the Father, and to the Son, and to the Holy Spirit.\nAs it was in the beginning, is now, and ever shall be, world without end. Amen.';
 
     // Psalmody — use passage cache text when available, else named fallback
+    const psalterWeekKey = `week${psalterWeek}`;
+    const dayOfWeek = calendar.day.toLowerCase();
+    const fallbackAntiphons = PSALTER_ANTIPHONS[psalterWeekKey]?.[dayOfWeek]?.[officeKey] ?? [];
+
     const psalmodyParts = psalmRefs.map((ref: string, idx: number) => {
         const passage = getPassage(ref);
         const text = sanitizeText(passage?.text) || `[ ${ref} — prayed from memory ]`;
         return {
             heading: ref,
-            antiphon: '',  // Proper antiphons come from scraped data; leave empty for computed fallback
+            antiphon: fallbackAntiphons[idx] ?? "",
             text,
         };
     });
@@ -308,9 +323,11 @@ export function buildStructuredOffice(date: string, officeKey: string): Structur
     let gospelCanticle: OfficeParts['gospelCanticle'];
     if (canticleInfo) {
         const passage = getPassage(canticleInfo.ref);
+        const seasonalAntiphon = PSALTER_ANTIPHONS.seasonal[seasonKey]?.[officeKey] ?? "";
+
         gospelCanticle = {
             heading: canticleInfo.name,
-            antiphon: '',  // Proper antiphon depends on the specific day; left empty in fallback
+            antiphon: seasonalAntiphon,
             text: sanitizeText(passage?.text) || 'My soul glorifies the Lord,\nmy spirit rejoices in God, my Saviour.',
         };
     }

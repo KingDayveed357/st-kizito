@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { ScrollView, Text, TextInput, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, ScrollView, Text, TextInput, View } from 'react-native';
 import { useTheme } from '../../src/hooks/useTheme';
 import { Header } from '../../src/components/ui/Header';
 import { Button } from '../../src/components/ui/Button';
@@ -57,7 +57,8 @@ export default function DonationScreen() {
                     </View>
                 }
             />
-
+               
+         <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
             <ScrollView contentContainerStyle={{ paddingHorizontal: 20, paddingTop: 14, paddingBottom: 52 }} showsVerticalScrollIndicator={false}>
                 <View
                     style={{
@@ -176,6 +177,7 @@ export default function DonationScreen() {
 
                 <Button onPress={handleContinue}>Continue</Button>
             </ScrollView>
+    </KeyboardAvoidingView>
         </SafeAreaView>
     );
 }

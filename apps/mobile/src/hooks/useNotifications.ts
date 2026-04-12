@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Notifications from 'expo-notifications';
 import { STORAGE_KEYS } from '../utils/constants';
@@ -8,6 +8,7 @@ import {
     cancelReminder,
     defaultPrayerReminders,
     ensureNotificationPermissions,
+    reconcileNotifications,
     scheduleDailyPrayerReminder,
 } from '../services/notifications/notificationService';
 
@@ -48,6 +49,14 @@ export const useNotifications = () => {
     const [preferences, setPreferences] = useState<NotificationPreferences>(DEFAULT_PREFERENCES);
     const [prayerReminders, setPrayerReminders] = useState<PrayerReminderSettings>(defaultPrayerReminders);
 
+    // ── Ref to prevent stale closures ────────────────────────────────────
+    // togglePrayerReminder and setPrayerReminderTime always read the LATEST
+    // state through this ref, even if React hasn't re-rendered yet.
+    const prayerRemindersRef = useRef(prayerReminders);
+    useEffect(() => {
+        prayerRemindersRef.current = prayerReminders;
+    }, [prayerReminders]);
+
     useEffect(() => {
         let mounted = true;
 
@@ -66,6 +75,10 @@ export const useNotifications = () => {
                 );
                 setPreferences(parseJson(prefsRaw, DEFAULT_PREFERENCES));
                 setPrayerReminders(parseJson(remindersRaw, defaultPrayerReminders));
+
+                // Boot-time reconciliation: clean up any orphan notifications
+                // from previous app sessions that crashed or were force-killed.
+                await reconcileNotifications();
             } finally {
                 if (mounted) {
                     setIsLoading(false);
@@ -107,6 +120,7 @@ export const useNotifications = () => {
 
     const persistPrayerReminders = useCallback(async (next: PrayerReminderSettings) => {
         setPrayerReminders(next);
+        prayerRemindersRef.current = next; // ← sync ref immediately
         await AsyncStorage.setItem(STORAGE_KEYS.prayerReminders, JSON.stringify(next));
     }, []);
 
@@ -116,12 +130,12 @@ export const useNotifications = () => {
             if (!granted) return false;
         }
 
-        const current = prayerReminders[key];
+        const current = prayerRemindersRef.current[key]; // ← always fresh via ref
 
         if (!enabled) {
             await cancelReminder(current.identifier);
             const next = {
-                ...prayerReminders,
+                ...prayerRemindersRef.current,
                 [key]: {
                     ...current,
                     enabled: false,
@@ -132,10 +146,12 @@ export const useNotifications = () => {
             return true;
         }
 
+        // Cancel any existing before scheduling (deterministic ID handles this too,
+        // but explicit cancel is defense-in-depth)
         await cancelReminder(current.identifier);
         const identifier = await scheduleDailyPrayerReminder(key, current.hour, current.minute);
         const next = {
-            ...prayerReminders,
+            ...prayerRemindersRef.current,
             [key]: {
                 ...current,
                 enabled: true,
@@ -144,12 +160,12 @@ export const useNotifications = () => {
         };
         await persistPrayerReminders(next);
         return true;
-    }, [ensurePermissions, persistPrayerReminders, prayerReminders]);
+    }, [ensurePermissions, persistPrayerReminders]); // ← NO prayerReminders dep!
 
     const setPrayerReminderTime = useCallback(async (key: PrayerReminderKey, hour: number, minute: number) => {
         const normalizedHour = Math.min(23, Math.max(0, hour));
         const normalizedMinute = Math.min(59, Math.max(0, minute));
-        const current = prayerReminders[key];
+        const current = prayerRemindersRef.current[key]; // ← always fresh via ref
 
         let identifier = current.identifier;
 
@@ -159,7 +175,7 @@ export const useNotifications = () => {
         }
 
         const next = {
-            ...prayerReminders,
+            ...prayerRemindersRef.current,
             [key]: {
                 ...current,
                 hour: normalizedHour,
@@ -170,7 +186,7 @@ export const useNotifications = () => {
 
         await persistPrayerReminders(next);
         return true;
-    }, [persistPrayerReminders, prayerReminders]);
+    }, [persistPrayerReminders]); // ← NO prayerReminders dep!
 
     const remindersWithLabel = useMemo(() => {
         return {
@@ -203,3 +219,4 @@ export const useNotifications = () => {
         setPrayerReminderTime,
     };
 };
+
