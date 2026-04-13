@@ -119,29 +119,53 @@ export function Sidebar({
 
                     return (
                       <li key={item.href}>
-                        <Link
-                          href={item.href}
-                          className={cn(
-                            "group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-all duration-200",
-                            collapsed && "md:justify-center",
-                            active
-                              ? "bg-sidebar-primary text-sidebar-primary-foreground shadow-sm"
-                              : "text-sidebar-foreground/88 hover:bg-sidebar-accent/25 hover:text-sidebar-foreground"
-                          )}
-                          title={collapsed ? item.label : undefined}
-                        >
-                          <Icon className={cn("h-4.5 w-4.5 flex-shrink-0", active ? "opacity-100" : "opacity-80 group-hover:opacity-100")} />
-                          {!collapsed && (
-                            <>
-                              <span className="truncate">{item.label}</span>
-                              {item.badge ? (
-                                <span className="ml-auto rounded-full bg-sidebar-accent px-2 py-0.5 text-[10px] font-medium text-sidebar-accent-foreground">
-                                  {item.badge}
-                                </span>
-                              ) : null}
-                            </>
-                          )}
-                        </Link>
+                        {item.disabled ? (
+                          <span
+                            aria-disabled="true"
+                            className={cn(
+                              "group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-all duration-200",
+                              "cursor-not-allowed text-sidebar-foreground/45",
+                              collapsed && "md:justify-center"
+                            )}
+                            title={collapsed ? item.label : undefined}
+                          >
+                            <Icon className="h-4.5 w-4.5 flex-shrink-0 opacity-60" />
+                            {!collapsed && (
+                              <>
+                                <span className="truncate">{item.label}</span>
+                                {item.badge ? (
+                                  <span className="ml-auto rounded-full bg-sidebar-accent/60 px-2 py-0.5 text-[10px] font-medium text-sidebar-accent-foreground">
+                                    {item.badge}
+                                  </span>
+                                ) : null}
+                              </>
+                            )}
+                          </span>
+                        ) : (
+                          <Link
+                            href={item.href}
+                            className={cn(
+                              "group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-all duration-200",
+                              collapsed && "md:justify-center",
+                              active
+                                ? "bg-sidebar-primary text-sidebar-primary-foreground shadow-sm"
+                                : "text-sidebar-foreground/88 hover:bg-sidebar-accent/25 hover:text-sidebar-foreground"
+                            )}
+                            title={collapsed ? item.label : undefined}
+                          >
+                            <Icon className={cn("h-4.5 w-4.5 flex-shrink-0", active ? "opacity-100" : "opacity-80 group-hover:opacity-100")} />
+                            {!collapsed && (
+                              <>
+                                <span className="truncate">{item.label}</span>
+                                {item.badge ? (
+                                  <span className="ml-auto rounded-full bg-sidebar-accent px-2 py-0.5 text-[10px] font-medium text-sidebar-accent-foreground">
+                                    {item.badge}
+                                  </span>
+                                ) : null}
+                              </>
+                            )}
+                          </Link>
+                        )}
                       </li>
                     )
                   })}
@@ -168,10 +192,10 @@ export function Sidebar({
           </button>
 
           {!collapsed && logoutSuccess ? (
-            <p className="px-3 text-xs text-emerald-500">Signed out. Redirecting...</p>
+            <p className="px-3 text-xs text-emerald-500 animate-in fade-in duration-300">Signed out. Redirecting...</p>
           ) : null}
           {!collapsed && logoutError ? (
-            <p className="px-3 text-xs text-amber-500">{logoutError}</p>
+            <p className="px-3 text-xs text-amber-500 animate-in fade-in duration-300">{logoutError}</p>
           ) : null}
         </div>
       </aside>

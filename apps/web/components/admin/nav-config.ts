@@ -1,4 +1,4 @@
-import { Bell, CalendarClock, CalendarDays, CreditCard, FileText, HandCoins, Home, Megaphone, Phone, Settings, ShieldCheck, Users } from 'lucide-react'
+import { CalendarClock, CalendarDays, CreditCard, FileText, HandCoins, Home, Megaphone, Phone, Settings, Users } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
 export interface SidebarNavItem {
@@ -6,6 +6,7 @@ export interface SidebarNavItem {
   href: string
   icon: LucideIcon
   badge?: string
+  disabled?: boolean
 }
 
 export interface SidebarNavSection {
@@ -40,9 +41,8 @@ export const ADMIN_NAV_SECTIONS: SidebarNavSection[] = [
   {
     title: 'Administration',
     items: [
-      { label: 'Users & Admins', href: '/admin/users', icon: Users },
+      { label: 'Users & Admins', href: '/admin/users', icon: Users, badge: 'Soon', disabled: true },
       { label: 'Settings', href: '/admin/settings', icon: Settings },
-      { label: 'Security', href: '/admin/settings#security', icon: ShieldCheck },
     ],
   },
 ]

@@ -4,9 +4,9 @@ import { useState, useEffect } from "react"
 import { AdminLayout } from "@/components/layout/admin-layout"
 import { Button } from "@/components/ui/button-custom"
 import { Input } from "@/components/ui/input-custom"
-import { Badge } from "@/components/ui/badge-custom"
 import { Card, CardContent } from "@/components/ui/card-custom"
 import { Modal, ModalHeader, ModalTitle, ModalBody, ModalFooter } from "@/components/ui/modal-custom"
+import { AdminPageSkeleton } from "@/components/admin/admin-page-skeleton"
 import { createClient } from "@/lib/supabase"
 
 type Event = {
@@ -21,6 +21,7 @@ type Event = {
 
 export default function EventsPage() {
   const [events, setEvents] = useState<Event[]>([])
+  const [isLoading, setIsLoading] = useState(true)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [editingId, setEditingId] = useState<string | null>(null)
   const [formData, setFormData] = useState({
@@ -38,6 +39,7 @@ export default function EventsPage() {
   }, [])
 
   const fetchEvents = async () => {
+    setIsLoading(true)
     const { data, error } = await supabase
       .from('events')
       .select('*')
@@ -45,6 +47,7 @@ export default function EventsPage() {
     if (!error && data) {
       setEvents(data as Event[])
     }
+    setIsLoading(false)
   }
 
   const handleCreateClick = () => {
@@ -130,13 +133,14 @@ export default function EventsPage() {
       navbarActions={navbarActions}
     >
       <div className="grid gap-4">
-        {events.length === 0 ? (
+        {isLoading ? <AdminPageSkeleton rows={3} /> : null}
+        {!isLoading && events.length === 0 ? (
           <Card>
             <CardContent className="py-12 text-center">
               <p className="text-muted-foreground">No events scheduled</p>
             </CardContent>
           </Card>
-        ) : (
+        ) : !isLoading ? (
           events.map((event) => {
             return (
               <Card key={event.id}>
@@ -187,7 +191,7 @@ export default function EventsPage() {
               </Card>
             )
           })
-        )}
+        ) : null}
       </div>
 
       {/* Modal for Create/Edit */}

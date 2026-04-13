@@ -46,6 +46,17 @@ export function useLogout() {
   const [logoutError, setLogoutError] = React.useState<string | null>(null)
   const [logoutSuccess, setLogoutSuccess] = React.useState(false)
 
+  React.useEffect(() => {
+    if (!logoutError && !logoutSuccess) return
+
+    const timeoutId = window.setTimeout(() => {
+      setLogoutError(null)
+      setLogoutSuccess(false)
+    }, 4000)
+
+    return () => window.clearTimeout(timeoutId)
+  }, [logoutError, logoutSuccess])
+
   const handleLogout = React.useCallback(async () => {
     if (isLoggingOut) return
 
@@ -68,7 +79,7 @@ export function useLogout() {
       window.setTimeout(() => {
         router.replace('/admin/login?loggedOut=1')
         router.refresh()
-      }, 500)
+      }, 900)
     } catch {
       await invalidateServerSession()
       clearClientAuthStorage()
@@ -76,7 +87,7 @@ export function useLogout() {
       window.setTimeout(() => {
         router.replace('/admin/login?loggedOut=1')
         router.refresh()
-      }, 500)
+      }, 900)
     } finally {
       setIsLoggingOut(false)
     }

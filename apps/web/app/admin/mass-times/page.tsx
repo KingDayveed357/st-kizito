@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button-custom"
 import { Input } from "@/components/ui/input-custom"
 import { Card, CardContent } from "@/components/ui/card-custom"
 import { Modal, ModalHeader, ModalTitle, ModalBody, ModalFooter } from "@/components/ui/modal-custom"
+import { AdminPageSkeleton } from "@/components/admin/admin-page-skeleton"
 import { createClient } from "@/lib/supabase"
 
 type MassTime = {
@@ -20,6 +21,7 @@ const DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", 
 
 export default function MassTimesPage() {
   const [massTimes, setMassTimes] = useState<MassTime[]>([])
+  const [isLoading, setIsLoading] = useState(true)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [editingId, setEditingId] = useState<string | null>(null)
   const [formData, setFormData] = useState({
@@ -36,12 +38,14 @@ export default function MassTimesPage() {
   }, [])
 
   const fetchMassTimes = async () => {
+    setIsLoading(true)
     const { data, error } = await supabase
       .from('mass_times')
       .select('*')
     if (!error && data) {
       setMassTimes(data as MassTime[])
     }
+    setIsLoading(false)
   }
 
   const groupedByDay = DAYS.map((day) => ({
@@ -128,7 +132,8 @@ export default function MassTimesPage() {
       navbarActions={navbarActions}
     >
       <div className="space-y-6">
-        {groupedByDay.map(({ day, times }) => (
+        {isLoading ? <AdminPageSkeleton rows={4} /> : null}
+        {!isLoading ? groupedByDay.map(({ day, times }) => (
           <div key={day}>
             <h3 className="text-lg font-semibold text-foreground mb-4">{day}</h3>
 
@@ -187,7 +192,7 @@ export default function MassTimesPage() {
               </div>
             )}
           </div>
-        ))}
+        )) : null}
       </div>
 
       {/* Modal for Create/Edit */}

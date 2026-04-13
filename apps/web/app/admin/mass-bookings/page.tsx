@@ -13,6 +13,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table-custom"
+import { AdminPageSkeleton } from "@/components/admin/admin-page-skeleton"
 import { createClient } from "@/lib/supabase"
 
 type Booking = {
@@ -34,6 +35,8 @@ type Booking = {
 
 export default function MassBookingsPage() {
   const [bookings, setBookings] = useState<Booking[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [activeActionId, setActiveActionId] = useState<string | null>(null)
   const [filterStatus, setFilterStatus] = useState<"all" | "pending" | "approved" | "rejected">("all")
 
   const supabase = createClient()
@@ -43,6 +46,7 @@ export default function MassBookingsPage() {
   }, [])
 
   const fetchBookings = async () => {
+    setIsLoading(true)
     const { data, error } = await supabase
       .from('bookings')
       .select('*, mass_times(day_of_week, time, location)')
@@ -51,18 +55,23 @@ export default function MassBookingsPage() {
     if (!error && data) {
       setBookings(data as any as Booking[])
     }
+    setIsLoading(false)
   }
 
   const filteredBookings = filterStatus === "all" ? bookings : bookings.filter((b) => b.status === filterStatus)
 
   const handleApprove = async (id: string) => {
+    setActiveActionId(id)
     await supabase.from('bookings').update({ status: 'approved' }).eq('id', id)
     await fetchBookings()
+    setActiveActionId(null)
   }
 
   const handleReject = async (id: string) => {
+    setActiveActionId(id)
     await supabase.from('bookings').update({ status: 'rejected' }).eq('id', id)
     await fetchBookings()
+    setActiveActionId(null)
   }
 
   const getStatusBadgeVariant = (status: string) => {
@@ -128,13 +137,14 @@ export default function MassBookingsPage() {
       </div>
 
       {/* Bookings Table */}
-      {filteredBookings.length === 0 ? (
+      {isLoading ? <AdminPageSkeleton rows={4} /> : null}
+      {!isLoading && filteredBookings.length === 0 ? (
         <Card>
           <CardContent className="py-12 text-center">
             <p className="text-muted-foreground">No bookings found</p>
           </CardContent>
         </Card>
-      ) : (
+      ) : !isLoading ? (
         <Card className="overflow-hidden">
           <Table>
             <TableHeader>
@@ -186,6 +196,7 @@ export default function MassBookingsPage() {
                             variant="ghost"
                             className="text-success hover:bg-success/10"
                             onClick={() => handleApprove(booking.id)}
+                            disabled={activeActionId === booking.id}
                           >
                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path
@@ -195,13 +206,14 @@ export default function MassBookingsPage() {
                                 d="M5 13l4 4L19 7"
                               />
                             </svg>
-                            <span className="ml-1">Approve</span>
+                            <span className="ml-1">{activeActionId === booking.id ? "Updating..." : "Approve"}</span>
                           </Button>
                           <Button
                             size="sm"
                             variant="ghost"
                             className="text-destructive hover:bg-destructive/10"
                             onClick={() => handleReject(booking.id)}
+                            disabled={activeActionId === booking.id}
                           >
                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path
@@ -211,7 +223,7 @@ export default function MassBookingsPage() {
                                 d="M6 18L18 6M6 6l12 12"
                               />
                             </svg>
-                            <span className="ml-1">Reject</span>
+                            <span className="ml-1">{activeActionId === booking.id ? "Updating..." : "Reject"}</span>
                           </Button>
                         </>
                       )}
@@ -231,7 +243,7 @@ export default function MassBookingsPage() {
             </TableBody>
           </Table>
         </Card>
-      )}
+      ) : null}
 
       {/* Stats */}
       <div className="grid grid-cols-3 gap-4 mt-6">

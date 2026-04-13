@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input-custom"
 import { Badge } from "@/components/ui/badge-custom"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card-custom"
 import { Modal, ModalHeader, ModalTitle, ModalBody, ModalFooter } from "@/components/ui/modal-custom"
+import { AdminPageSkeleton } from "@/components/admin/admin-page-skeleton"
 import { createClient } from "@/lib/supabase"
 
 type Announcement = {
@@ -20,6 +21,7 @@ type Announcement = {
 
 export default function AnnouncementsPage() {
   const [announcements, setAnnouncements] = useState<Announcement[]>([])
+  const [isLoading, setIsLoading] = useState(true)
   const [filterType, setFilterType] = useState<"all" | "liturgical" | "parish">("all")
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [editingId, setEditingId] = useState<string | null>(null)
@@ -37,6 +39,7 @@ export default function AnnouncementsPage() {
   }, [])
 
   const fetchAnnouncements = async () => {
+    setIsLoading(true)
     const { data, error } = await supabase
       .from('announcements')
       .select('*')
@@ -45,6 +48,7 @@ export default function AnnouncementsPage() {
     if (!error && data) {
       setAnnouncements(data as Announcement[])
     }
+    setIsLoading(false)
   }
 
   const filteredAnnouncements = filterType === "all" ? announcements : announcements.filter((a) => a.type === filterType)
@@ -146,13 +150,14 @@ export default function AnnouncementsPage() {
 
       {/* Announcements List */}
       <div className="space-y-4">
-        {filteredAnnouncements.length === 0 ? (
+        {isLoading ? <AdminPageSkeleton rows={3} /> : null}
+        {!isLoading && filteredAnnouncements.length === 0 ? (
           <Card>
             <CardContent className="py-12 text-center">
               <p className="text-muted-foreground">No announcements found</p>
             </CardContent>
           </Card>
-        ) : (
+        ) : !isLoading ? (
           filteredAnnouncements.map((announcement) => (
             <Card key={announcement.id}>
               <CardContent className="pt-6">
@@ -206,7 +211,7 @@ export default function AnnouncementsPage() {
               </CardContent>
             </Card>
           ))
-        )}
+        ) : null}
       </div>
 
       {/* Modal for Create/Edit */}

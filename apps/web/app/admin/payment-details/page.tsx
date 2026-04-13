@@ -5,6 +5,7 @@ import { AdminLayout } from "@/components/layout/admin-layout"
 import { Button } from "@/components/ui/button-custom"
 import { Input } from "@/components/ui/input-custom"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card-custom"
+import { AdminPageSkeleton } from "@/components/admin/admin-page-skeleton"
 import { createClient } from "@/lib/supabase"
 
 export default function PaymentDetailsPage() {
@@ -117,7 +118,7 @@ export default function PaymentDetailsPage() {
             )}
 
             {isLoading ? (
-              <p className="text-muted-foreground text-sm">Loading details...</p>
+              <AdminPageSkeleton rows={1} />
             ) : (
               <>
                 <Input

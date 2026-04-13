@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button-custom"
 import { Input } from "@/components/ui/input-custom"
 import { Card, CardContent } from "@/components/ui/card-custom"
 import { Modal, ModalBody, ModalFooter, ModalHeader, ModalTitle } from "@/components/ui/modal-custom"
+import { AdminPageSkeleton } from "@/components/admin/admin-page-skeleton"
 import { createClient } from "@/lib/supabase"
 
 type ParishContact = {
@@ -33,6 +34,7 @@ const ICON_OPTIONS = [
 
 export default function ContactDetailsPage() {
   const [contacts, setContacts] = useState<ParishContact[]>([])
+  const [isLoading, setIsLoading] = useState(true)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [editingId, setEditingId] = useState<string | null>(null)
   const [isSaving, setIsSaving] = useState(false)
@@ -58,6 +60,7 @@ export default function ContactDetailsPage() {
 
   const fetchContacts = async () => {
     setErrorMsg(null)
+    setIsLoading(true)
     const { data, error } = await supabase
       .from("parish_contacts")
       .select("*")
@@ -72,6 +75,7 @@ export default function ContactDetailsPage() {
     if (data) {
       setContacts(data as ParishContact[])
     }
+    setIsLoading(false)
   }
 
   const handleCreateClick = () => {
@@ -194,13 +198,14 @@ export default function ContactDetailsPage() {
           </div>
         ) : null}
 
-        {contacts.length === 0 ? (
+        {isLoading ? <AdminPageSkeleton rows={3} /> : null}
+        {!isLoading && contacts.length === 0 ? (
           <Card>
             <CardContent className="py-12 text-center">
               <p className="text-muted-foreground">No contact details added yet</p>
             </CardContent>
           </Card>
-        ) : (
+        ) : !isLoading ? (
           contacts.map((contact) => (
             <Card key={contact.id}>
               <CardContent className="pt-6">
@@ -234,7 +239,7 @@ export default function ContactDetailsPage() {
               </CardContent>
             </Card>
           ))
-        )}
+        ) : null}
       </div>
 
       <Modal open={isModalOpen} onOpenChange={setIsModalOpen}>

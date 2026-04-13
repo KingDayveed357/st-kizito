@@ -1,5 +1,3 @@
-import Link from "next/link"
-
 export function Footer() {
   const currentYear = new Date().getFullYear()
 
@@ -64,9 +62,9 @@ export function Footer() {
                 </a>
               </li>
               <li>
-                <Link href="/admin/login" className="text-foreground/70 hover:text-primary transition-colors text-sm">
-                  Admin Login
-                </Link>
+                <a href="#" className="text-foreground/70 hover:text-primary transition-colors text-sm">
+                  Contact Support
+                </a>
               </li>
             </ul>
           </div>

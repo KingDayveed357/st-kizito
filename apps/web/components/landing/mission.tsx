@@ -1,6 +1,12 @@
 export function MissionSection() {
   return (
-    <section className="relative py-32 px-6 lg:px-12 bg-gradient-to-b from-primary via-primary/95 to-primary/90 text-white overflow-hidden">
+    <section
+      className="relative py-32 px-6 lg:px-12 text-white overflow-hidden bg-cover bg-center bg-no-repeat"
+      style={{
+        backgroundImage:
+          "linear-gradient(to bottom, rgba(5, 33, 66, 0.9), rgba(5, 33, 66, 0.82), rgba(5, 33, 66, 0.76)), url('/background-image.jpg')",
+      }}
+    >
       {/* Background texture/image */}
       <div 
         className="absolute inset-0 opacity-20"

@@ -61,7 +61,7 @@ export const HeroSection = () => {
               <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-100 dark:border-emerald-800/40 shadow-sm backdrop-blur-md">
                 <span className="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
                 <span className="text-[11px] font-bold uppercase tracking-[0.1em] text-emerald-800 dark:text-emerald-400">
-                  Version 1.0 • Digital Sanctuary
+                  St. Kizito Parish App
                 </span>
               </div>
             </motion.div>
@@ -71,9 +71,9 @@ export const HeroSection = () => {
               variants={itemVariants}
               className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-serif font-medium text-slate-900 dark:text-white leading-[1.05] tracking-tight"
             >
-              Grace in Every <br />
-              <span className="italic text-emerald-700 dark:text-emerald-500 font-normal">Moment.</span> <br />
-              Devotion in <span className="relative inline-block">your Step.
+              Walk with Christ <br />
+              <span className="italic text-emerald-700 dark:text-emerald-500 font-normal">Each Day.</span> <br />
+              Stay close to <span className="relative inline-block">St. Kizito.
                 <motion.svg 
                   className="absolute -bottom-2 lg:-bottom-4 left-0 w-full" 
                   viewBox="0 0 100 10" 
@@ -91,9 +91,9 @@ export const HeroSection = () => {
               variants={itemVariants}
               className="text-lg md:text-xl lg:text-2xl text-slate-600 dark:text-slate-400 max-w-xl leading-relaxed font-light"
             >
-              Experience the sacred liturgy like never before. St. Kizito Parish brings 
-              daily readings, the Divine Office, and community updates into a 
-              beautifully crafted digital experience.
+              A holy digital home for our parishioners and families. Receive daily readings,
+              the Divine Office, Mass updates, and parish notices that keep your faith life
+              rooted in prayer and communion.
             </motion.p>
 
             {/* CTAs */}
@@ -107,7 +107,7 @@ export const HeroSection = () => {
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
                 <Download className="mr-2.5 h-6 w-6" />
-                Download App
+                Download the Parish App
               </Button>
               
               <Button 
@@ -118,7 +118,7 @@ export const HeroSection = () => {
                 <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center group-hover:bg-slate-200 dark:group-hover:bg-slate-700 transition-colors">
                   <Play className="h-4 w-4 fill-slate-900 dark:fill-white text-slate-900 dark:text-white ml-1" />
                 </div>
-                See Experience
+                See How It Helps
               </Button>
             </motion.div>
 
@@ -139,10 +139,10 @@ export const HeroSection = () => {
                   {[1, 2, 3, 4, 5].map((i) => (
                     <Star key={i} className="h-3.5 w-3.5 fill-amber-400 text-amber-400 drop-shadow-sm" />
                   ))}
-                  <span className="text-xs font-bold text-slate-900 dark:text-white ml-1.5 uppercase tracking-widest">4.9/5 Rating</span>
+                  <span className="text-xs font-bold text-slate-900 dark:text-white ml-1.5 uppercase tracking-widest">Faith-Centered Experience</span>
                 </div>
                 <p className="text-[11px] font-bold text-slate-400 uppercase tracking-[0.2em]">
-                  Join 10,000+ faithful parishioners
+                  Made with love for St. Kizito Parishioners
                 </p>
               </div>
             </motion.div>

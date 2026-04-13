@@ -58,14 +58,25 @@ export async function middleware(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser()
 
+  const { pathname } = request.nextUrl
+
   // Ensure auth endpoints remain accessible.
-  if (request.nextUrl.pathname === '/admin/login' || request.nextUrl.pathname === '/admin/logout') {
+  if (pathname === '/admin/logout' || pathname === '/api/admin/login') {
+    return supabaseResponse
+  }
+
+  if (pathname === '/admin/login') {
+    if (user) {
+      return NextResponse.redirect(new URL('/admin', request.url))
+    }
     return supabaseResponse
   }
 
   // Protect /admin routes
-  if (request.nextUrl.pathname.startsWith('/admin') && !user) {
-    return NextResponse.redirect(new URL('/admin/login', request.url))
+  if (pathname.startsWith('/admin') && !user) {
+    const loginUrl = new URL('/admin/login', request.url)
+    loginUrl.searchParams.set('next', pathname)
+    return NextResponse.redirect(loginUrl)
   }
 
   return supabaseResponse

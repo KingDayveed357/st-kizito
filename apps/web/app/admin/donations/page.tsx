@@ -13,6 +13,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table-custom"
+import { AdminPageSkeleton } from "@/components/admin/admin-page-skeleton"
 import { createClient } from "@/lib/supabase"
 
 type Donation = {
@@ -30,6 +31,8 @@ type Donation = {
 
 export default function DonationsPage() {
   const [donations, setDonations] = useState<Donation[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [activeActionId, setActiveActionId] = useState<string | null>(null)
   const [filterStatus, setFilterStatus] = useState<"all" | "pending" | "approved" | "rejected">("all")
 
   const supabase = createClient()
@@ -39,6 +42,7 @@ export default function DonationsPage() {
   }, [])
 
   const fetchDonations = async () => {
+    setIsLoading(true)
     const { data, error } = await supabase
       .from('donations')
       .select('*')
@@ -47,18 +51,23 @@ export default function DonationsPage() {
     if (!error && data) {
       setDonations(data as Donation[])
     }
+    setIsLoading(false)
   }
 
   const filteredDonations = filterStatus === "all" ? donations : donations.filter((d) => d.status === filterStatus)
 
   const handleApprove = async (id: string) => {
+    setActiveActionId(id)
     await supabase.from('donations').update({ status: 'approved' }).eq('id', id)
     await fetchDonations()
+    setActiveActionId(null)
   }
 
   const handleReject = async (id: string) => {
+    setActiveActionId(id)
     await supabase.from('donations').update({ status: 'rejected' }).eq('id', id)
     await fetchDonations()
+    setActiveActionId(null)
   }
 
   const getStatusBadgeVariant = (status: string) => {
@@ -128,13 +137,14 @@ export default function DonationsPage() {
       </div>
 
       {/* Donations Table */}
-      {filteredDonations.length === 0 ? (
+      {isLoading ? <AdminPageSkeleton rows={4} /> : null}
+      {!isLoading && filteredDonations.length === 0 ? (
         <Card>
           <CardContent className="py-12 text-center">
             <p className="text-muted-foreground">No donations found</p>
           </CardContent>
         </Card>
-      ) : (
+      ) : !isLoading ? (
         <Card className="overflow-hidden">
           <Table>
             <TableHeader>
@@ -185,6 +195,7 @@ export default function DonationsPage() {
                             variant="ghost"
                             className="text-success hover:bg-success/10"
                             onClick={() => handleApprove(donation.id)}
+                            disabled={activeActionId === donation.id}
                           >
                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path
@@ -194,13 +205,14 @@ export default function DonationsPage() {
                                 d="M5 13l4 4L19 7"
                               />
                             </svg>
-                            <span className="ml-1">Approve</span>
+                            <span className="ml-1">{activeActionId === donation.id ? "Updating..." : "Approve"}</span>
                           </Button>
                           <Button
                             size="sm"
                             variant="ghost"
                             className="text-destructive hover:bg-destructive/10"
                             onClick={() => handleReject(donation.id)}
+                            disabled={activeActionId === donation.id}
                           >
                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path
@@ -210,7 +222,7 @@ export default function DonationsPage() {
                                 d="M6 18L18 6M6 6l12 12"
                               />
                             </svg>
-                            <span className="ml-1">Reject</span>
+                            <span className="ml-1">{activeActionId === donation.id ? "Updating..." : "Reject"}</span>
                           </Button>
                         </>
                       )}
@@ -221,7 +233,7 @@ export default function DonationsPage() {
             </TableBody>
           </Table>
         </Card>
-      )}
+      ) : null}
 
       {/* Stats */}
       <div className="grid grid-cols-3 gap-4 mt-6">
