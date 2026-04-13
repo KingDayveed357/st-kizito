@@ -237,3 +237,10 @@
     @apply underline-offset-4 hover:underline;
   }
 }
+
+@layer utilities {
+  .defer-render {
+    content-visibility: auto;
+    contain-intrinsic-size: 900px;
+  }
+}

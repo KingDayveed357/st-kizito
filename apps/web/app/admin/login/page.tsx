@@ -143,7 +143,7 @@ export default function LoginPage() {
                   Signing in...
                 </>
               ) : (
-                "Sign In to Admin"
+                "Enter the Sanctuary"
               )}
             </button>
           </form>
@@ -153,7 +153,7 @@ export default function LoginPage() {
               <span aria-hidden="true">✓</span>
               <span>Secure Session Controls Active</span>
             </div>
-            <p className="text-foreground/50">No self-service password reset is available for privileged admin accounts.</p>
+            {/* <p className="text-foreground/50">No self-service password reset is available for privileged admin accounts.</p> */}
           </div>
         </div>
       </div>

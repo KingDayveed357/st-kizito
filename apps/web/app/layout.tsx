@@ -20,19 +20,19 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       {
-        url: '/favicon.png',
+        url: '/favicon.svg',
         media: '(prefers-color-scheme: light)',
       },
       {
-        url: '/favicon.png',
+        url: '/favicon.svg',
         media: '(prefers-color-scheme: dark)',
       },
       {
-        url: '/favicon.png',
+        url: '/favicon.svg',
         type: 'image/svg+xml',
       },
     ],
-    apple: '/favicon.png',
+    apple: '/favicon.svg',
   },
   openGraph: {
     type: 'website',

@@ -1,17 +1,21 @@
+import Image from "next/image"
+
 export function MissionSection() {
   return (
-    <section
-      className="relative py-32 px-6 lg:px-12 text-white overflow-hidden bg-cover bg-center bg-no-repeat"
-      style={{
-        backgroundImage:
-          "linear-gradient(to bottom, rgba(5, 33, 66, 0.9), rgba(5, 33, 66, 0.82), rgba(5, 33, 66, 0.76)), url('/background-image.jpg')",
-      }}
-    >
-      {/* Background texture/image */}
-      <div 
+    <section className="relative py-32 px-1 lg:px-12 text-white overflow-hidden">
+      <Image
+        src="/background-image.jpg"
+        alt="St. Kizito Parish congregation"
+        fill
+        sizes="100vw"
+        className="object-cover"
+        quality={65}
+      />
+      <div className="absolute inset-0 bg-gradient-to-b from-primary/90 via-primary/80 to-primary/75" />
+      <div
         className="absolute inset-0 opacity-20"
         style={{
-          backgroundImage: 'radial-gradient(circle at 20% 50%, rgba(201, 168, 76, 0.3) 0%, transparent 50%)',
+          backgroundImage: "radial-gradient(circle at 20% 50%, rgba(201, 168, 76, 0.3) 0%, transparent 50%)",
         }}
       />
 
