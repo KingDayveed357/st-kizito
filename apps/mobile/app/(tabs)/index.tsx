@@ -3,6 +3,7 @@ import { View, ScrollView, Text, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '../../src/hooks/useTheme';
 import { Header } from '../../src/components/ui/Header';
+import { CalendarIconButton } from '../../src/components/ui/CalendarIconButton';
 import { Card } from '../../src/components/ui/Card';
 import { LiturgicalBadge } from '../../src/components/liturgical/LiturgicalBadge';
 import { Button } from '../../src/components/ui/Button';
@@ -38,8 +39,13 @@ export default function HomeScreen() {
         <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
             <Header
                 centerElement={
-                    <View className="items-center">
-                        <Text style={{ color: allColors.liturgical.ordinaryTime }} className="font-serif font-bold text-center text-lg leading-snug mx-4">
+                    <View className="items-center" style={{ flexShrink: 1 }}>
+                        <Text
+                            numberOfLines={2}
+                            ellipsizeMode="tail"
+                            style={{ color: allColors.liturgical.ordinaryTime }}
+                            className="font-serif font-bold text-center text-lg leading-snug"
+                        >
                             {readings?.feastName ?? 'Daily Readings'}
                         </Text>
                         <Text style={{ color: colors.textSecondary }} className="font-sans font-bold text-[10px] uppercase tracking-widest mt-2">
@@ -48,15 +54,13 @@ export default function HomeScreen() {
                     </View>
                 }
                rightElement={
-                    <TouchableOpacity
+                    <CalendarIconButton
+                        color={allColors.liturgical.ordinaryTime}
                         onPress={() => {
                             setSource('readings');
                             router.push('/calendar');
                         }}
-                        className="p-2 mr-2"
-                    >
-                        <Ionicons name="calendar-outline" size={24} color={allColors.liturgical.ordinaryTime} />
-                    </TouchableOpacity>
+                    />
                 }
             />
 
@@ -111,7 +115,12 @@ export default function HomeScreen() {
                         }}
                     />
                     <Chip label="Mass Time" onPress={() => router.push('/parish')} />
-                    <Chip label="Mass Intentions" onPress={() => {}} />
+                    <Chip label="Book Mass" onPress={() => {
+                        router.push('/booking');
+                    }} />
+                     <Chip label="Support the Parish" onPress={() => {
+                        router.push('/donation');
+                    }} />
                 </ScrollView>
 
                 <ScriptureQuote
@@ -147,14 +156,14 @@ export default function HomeScreen() {
                             >
                                 <Ionicons name="megaphone-outline" size={18} color={allColors.liturgical.ordinaryTime} />
                             </View>
-                            <Text style={{ color: allColors.liturgical.ordinaryTime }} className="font-sans font-bold text-[10px] tracking-widest uppercase ml-3">
+                            <Text style={{ color: allColors.liturgical.ordinaryTime }} className="font-sans font-bold text-[10px] tracking-widest uppercase px-3 ml-3">
                                 Latest Announcement
                             </Text>
                         </View>
                         <TouchableOpacity onPress={() => router.push('/parish/announcements')}>
-                            <Text style={{ color: allColors.liturgical.ordinaryTime }} className="font-sans font-semibold text-[12px]">
+                            {/* <Text style={{ color: allColors.liturgical.ordinaryTime }} className="font-sans font-semibold text-[12px]">
                                 View
-                            </Text>
+                            </Text> */}
                         </TouchableOpacity>
                     </View>
 
@@ -201,14 +210,14 @@ export default function HomeScreen() {
                             >
                                 <Ionicons name="calendar-outline" size={18} color={allColors.liturgical.adventLent} />
                             </View>
-                            <Text style={{ color: allColors.liturgical.adventLent }} className="font-sans font-bold text-[10px] tracking-widest uppercase ml-3">
+                            <Text style={{ color: allColors.liturgical.adventLent }} className="font-sans font-bold text-[10px] tracking-widest uppercase px-3 ml-3">
                                 Upcoming Event
                             </Text>
                         </View>
                         <TouchableOpacity onPress={() => router.push('/parish/events')}>
-                            <Text style={{ color: allColors.liturgical.adventLent }} className="font-sans font-semibold text-[12px]">
+                            {/* <Text style={{ color: allColors.liturgical.adventLent }} className="font-sans font-semibold text-[12px]">
                                 View
-                            </Text>
+                            </Text> */}
                         </TouchableOpacity>
                     </View>
 
@@ -241,4 +250,3 @@ export default function HomeScreen() {
         </SafeAreaView>
     );
 }
-

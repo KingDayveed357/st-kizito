@@ -6,10 +6,11 @@ interface PsalmBlockProps {
     content: string[];
     title: string;
     antiphon?: string;
+    psalmPrayer?: string;
     accentColor: string;
 }
 
-export const PsalmBlock: React.FC<PsalmBlockProps> = ({ content, title, antiphon, accentColor }) => {
+export const PsalmBlock: React.FC<PsalmBlockProps> = ({ content, title, antiphon, psalmPrayer, accentColor }) => {
     const { colors, textScale, lineHeightScale } = useTheme();
     const baseSize = 18 * textScale;
     const bodyLineHeight = 28 * textScale * lineHeightScale;
@@ -56,6 +57,23 @@ export const PsalmBlock: React.FC<PsalmBlockProps> = ({ content, title, antiphon
                     </Text>
                 ))}
             </View>
+
+            {/* 4. Psalm-Prayer (after doxology) */}
+            {psalmPrayer && (
+                <View style={[styles.psalmPrayerContainer, { borderLeftColor: accentColor + '30' }]}>
+                    <Text style={[styles.psalmPrayerLabel, { color: accentColor + 'AA', fontSize: 9 * textScale }]}>
+                        PSALM-PRAYER
+                    </Text>
+                    <Text style={{
+                        fontFamily: 'NotoSerif-Italic',
+                        color: colors.textSecondary,
+                        fontSize: baseSize - 1,
+                        lineHeight: bodyLineHeight - 2,
+                    }}>
+                        {psalmPrayer}
+                    </Text>
+                </View>
+            )}
         </View>
     );
 };
@@ -94,5 +112,16 @@ const styles = StyleSheet.create({
     },
     verseText: {
         marginBottom: 2,
+    },
+    psalmPrayerContainer: {
+        marginTop: 12,
+        paddingLeft: 14,
+        paddingVertical: 8,
+        borderLeftWidth: 2,
+    },
+    psalmPrayerLabel: {
+        fontFamily: 'Inter-Bold',
+        letterSpacing: 1.2,
+        marginBottom: 4,
     },
 });

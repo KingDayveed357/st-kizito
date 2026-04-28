@@ -1,19 +1,28 @@
 import { getCalendar } from './liturgicalData';
 import { resolveCelebration } from './calendarEngine';
+import { normalizeOfficeKey } from './liturgicalCalendar';
 import divineOfficeData from '../../data/divineOffice.json';
 import passageCache from '../../data/passageCache.json';
 import { extractBibleText } from '../utils/bibleExtractor';
 import { PSALTER_ANTIPHONS, COMMON_RESPONSORIES } from '../data/divineOfficeExtras';
 
-// ─── Cycle data (keyed by liturgical key, not date) ───────────────────────
-// This file is built by: node scripts/scrape-divine-office-cycle.mjs
-// It maps e.g. "OrdinaryTime_Week3_Monday" → scraped office content
+// ─── Scraped data (keyed by liturgical key, not date) ─────────────────────
+// Tier 1: High-fidelity data from DivineOffice.org (complete with all parts)
+// Built by: node scripts/scrape-divineoffice-org.mjs
+let divineOfficeCompleteData: Record<string, any> = {};
+try {
+    divineOfficeCompleteData = require('../../data/divineOfficeComplete.json') as Record<string, any>;
+} catch {
+    // Not yet generated — will try Tier 2 or computed fallback
+}
+
+// Tier 2: Legacy cycle data from Universalis (partial coverage)
+// Built by: node scripts/scrape-divine-office-cycle.mjs
 let divineOfficeCycleData: Record<string, any> = {};
 try {
-    // Dynamic require so the app still boots if the file doesn't exist yet
     divineOfficeCycleData = require('../../data/divineOfficeCycle.json') as Record<string, any>;
 } catch {
-    // File not yet generated — will gracefully fall back to computed content
+    // Not yet generated — will use computed fallback
 }
 
 // ─── Types ─────────────────────────────────────────────────────────────────
@@ -22,13 +31,14 @@ export interface OfficeParts {
     invitatory?: { heading?: string; text: string };
     introduction?: string;
     hymn?: { text: string };
-    psalmody: { heading?: string; antiphon?: string; text: string; antiphon2?: string }[];
+    psalmody: { heading?: string; antiphon?: string; text: string; antiphon2?: string; psalmPrayer?: string }[];
     reading?: { reference?: string; text: string };
     responsory?: { text: string };
-    gospelCanticle?: { heading?: string; antiphon?: string; text: string; antiphon2?: string };
+    gospelCanticle?: { heading?: string; antiphon?: string; text: string; antiphon2?: string; reference?: string };
     intercessions?: { text: string };
     lordsPrayer?: { text: string };
     concludingPrayer?: { text: string };
+    dismissal?: { text: string };
 }
 
 export interface StructuredOffice {
@@ -247,9 +257,30 @@ export function buildStructuredOffice(date: string, officeKey: string): Structur
     const seasonKey = getSeasonKey(calendar);
     const officeMeta = divineOfficeData as Record<string, any>;
 
-    // ── Priority 1: High-fidelity scraped cycle data (keyed by liturgical key) ──
-    if (liturgicalKey && divineOfficeCycleData[liturgicalKey]?.offices?.[officeKey]) {
-        const scrapedPayload = divineOfficeCycleData[liturgicalKey].offices[officeKey];
+    // Derive the canonical office key (normalises Easter Octave aliases etc.).
+    // This operates ONLY on divine office data lookups. The raw liturgicalKey is
+    // preserved separately so readings lookups (which use calendar.key directly)
+    // remain completely unaffected.
+    const rawKey = liturgicalKey;
+    const officeDataKey = normalizeOfficeKey(rawKey);
+
+    // ── Tier 1: DivineOffice.org data (highest fidelity, complete parts) ────
+    if (officeDataKey && divineOfficeCompleteData[officeDataKey]?.offices?.[officeKey]) {
+        const scrapedPayload = divineOfficeCompleteData[officeDataKey].offices[officeKey];
+        if (scrapedPayload?.parts && Array.isArray(scrapedPayload.parts.psalmody)) {
+            const structuredOffice: StructuredOffice = {
+                date,
+                office: officeKey,
+                celebration: primary.celebration,
+                parts: scrapedPayload.parts,
+            };
+            if (validateOfficeData(structuredOffice)) return structuredOffice;
+        }
+    }
+
+    // ── Tier 2: Legacy Universalis cycle data (partial coverage) ─────────
+    if (officeDataKey && divineOfficeCycleData[officeDataKey]?.offices?.[officeKey]) {
+        const scrapedPayload = divineOfficeCycleData[officeDataKey].offices[officeKey];
         if (scrapedPayload?.parts && Array.isArray(scrapedPayload.parts.psalmody)) {
             const structuredOffice: StructuredOffice = {
                 date,

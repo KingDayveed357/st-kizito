@@ -2,7 +2,7 @@ import Image from "next/image"
 
 export function MissionSection() {
   return (
-    <section className="relative py-32 px-1 lg:px-12 text-white overflow-hidden">
+    <section className="relative py-32 px-4 lg:px-12 text-white overflow-hidden">
       <Image
         src="/background-image.jpg"
         alt="St. Kizito Parish congregation"

@@ -62,6 +62,11 @@ export function parseVerses(text: string): string[] {
 export function parseDivineOffice(parts: DivineOfficeParts): PrayerBlock[] {
     const blocks: PrayerBlock[] = [];
 
+    const push = (b: PrayerBlock | PrayerBlock[]) => {
+        if (Array.isArray(b)) blocks.push(...b);
+        else blocks.push(b);
+    };
+
     const normalizeAntiphon = (value?: string | null): string | undefined => {
         const cleaned = cleanDivineOfficeText(value ?? '');
         if (!cleaned || looksLikeInstructionalNoise(cleaned)) return undefined;
@@ -113,6 +118,226 @@ export function parseDivineOffice(parts: DivineOfficeParts): PrayerBlock[] {
                 text: line,
             }));
 
+    // NEW: Handle dynamic sequence parsing from parts.blocks
+    if (parts.blocks && parts.blocks.length > 0) {
+        let readingCount = 0;
+        let responsoryCount = 0;
+        parts.blocks.forEach((b) => {
+            const rawText = b.text ?? '';
+            const t = cleanDivineOfficeText(rawText);
+
+            switch (b.type) {
+                case 'introduction':
+                    if (t) push({ type: 'opening', text: t });
+                    break;
+                case 'hymn':
+                    if (t) {
+                        push({ type: 'heading', text: 'Hymn' });
+                        push({ type: 'hymn', verses: parseVerses(t) });
+                    }
+                    break;
+                case 'psalmody':
+                    if (b.items) {
+                        b.items.forEach((p: any, idx: number) => {
+                            const cleanBody = cleanDivineOfficeText(p.text);
+                            if (!cleanBody) return;
+
+                            let antiphon = normalizeAntiphon(p.antiphon);
+                            const explicitSecondary = normalizeAntiphon(p.antiphon2);
+                            let contentArr = parseVerses(cleanBody);
+
+                            if (!antiphon && contentArr.length > 2) {
+                                const first = contentArr[0];
+                                const last = contentArr[contentArr.length - 1];
+                                const firstKey = first.toLowerCase().replace(/alleluia\.?/g, '').trim();
+                                const lastKey = last.toLowerCase().replace(/alleluia\.?/g, '').trim();
+                                if (firstKey && lastKey && (firstKey === lastKey || firstKey.includes(lastKey) || lastKey.includes(firstKey))) {
+                                    antiphon = cleanDivineOfficeText(first);
+                                    contentArr = contentArr.slice(1, -1);
+                                }
+                            } else if (antiphon) {
+                                contentArr = removeEmbeddedAntiphon(contentArr, antiphon);
+                            }
+
+                            if (antiphon) {
+                                push({ type: 'antiphon', text: antiphon });
+                            }
+
+                            // Try to split heading: line 0 = title, line 1 = summary
+                            let titleBlock = p.heading ? p.heading.split('\n').map((s: string) => s.trim()).filter(Boolean) : [];
+                            if (titleBlock.length > 0) {
+                                push({ type: 'psalm_title', text: titleBlock[0] });
+                                if (titleBlock.length > 1) {
+                                    push({ type: 'psalm_summary', text: titleBlock.slice(1).join(' ') });
+                                }
+                            } else {
+                                push({ type: 'psalm_title', text: `Psalm ${idx + 1}` });
+                            }
+
+                            // Extract title/summary and Glory Be from the body
+                            const actualContent: string[] = [];
+                            let gloryBeExtracted = '';
+
+                            for (let i = 0; i < contentArr.length; i++) {
+                                const line = cleanDivineOfficeText(contentArr[i]);
+                                if (!line) continue;
+                                if (/^Glory to the Father/i.test(line)) {
+                                    gloryBeExtracted = line;
+                                } else {
+                                    actualContent.push(line);
+                                }
+                            }
+
+                            // If title was missing from heading, maybe it's in the first line of content
+                            if (titleBlock.length === 0 && actualContent.length > 0 && actualContent[0].length < 60) {
+                                push({ type: 'psalm_title', text: actualContent[0] });
+                                actualContent.shift();
+                            }
+
+                            if (actualContent.length > 0) {
+                                push({ type: 'psalm_body', content: actualContent });
+                            }
+
+                            if (gloryBeExtracted) {
+                                push({ type: 'glory_be', text: gloryBeExtracted });
+                            } else {
+                                push({ type: 'glory_be', text: 'Glory to the Father, and to the Son, and to the Holy Spirit:\n— as it was in the beginning, is now, and will be for ever. Amen.' });
+                            }
+
+                            if (antiphon) {
+                                push({ type: 'antiphon', text: antiphon });
+                            }
+                        });
+                    }
+                    break;
+                case 'reading':
+                    if (t && !looksLikeInstructionalNoise(t)) {
+                        readingCount++;
+                        let typeId: any = readingCount === 1 ? 'reading_1' : 'reading_2';
+                        let heading = `Reading ${readingCount}`;
+                        const lower = rawText.toLowerCase();
+                        if (lower.includes('first reading')) { heading = 'First Reading'; typeId = 'reading_1'; }
+                        else if (lower.includes('second reading')) { heading = 'Second Reading'; typeId = 'reading_2'; }
+                        else if (lower.includes('scripture reading')) heading = 'Scripture Reading';
+
+                        push({ type: 'heading', text: heading });
+                        push({
+                            type: typeId,
+                            text: t,
+                            reference: b.reference ? cleanDivineOfficeText(b.reference) : undefined,
+                        });
+                    }
+                    break;
+                case 'responsory':
+                    if (t && !looksLikeInstructionalNoise(t)) {
+                        responsoryCount++;
+                        let typeId: any = responsoryCount === 1 ? 'responsory_1' : 'responsory_2';
+                        const lines = parseResponsoryLines(t);
+                        if (lines.length > 0) push({ type: typeId, lines });
+                    }
+                    break;
+                case 'teDeum':
+                    if (t) {
+                        push({ type: 'heading', text: 'Te Deum' });
+                        push({ type: 'prayer', text: t });
+                    }
+                    break;
+                case 'gospelCanticle':
+                    if (b.items) {
+                        b.items.forEach((gc: any, idx: number) => {
+                            let antiphon = normalizeAntiphon(gc.antiphon);
+                            const secondary = normalizeAntiphon(gc.antiphon2);
+                            let contentArr = parseVerses(cleanDivineOfficeText(gc.text));
+                            
+                            if (antiphon) {
+                                contentArr = removeEmbeddedAntiphon(contentArr, antiphon);
+                                push({ type: 'antiphon', text: antiphon });
+                            }
+                            
+                            let titleBlock = gc.heading ? gc.heading.split('\n').map((s: string) => s.trim()).filter(Boolean) : [];
+                            if (titleBlock.length > 0) {
+                                push({ type: 'psalm_title', text: titleBlock[0] });
+                                if (titleBlock.length > 1) push({ type: 'psalm_summary', text: titleBlock.slice(1).join(' ') });
+                            }
+                            
+                            const actualContent: string[] = [];
+                            let gloryBeExtracted = '';
+
+                            for (let i = 0; i < contentArr.length; i++) {
+                                const line = cleanDivineOfficeText(contentArr[i]);
+                                if (!line) continue;
+                                if (/^Glory to the Father/i.test(line)) gloryBeExtracted = line;
+                                else actualContent.push(line);
+                            }
+
+                            if (actualContent.length > 0) {
+                                push({ type: 'gospel_canticle', content: actualContent });
+                            }
+
+                            if (gloryBeExtracted) {
+                                push({ type: 'glory_be', text: gloryBeExtracted });
+                            } else {
+                                push({ type: 'glory_be', text: 'Glory to the Father, and to the Son, and to the Holy Spirit:\n— as it was in the beginning, is now, and will be for ever. Amen.' });
+                            }
+
+                            if (antiphon) push({ type: 'antiphon', text: antiphon });
+                        });
+                    }
+                    break;
+                case 'intercessions':
+                    if (t && !looksLikeInstructionalNoise(t)) {
+                        const lines = t.split('\n');
+                        const items: { text: string; response?: string }[] = [];
+                        let currentItem: { text: string; response?: string } | null = null;
+            
+                        lines.forEach((line) => {
+                            const trimmed = line.trim();
+                            if (/^[–—-]/.test(trimmed)) {
+                                if (currentItem) {
+                                    currentItem.response = trimmed.replace(/^[–—-]\s*/, '');
+                                    items.push(currentItem);
+                                    currentItem = null;
+                                }
+                            } else {
+                                if (currentItem) items.push(currentItem);
+                                currentItem = { text: trimmed };
+                            }
+                        });
+            
+                        if (currentItem) items.push(currentItem);
+                        push({ type: 'heading', text: 'Intercessions' });
+                        push({ type: 'intercessions', items });
+                    }
+                    break;
+                case 'lordsPrayer':
+                    if (t) {
+                        push({ type: 'heading', text: "The Lord's Prayer" });
+                        push({ type: 'our_father', text: t });
+                    }
+                    break;
+                case 'concludingPrayer':
+                    if (t) {
+                        push({ type: 'heading', text: 'Concluding Prayer' });
+                        push({ type: 'concluding_prayer', text: t });
+                    }
+                    break;
+                case 'dismissal':
+                    if (t) {
+                        push({ type: 'heading', text: 'Dismissal' });
+                        push({ type: 'dismissal', text: t });
+                    }
+                    break;
+                default:
+                    if (t && !looksLikeInstructionalNoise(t)) {
+                        push({ type: 'prayer', text: t });
+                    }
+                    break;
+            }
+        });
+        return blocks;
+    }
+
+    // LEGACY: Hardcoded fallback logic
     if (parts.invitatory?.text) {
         blocks.push({ type: 'heading', text: parts.invitatory.heading ?? 'Invitatory' });
         blocks.push({ type: 'prayer', text: cleanDivineOfficeText(parts.invitatory.text) });
@@ -165,6 +390,7 @@ export function parseDivineOffice(parts: DivineOfficeParts): PrayerBlock[] {
                 antiphon,
                 content: cleanedContent,
                 ...(secondaryAntiphons.length ? { secondaryAntiphons } : {}),
+                ...(p.psalmPrayer ? { psalmPrayer: cleanDivineOfficeText(p.psalmPrayer) } : {}),
             });
         });
     }
@@ -189,35 +415,6 @@ export function parseDivineOffice(parts: DivineOfficeParts): PrayerBlock[] {
             }
         }
     }
-
-    const supplementalReadings = [
-        { label: 'First Reading', part: (parts as any).firstReading },
-        { label: 'Second Reading', part: (parts as any).secondReading },
-        { label: 'Scripture Reading', part: (parts as any).scriptureReading },
-        { label: 'Reading', part: (parts as any).reading2 },
-    ] as const;
-
-    supplementalReadings.forEach(({ label, part }) => {
-        const text = cleanDivineOfficeText(part?.text);
-        if (!text || looksLikeInstructionalNoise(text)) return;
-
-        blocks.push({ type: 'heading', text: label });
-        blocks.push({
-            type: 'reading',
-            text,
-            reference: part?.reference ? cleanDivineOfficeText(part.reference) : undefined,
-        });
-
-        const responsoryText = cleanDivineOfficeText(
-            part?.responsory?.text ?? part?.shortResponsory?.text ?? part?.response?.text ?? null
-        );
-        if (responsoryText && !looksLikeInstructionalNoise(responsoryText)) {
-            const lines = parseResponsoryLines(responsoryText);
-            if (lines.length > 0) {
-                blocks.push({ type: 'responsory', lines });
-            }
-        }
-    });
 
     if (parts.gospelCanticle?.text) {
         const gc = parts.gospelCanticle;
@@ -284,6 +481,14 @@ export function parseDivineOffice(parts: DivineOfficeParts): PrayerBlock[] {
         if (text) {
             blocks.push({ type: 'heading', text: 'Concluding Prayer' });
             blocks.push({ type: 'prayer', text });
+        }
+    }
+
+    if (parts.dismissal?.text) {
+        const text = cleanDivineOfficeText(parts.dismissal.text);
+        if (text) {
+            blocks.push({ type: 'heading', text: 'Dismissal' });
+            blocks.push({ type: 'dismissal', text });
         }
     }
 

@@ -16,14 +16,12 @@ import { TextSizeControl } from '../../src/components/ui/TextSizeControl';
 import { PrayerSection, PrayerSectionVariant } from '../../src/components/liturgical/PrayerSection';
 import {
     getCalendar,
-    getReadings,
     getDivineOfficePrayer,
     getTodayIso,
 } from '../../src/services/liturgicalData';
 import { DivineOfficePrayer, PrayerBlock } from '../../src/types/divineOffice.types';
 import { parseDivineOffice } from '../../src/utils/divineOfficeParser';
 import { PrayerBlockRenderer } from '../../src/components/liturgical/PrayerBlockRenderer';
-
 // ─── Season → accent color + background tint ──────────────────────────────
 
 const SEASON_ACCENT: Record<string, string> = {
@@ -182,77 +180,10 @@ export default function PrayerDetailScreen() {
     const hasParts = !!detail?.parts;
 
     // ── Render content sections ───────────────────────────────────────────
-
-    const buildOfficeOfReadingsFallback = useCallback((): PrayerBlock[] => {
-        const missal = getReadings(effectiveDate);
-        if (!missal) return [];
-
-        const supplemental: PrayerBlock[] = [];
-        const first = missal.readings.find((block) => block.type === 'first_reading' && !!block.text);
-        const second = missal.readings.find((block) => block.type === 'second_reading' && !!block.text);
-        const gospel = missal.readings.find((block) => block.type === 'gospel' && !!block.text);
-        const psalm = missal.readings.find((block) => block.type === 'psalm');
-
-        if (first?.text) {
-            supplemental.push({ type: 'heading', text: 'First Reading' });
-            supplemental.push({
-                type: 'reading',
-                reference: first.reference ?? undefined,
-                text: first.text,
-            });
-        }
-
-        if (psalm?.response || (psalm?.verses && psalm.verses.length > 0)) {
-            const lines = [
-                ...(psalm.response ? [psalm.response] : []),
-                ...((psalm.verses ?? []).map((verse) => verse.text)),
-            ]
-                .map((line) => line.trim())
-                .filter(Boolean)
-                .slice(0, 4)
-                .map((line, index) => ({ leader: index === 0, text: line }));
-
-            if (lines.length > 0) {
-                supplemental.push({ type: 'heading', text: 'Responsory' });
-                supplemental.push({ type: 'responsory', lines });
-            }
-        }
-
-        if (second?.text) {
-            supplemental.push({ type: 'heading', text: 'Second Reading' });
-            supplemental.push({
-                type: 'reading',
-                reference: second.reference ?? undefined,
-                text: second.text,
-            });
-        } else if (gospel?.text) {
-            supplemental.push({ type: 'heading', text: 'Scripture Reading' });
-            supplemental.push({
-                type: 'reading',
-                reference: gospel.reference ?? undefined,
-                text: gospel.text,
-            });
-        }
-
-        return supplemental;
-    }, [effectiveDate]);
-
     const prayerBlocks = useMemo(() => {
         if (!detail?.parts) return [];
-        const parsed = parseDivineOffice(detail.parts);
-
-        if (prayerKey === 'officeOfReadings') {
-            const readingCount = parsed.filter((block) => block.type === 'reading').length;
-            if (readingCount < 2) {
-                const supplemental = buildOfficeOfReadingsFallback();
-                if (supplemental.length > 0) {
-                    return [...parsed, ...supplemental];
-                }
-            }
-        }
-
-        return parsed;
-    }, [buildOfficeOfReadingsFallback, detail, prayerKey]);
+        return parseDivineOffice(detail.parts);
+    }, [detail]);
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: bgColor }}>

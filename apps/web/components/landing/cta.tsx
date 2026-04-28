@@ -1,6 +1,6 @@
 export function CTASection() {
   return (
-    <section className="relative py-24 px-6 lg:px-12 overflow-hidden bg-surface-container-low">
+    <section className="relative py-24 px-3 lg:px-12 overflow-hidden bg-surface-container-low">
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute -top-20 -left-20 h-72 w-72 rounded-full bg-primary/15 blur-3xl" />
         <div className="absolute -bottom-20 -right-20 h-72 w-72 rounded-full bg-tertiary/20 blur-3xl" />

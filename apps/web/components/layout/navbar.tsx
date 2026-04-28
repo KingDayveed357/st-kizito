@@ -32,7 +32,7 @@ export function Navbar({ title, subtitle, actions, onMenuClick, className }: Nav
         </button>
 
         {/* Title */}
-        <div className="flex-1 min-w-0">
+        <div className="flex-1 flex-row lg:flex-col min-w-0">
           {title && <h1 className="text-lg font-semibold tracking-tight text-foreground truncate">{title}</h1>}
           {subtitle && <p className="text-xs text-foreground/60 mt-0.5">{subtitle}</p>}
         </div>

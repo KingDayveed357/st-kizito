@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { parishService } from '../services/api/parishService';
 import { useCachedData } from './useCachedData';
 import { STORAGE_KEYS } from '../utils/constants';
+import { getContactRoleMeta } from '../utils/contactRoleMeta';
 
 export type ParishContact = {
     id: string;
@@ -68,10 +69,25 @@ export const useParishContacts = () => {
     );
 
     const contacts = useMemo(() => {
-        if (data && data.length > 0) {
-            return data;
-        }
-        return FALLBACK_CONTACTS;
+        const source = data && data.length > 0 ? data : FALLBACK_CONTACTS;
+        return [...source]
+            .map((contact) => {
+                const roleMeta = getContactRoleMeta(contact.role);
+                return {
+                    ...contact,
+                    icon: roleMeta.icon,
+                    accent: roleMeta.accent,
+                    sort_order: roleMeta.sortOrder,
+                };
+            })
+            .sort((a, b) => {
+                const orderA = a.sort_order ?? 999;
+                const orderB = b.sort_order ?? 999;
+                if (orderA !== orderB) {
+                    return orderA - orderB;
+                }
+                return a.name.localeCompare(b.name);
+            });
     }, [data]);
 
     return { data: contacts, isLoading, isRefreshing, refetch: refresh };

@@ -3,6 +3,7 @@ import { View, ScrollView, Text, TouchableOpacity } from 'react-native';
 import { useTheme } from '../../src/hooks/useTheme';
 import { useDivineOffice } from '../../src/hooks/useDivineOffice';
 import { Header } from '../../src/components/ui/Header';
+import { CalendarIconButton } from '../../src/components/ui/CalendarIconButton';
 import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
@@ -32,15 +33,13 @@ export default function DivineOfficeScreen() {
                     </View>
                 }
                 rightElement={
-                    <TouchableOpacity
+                    <CalendarIconButton
+                        color={allColors.liturgical.ordinaryTime}
                         onPress={() => {
                             setSource('divineOffice');
                             router.push('/calendar');
                         }}
-                        className="p-2 mr-2"
-                    >
-                        <Ionicons name="calendar-outline" size={24} color={allColors.liturgical.ordinaryTime} />
-                    </TouchableOpacity>
+                    />
                 }
             />
 

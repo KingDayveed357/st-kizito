@@ -7,7 +7,19 @@
     "dev": "expo start --dev-client",
     "android": "expo run:android",
     "ios": "expo run:ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "office:scrape": "node scripts/scrape-divineoffice-org.mjs",
+    "office:clean": "node scripts/scrape-divineoffice-org.mjs --clean",
+    "office:audit": "node scripts/audit-coverage.mjs",
+    "office:audit:missing": "node scripts/audit-coverage.mjs --missing",
+    "office:audit:thin": "node scripts/audit-coverage.mjs --thin",
+    "office:audit:json": "node scripts/audit-coverage.mjs --json",
+    "office:migrate": "node scripts/migrate-keys.mjs",
+    "office:migrate:apply": "node scripts/migrate-keys.mjs --apply",
+    "office:verify": "node scripts/verify-calendar-parity.mjs",
+    "office:plan": "node scripts/generate-scrape-plan.mjs",
+    "office:plan:shell": "node scripts/generate-scrape-plan.mjs --shell",
+    "office:plan:run": "node scripts/generate-scrape-plan.mjs --run"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.2",
@@ -25,6 +37,7 @@
     "expo-dev-client": "^55.0.22",
     "expo-font": "~55.0.6",
     "expo-image": "~55.0.8",
+    "expo-linear-gradient": "~55.0.13",
     "expo-linking": "~55.0.11",
     "expo-notifications": "~55.0.16",
     "expo-router": "~55.0.10",

@@ -17,6 +17,7 @@ import { useRouter } from 'expo-router';
 import { useTheme } from '../../src/hooks/useTheme';
 import { useReadings } from '../../src/hooks/useReadings';
 import { TextSizeControl } from '../../src/components/ui/TextSizeControl';
+import { CalendarIconButton } from '../../src/components/ui/CalendarIconButton';
 import { ReadingSection } from '../../src/components/liturgical/ReadingSection';
 import { EmptyState } from '../../src/components/ui/EmptyState';
 import { OfflineBanner } from '../../src/components/ui/OfflineBanner';
@@ -163,17 +164,15 @@ export default function ReadingsScreen() {
                     </View>
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                         <TextSizeControl />
-                        <TouchableOpacity
-                            accessibilityRole="button"
+                        <CalendarIconButton
                             accessibilityLabel="Open calendar"
+                            color={accentColor}
                             onPress={() => {
                                 setSource('readings');
                                 router.push('/calendar');
                             }}
                             style={{ marginLeft: 12 }}
-                        >
-                            <Ionicons name="calendar-outline" size={22} color={accentColor} />
-                        </TouchableOpacity>
+                        />
                     </View>
                 </View>
 

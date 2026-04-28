@@ -28,40 +28,118 @@ export const PrayerBlockRenderer: React.FC<PrayerBlockRendererProps> = ({ blocks
     const baseSize = 18 * textScale;
     const baseLine = 30 * textScale * lineHeightScale;
 
+    const DEBUG_FULL_RENDER = true;
+
+    const renderWrappedBlock = (idx: number, type: string, content: React.ReactNode) => {
+        if (!DEBUG_FULL_RENDER) return content;
+        
+        return (
+            <View key={`debug-${idx}`} style={[styles.debugWrapper, { borderColor: accentColor }]}>
+                <View style={[styles.debugLabel, { backgroundColor: accentColor }]}>
+                    <Text style={styles.debugLabelText}>{type}</Text>
+                </View>
+                {content}
+            </View>
+        );
+    };
+
     return (
         <View style={styles.container}>
             {blocks.map((block, idx) => {
                 switch (block.type) {
                     case 'heading':
-                        return (
-                            <View key={idx} style={styles.headingRow}>
+                        return renderWrappedBlock(idx, 'heading',
+                            <View style={styles.headingRow}>
                                 <Text style={[styles.headingText, { color: accentColor, fontSize: 11 * textScale }]}>
-                                    {block.text.toUpperCase()}
+                                    {block.text?.toUpperCase()}
                                 </Text>
                             </View>
                         );
-                    case 'psalm':
-                        return (
-                            <View key={idx}>
-                                {idx > 0 && <SectionDivider color={accentColor} />}
-                                <PsalmBlock 
-                                    content={block.content}
-                                    title={block.title}
-                                    antiphon={block.antiphon} 
-                                    accentColor={accentColor} 
-                                />
+                    case 'opening':
+                    case 'invitatory':
+                    case 'prayer':
+                    case 'concluding_prayer':
+                    case 'dismissal':
+                        return renderWrappedBlock(idx, block.type,
+                            <View style={styles.prayerBlock}>
+                                <Text style={[styles.prayerText, { color: colors.textPrimary, fontSize: baseSize, lineHeight: baseLine }]}>
+                                    {block.text}
+                                </Text>
+                            </View>
+                        );
+                    case 'rubric':
+                        return renderWrappedBlock(idx, 'rubric',
+                            <View style={styles.prayerBlock}>
+                                <Text style={[styles.prayerText, { color: colors.textMuted, fontFamily: 'NotoSerif-Italic', fontSize: baseSize - 2, textAlign: 'center', lineHeight: baseLine }]}>
+                                    {block.text}
+                                </Text>
                             </View>
                         );
                     case 'hymn':
-                        return (
-                            <View key={idx}>
-                                <HymnBlock verses={block.verses} accentColor={accentColor} />
+                        return renderWrappedBlock(idx, 'hymn',
+                            <View>
+                                {block.verses && <HymnBlock verses={block.verses} accentColor={accentColor} />}
                                 <SectionDivider color={accentColor} />
                             </View>
                         );
+                    case 'antiphon':
+                        return renderWrappedBlock(idx, 'antiphon',
+                            <View style={styles.antiphonBlock}>
+                                <Text style={[styles.antiphonText, { color: accentColor, fontSize: baseSize, lineHeight: baseLine }]}>
+                                    <Text style={{ fontFamily: 'NotoSerif-BoldItalic' }}>Ant. </Text>
+                                    <Text style={{ fontFamily: 'NotoSerif-Regular' }}>{block.text}</Text>
+                                </Text>
+                            </View>
+                        );
+                    case 'psalm_title':
+                        return renderWrappedBlock(idx, 'psalm_title',
+                            <View style={styles.psalmTitleBlock}>
+                                <Text style={[styles.psalmTitle, { color: accentColor, fontSize: baseSize }]}>
+                                    {block.text}
+                                </Text>
+                            </View>
+                        );
+                    case 'psalm_summary':
+                        return renderWrappedBlock(idx, 'psalm_summary',
+                            <View style={styles.psalmSummaryBlock}>
+                                <Text style={[styles.psalmSummary, { color: colors.textSecondary, fontSize: baseSize - 2 }]}>
+                                    {block.text}
+                                </Text>
+                            </View>
+                        );
+                    case 'psalm_body':
+                    case 'gospel_canticle':
+                    case 'psalm':
+                        return renderWrappedBlock(idx, block.type,
+                            <View>
+                                {block.content && block.content.length > 0 ? (
+                                    <PsalmBlock 
+                                        content={block.content}
+                                        title={block.title || ""}
+                                        antiphon={block.antiphon}
+                                        psalmPrayer={block.psalmPrayer}
+                                        accentColor={accentColor} 
+                                    />
+                                ) : (
+                                    <Text style={[styles.prayerText, { color: colors.textPrimary, fontSize: baseSize, padding: 28 }]}>
+                                        {block.text}
+                                    </Text>
+                                )}
+                            </View>
+                        );
+                    case 'glory_be':
+                        return renderWrappedBlock(idx, 'glory_be',
+                            <View style={styles.gloryBeBlock}>
+                                <Text style={[styles.gloryBeText, { color: colors.textPrimary, fontSize: baseSize, lineHeight: baseLine }]}>
+                                    {block.text}
+                                </Text>
+                            </View>
+                        );
+                    case 'reading_1':
+                    case 'reading_2':
                     case 'reading':
-                        return (
-                            <View key={idx}>
+                        return renderWrappedBlock(idx, block.type,
+                            <View>
                                 <SectionDivider color={accentColor} />
                                 <View style={styles.readingBlock}>
                                     {block.reference && (
@@ -82,10 +160,12 @@ export const PrayerBlockRenderer: React.FC<PrayerBlockRendererProps> = ({ blocks
                                 </View>
                             </View>
                         );
+                    case 'responsory_1':
+                    case 'responsory_2':
                     case 'responsory':
-                        return (
-                            <View key={idx} style={styles.responsoryBlock}>
-                                {block.lines.map((line, lidx) => (
+                        return renderWrappedBlock(idx, block.type,
+                            <View style={styles.responsoryBlock}>
+                                {block.lines?.map((line, lidx) => (
                                     <View key={lidx} style={styles.respLine}>
                                         <Text style={{
                                             color: line.leader ? colors.textPrimary : colors.textSecondary,
@@ -99,25 +179,10 @@ export const PrayerBlockRenderer: React.FC<PrayerBlockRendererProps> = ({ blocks
                                 ))}
                             </View>
                         );
-                    case 'prayer':
-                    case 'rubric':
-                        return (
-                            <View key={idx} style={styles.prayerBlock}>
-                                <Text style={[styles.prayerText, { 
-                                    color: block.type === 'rubric' ? colors.textMuted : colors.textPrimary,
-                                    fontFamily: block.type === 'rubric' ? 'NotoSerif-Italic' : 'NotoSerif-Regular',
-                                    fontSize: block.type === 'rubric' ? baseSize - 2 : baseSize,
-                                    textAlign: block.type === 'rubric' ? 'center' : 'left',
-                                    lineHeight: baseLine,
-                                }]}>
-                                    {block.text}
-                                </Text>
-                            </View>
-                        );
                     case 'intercessions':
-                        return (
-                            <View key={idx} style={styles.intercessionBlock}>
-                                {block.items.map((item, iidx) => (
+                        return renderWrappedBlock(idx, 'intercessions',
+                            <View style={styles.intercessionBlock}>
+                                {block.items?.map((item, iidx) => (
                                     <View key={iidx} style={styles.intercessionItem}>
                                         <Text style={{
                                             color: colors.textPrimary,
@@ -143,8 +208,23 @@ export const PrayerBlockRenderer: React.FC<PrayerBlockRendererProps> = ({ blocks
                                 ))}
                             </View>
                         );
+                    case 'our_father':
+                        return renderWrappedBlock(idx, 'our_father',
+                            <View style={styles.prayerBlock}>
+                                <Text style={[styles.prayerText, { color: colors.textPrimary, fontSize: baseSize, lineHeight: baseLine }]}>
+                                    {block.text}
+                                </Text>
+                            </View>
+                        );
                     default:
-                        return null;
+                        // Fallback generic renderer
+                        return renderWrappedBlock(idx, block.type || 'unknown',
+                            <View style={styles.prayerBlock}>
+                                <Text style={[styles.prayerText, { color: colors.textPrimary, fontSize: baseSize, lineHeight: baseLine }]}>
+                                    {block.text}
+                                </Text>
+                            </View>
+                        );
                 }
             })}
         </View>
@@ -184,6 +264,39 @@ const styles = StyleSheet.create({
     readingText: {
         textAlign: 'left',
     },
+    psalmTitleBlock: {
+        alignItems: 'center',
+        paddingHorizontal: 28,
+        marginTop: 16,
+        marginBottom: 8,
+    },
+    psalmTitle: {
+        fontFamily: 'NotoSerif-Regular',
+        textAlign: 'center',
+    },
+    psalmSummaryBlock: {
+        paddingHorizontal: 28,
+        marginBottom: 16,
+    },
+    psalmSummary: {
+        fontFamily: 'NotoSerif-Italic',
+        textAlign: 'center',
+    },
+    antiphonBlock: {
+        paddingHorizontal: 28,
+        marginVertical: 12,
+    },
+    antiphonText: {
+        textAlign: 'center',
+    },
+    gloryBeBlock: {
+        paddingHorizontal: 28,
+        marginVertical: 16,
+    },
+    gloryBeText: {
+        fontFamily: 'NotoSerif-Italic',
+        textAlign: 'left',
+    },
     responsoryBlock: {
         paddingHorizontal: 28,
         marginVertical: 16,
@@ -204,5 +317,30 @@ const styles = StyleSheet.create({
     },
     intercessionItem: {
         marginBottom: 16,
+    },
+    debugWrapper: {
+        borderWidth: 2,
+        borderStyle: 'dashed',
+        padding: 4,
+        marginVertical: 4,
+        marginHorizontal: 16,
+        borderRadius: 8,
+        position: 'relative',
+    },
+    debugLabel: {
+        position: 'absolute',
+        top: -10,
+        left: 10,
+        paddingHorizontal: 8,
+        paddingVertical: 2,
+        borderRadius: 4,
+        zIndex: 1,
+    },
+    debugLabelText: {
+        color: 'white',
+        fontSize: 10,
+        fontFamily: 'Inter-Bold',
+        letterSpacing: 1,
+        textTransform: 'uppercase',
     },
 });

@@ -18,7 +18,7 @@ import type {
     PsalmVerse,
 } from '../types/readings.types';
 
-import { getLiturgicalDay } from './liturgicalEngine';
+import { computeLiturgicalDay } from './liturgicalCalendar';
 
 const calendarData = calendar2026 as Record<string, any>;
 const readingsData = readings as Record<string, any>;
@@ -35,27 +35,23 @@ export const getTodayIso = () => {
 
 export const getCalendar = (date: string) => {
     if (calendarCache[date]) return calendarCache[date];
+
+    // Primary source: pre-built per-year calendar files (highest fidelity —
+    // includes sanctoral names, precise celebration types, etc.)
     if (calendarData[date]) {
         calendarCache[date] = calendarData[date];
         return calendarData[date];
     }
-    // Fallback to dynamic engine
+
+    // Fallback: authoritative liturgical calendar engine.
+    // computeLiturgicalDay() is the canonical algorithm, shared with the scraper,
+    // so divine office keys will always match the stored data.
+    // It is safe to use for any year from 2000–2040.
     try {
-        const dynamic = getLiturgicalDay(date);
-        const result = {
-            date: dynamic.date,
-            celebration: dynamic.celebration,
-            celebrationType: dynamic.celebrationType,
-            season: dynamic.season,
-            color: dynamic.color,
-            liturgicalYear: dynamic.year,
-            week: dynamic.week,
-            day: dynamic.dayOfWeek,
-            key: dynamic.key
-        };
+        const result = computeLiturgicalDay(date);
         calendarCache[date] = result;
         return result;
-    } catch (e) {
+    } catch {
         return null;
     }
 };

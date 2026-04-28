@@ -39,9 +39,9 @@ export const Header: React.FC<HeaderProps> = ({
                 minHeight: 72,
                 paddingHorizontal: spacing.screenMargin - 2,
             }}
-            className="flex-row items-center justify-between"
+            className="flex-row items-center"
         >
-            <View className="flex-1 items-start justify-center">
+            <View style={{ width: 52 }} className="items-start justify-center">
                 {leftElement ? leftElement : showBack ? (
                     <TouchableOpacity
                         onPress={handleBack}
@@ -67,7 +67,7 @@ export const Header: React.FC<HeaderProps> = ({
                     </TouchableOpacity>
                 ) : null}
             </View>
-            <View className="flex-[3] items-center justify-center">
+            <View style={{ flex: 1, minWidth: 0 }} className="items-center justify-center px-2">
                 {centerElement ? centerElement : (
                     <Text
                         style={{ color: colors.accent }}
@@ -78,7 +78,7 @@ export const Header: React.FC<HeaderProps> = ({
                     </Text>
                 )}
             </View>
-            <View className="flex-1 items-end justify-center">
+            <View style={{ width: 52 }} className="items-end justify-center">
                 {rightElement}
             </View>
         </View>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Stack } from 'expo-router';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -10,12 +10,27 @@ import { StatusBar } from 'expo-status-bar';
 import { useTheme } from '../src/hooks/useTheme';
 import '../global.css';
 
-SplashScreen.preventAutoHideAsync();
+SplashScreen.preventAutoHideAsync().catch(() => {
+    // Native splash might already be hidden in dev reloads.
+});
+
+const DEV_SPLASH_MIN_DURATION_MS = 1200;
+
 const queryClient = new QueryClient();
 
 export default function RootLayout() {
     const [appIsReady, setAppIsReady] = useState(false);
     const { colors, isDark } = useTheme();
+
+    const onLayoutRootView = useCallback(async () => {
+        if (!appIsReady) {
+            return;
+        }
+
+        await SplashScreen.hideAsync().catch(() => {
+            // Ignore repeated hide calls in fast refresh and dev reloads.
+        });
+    }, [appIsReady]);
 
     useEffect(() => {
         configureNotificationHandler();
@@ -25,11 +40,15 @@ export default function RootLayout() {
         async function prepare() {
             try {
                 await seedDatabaseIfNeeded();
+
+                // Keep native splash visible a bit longer in development for visual QA.
+                if (__DEV__) {
+                    await new Promise((resolve) => setTimeout(resolve, DEV_SPLASH_MIN_DURATION_MS));
+                }
             } catch (e) {
                 console.warn(e);
             } finally {
                 setAppIsReady(true);
-                await SplashScreen.hideAsync();
             }
         }
         prepare();
@@ -45,7 +64,7 @@ export default function RootLayout() {
     }
 
     return (
-        <GestureHandlerRootView style={{ flex: 1, backgroundColor: colors.background }}>
+        <GestureHandlerRootView onLayout={onLayoutRootView} style={{ flex: 1, backgroundColor: colors.background }}>
             <QueryClientProvider client={queryClient}>
                 <StatusBar style={isDark ? 'light' : 'dark'} translucent={false} backgroundColor={colors.background} />
                 <Stack

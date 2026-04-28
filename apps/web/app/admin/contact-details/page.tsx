@@ -8,6 +8,7 @@ import { Card, CardContent } from "@/components/ui/card-custom"
 import { Modal, ModalBody, ModalFooter, ModalHeader, ModalTitle } from "@/components/ui/modal-custom"
 import { AdminPageSkeleton } from "@/components/admin/admin-page-skeleton"
 import { createClient } from "@/lib/supabase"
+import { getContactRoleMeta } from "@/lib/contact-role-meta"
 
 type ParishContact = {
   id: string
@@ -23,15 +24,6 @@ type ParishContact = {
   created_at: string
 }
 
-const ICON_OPTIONS = [
-  "document-text-outline",
-  "book-outline",
-  "heart-circle-outline",
-  "person-outline",
-  "people-outline",
-  "call-outline",
-]
-
 export default function ContactDetailsPage() {
   const [contacts, setContacts] = useState<ParishContact[]>([])
   const [isLoading, setIsLoading] = useState(true)
@@ -46,9 +38,6 @@ export default function ContactDetailsPage() {
     detail: "",
     phone: "",
     whatsapp_phone: "",
-    icon: "person-outline",
-    accent: "#4A7C59",
-    sort_order: "0",
     active: true,
   })
 
@@ -69,6 +58,7 @@ export default function ContactDetailsPage() {
 
     if (error) {
       setErrorMsg(`Failed to load contacts: ${error.message}`)
+      setIsLoading(false)
       return
     }
 
@@ -86,9 +76,6 @@ export default function ContactDetailsPage() {
       detail: "",
       phone: "",
       whatsapp_phone: "",
-      icon: "person-outline",
-      accent: "#4A7C59",
-      sort_order: "0",
       active: true,
     })
     setIsModalOpen(true)
@@ -102,9 +89,6 @@ export default function ContactDetailsPage() {
       detail: contact.detail ?? "",
       phone: contact.phone,
       whatsapp_phone: contact.whatsapp_phone ?? "",
-      icon: contact.icon ?? "person-outline",
-      accent: contact.accent ?? "#4A7C59",
-      sort_order: String(contact.sort_order ?? 0),
       active: contact.active,
     })
     setIsModalOpen(true)
@@ -120,6 +104,7 @@ export default function ContactDetailsPage() {
     }
 
     setIsSaving(true)
+    const derived = getContactRoleMeta(formData.role)
 
     const payload = {
       role: formData.role,
@@ -127,9 +112,9 @@ export default function ContactDetailsPage() {
       detail: formData.detail || null,
       phone: formData.phone.trim(),
       whatsapp_phone: formData.whatsapp_phone.trim() || null,
-      icon: formData.icon || null,
-      accent: formData.accent || null,
-      sort_order: Number(formData.sort_order || "0"),
+      icon: derived.icon,
+      accent: derived.accent,
+      sort_order: derived.sortOrder,
       active: formData.active,
     }
 
@@ -206,13 +191,16 @@ export default function ContactDetailsPage() {
             </CardContent>
           </Card>
         ) : !isLoading ? (
-          contacts.map((contact) => (
+          contacts.map((contact) => {
+            const derived = getContactRoleMeta(contact.role)
+            const accent = contact.accent ?? derived.accent
+            return (
             <Card key={contact.id}>
               <CardContent className="pt-6">
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-1">
-                      <span className="text-xs font-semibold uppercase tracking-wider" style={{ color: contact.accent ?? "#4A7C59" }}>
+                      <span className="text-xs font-semibold uppercase tracking-wider" style={{ color: accent }}>
                         {contact.role}
                       </span>
                       {!contact.active ? (
@@ -224,7 +212,7 @@ export default function ContactDetailsPage() {
                     <div className="mt-3 text-sm text-muted-foreground space-y-1">
                       <p>Phone: {contact.phone}</p>
                       <p>WhatsApp: {contact.whatsapp_phone || contact.phone}</p>
-                      <p>Sort Order: {contact.sort_order}</p>
+                      <p>Sort Order: {contact.sort_order ?? derived.sortOrder}</p>
                     </div>
                   </div>
                   <div className="flex gap-2">
@@ -238,7 +226,8 @@ export default function ContactDetailsPage() {
                 </div>
               </CardContent>
             </Card>
-          ))
+            )
+          })
         ) : null}
       </div>
 
@@ -282,32 +271,6 @@ export default function ContactDetailsPage() {
               onChange={(e) => setFormData({ ...formData, whatsapp_phone: e.target.value })}
             />
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-foreground mb-2">Icon</label>
-              <select
-                value={formData.icon}
-                onChange={(e) => setFormData({ ...formData, icon: e.target.value })}
-                className="w-full h-10 rounded-lg border border-input bg-input px-3 py-2 text-sm text-foreground"
-              >
-                {ICON_OPTIONS.map((icon) => (
-                  <option key={icon} value={icon}>{icon}</option>
-                ))}
-              </select>
-            </div>
-            <Input
-              label="Accent Color"
-              placeholder="#4A7C59"
-              value={formData.accent}
-              onChange={(e) => setFormData({ ...formData, accent: e.target.value })}
-            />
-          </div>
-          <Input
-            label="Sort Order"
-            type="number"
-            value={formData.sort_order}
-            onChange={(e) => setFormData({ ...formData, sort_order: e.target.value })}
-          />
           <div className="flex items-center gap-2">
             <input
               id="active"
