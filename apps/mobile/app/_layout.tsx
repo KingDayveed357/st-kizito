@@ -37,6 +37,8 @@ export default function RootLayout() {
     }, []);
 
     useEffect(() => {
+        let isMounted = true;
+
         async function prepare() {
             try {
                 await seedDatabaseIfNeeded();
@@ -48,10 +50,16 @@ export default function RootLayout() {
             } catch (e) {
                 console.warn(e);
             } finally {
-                setAppIsReady(true);
+                if (isMounted) {
+                    setAppIsReady(true);
+                }
             }
         }
         prepare();
+
+        return () => {
+            isMounted = false;
+        };
     }, []);
 
     useEffect(() => {

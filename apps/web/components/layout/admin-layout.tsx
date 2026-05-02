@@ -4,6 +4,7 @@ import * as React from "react"
 import { Sidebar } from "./sidebar"
 import { Navbar } from "./navbar"
 import { ADMIN_NAV_SECTIONS } from "@/components/admin/nav-config"
+import { useIsMobile } from "@/components/ui/use-mobile"
 
 interface AdminLayoutProps {
   children: React.ReactNode
@@ -18,8 +19,20 @@ export function AdminLayout({
   subtitle,
   navbarActions,
 }: AdminLayoutProps) {
-  const [sidebarOpen, setSidebarOpen] = React.useState(true)
+  const isMobile = useIsMobile()
+  const [sidebarOpen, setSidebarOpen] = React.useState(false)
   const [sidebarCollapsed, setSidebarCollapsed] = React.useState(false)
+
+  // Sync sidebar state with screen size
+  React.useEffect(() => {
+    if (isMobile !== undefined) {
+      if (!isMobile) {
+        setSidebarOpen(true)
+      } else {
+        setSidebarOpen(false)
+      }
+    }
+  }, [isMobile])
 
   return (
     <div className="flex h-screen overflow-hidden bg-surface">
@@ -37,8 +50,8 @@ export function AdminLayout({
           actions={navbarActions}
           onMenuClick={() => setSidebarOpen(!sidebarOpen)}
         />
-        <main className="flex-1 overflow-y-auto">
-          <div className="p-5 md:p-8">{children}</div>
+        <main className="flex-1 overflow-y-auto bg-surface-container-lowest/20">
+          <div className="p-4 md:p-8 max-w-7xl mx-auto w-full">{children}</div>
         </main>
       </div>
     </div>

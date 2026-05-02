@@ -1,6 +1,14 @@
+import calendar2026 from '../../data/calendar/2026.json';
+import readings from '../../data/readings.json';
+import divineOffice from '../../data/divineOffice.json';
+import inspirations from '../../data/inspirations.json';
+import passageCache from '../../data/passageCache.json';
 import { formatPremiumDate } from '../utils/formatters';
 import { extractBibleText } from '../utils/bibleExtractor';
-import { LITURGICAL_LABELS } from '../constants/liturgical';
+
+// Import scraped USCCB API data if generated. (Optional fallback structure avoids missing text issues)
+import usccbDataRaw from '../../data/usccb-readings-dataset.json';
+
 import { buildStructuredOffice } from './divineOfficeEngine';
 
 import type {
@@ -12,76 +20,26 @@ import type {
 
 import { computeLiturgicalDay } from './liturgicalCalendar';
 
-const MAX_CALENDAR_CACHE_SIZE = 2500;
-const calendarCache = new Map<string, any>();
+const calendarData = calendar2026 as Record<string, any>;
+const readingsData = readings as Record<string, any>;
+const officeData = divineOffice as Record<string, any>;
+const inspirationData = inspirations as Record<string, any>;
+const passages = passageCache as Record<string, any>;
+const usccbData = usccbDataRaw as Record<string, { readings?: any, readingsList?: any[], masses?: any[] }>;
 
-let calendarDataMemo: Record<string, any> | null = null;
-let readingsDataMemo: Record<string, any> | null = null;
-let inspirationDataMemo: Record<string, any> | null = null;
-let passageDataMemo: Record<string, any> | null = null;
-let usccbDataMemo: Record<string, { readings?: any, readingsList?: any[], masses?: any[] }> | null = null;
-
-const getCalendarData = (): Record<string, any> => {
-    if (!calendarDataMemo) {
-        calendarDataMemo = require('../../data/calendar/2026.json') as Record<string, any>;
-    }
-    return calendarDataMemo;
-};
-
-const getReadingsData = (): Record<string, any> => {
-    if (!readingsDataMemo) {
-        readingsDataMemo = require('../../data/readings.json') as Record<string, any>;
-    }
-    return readingsDataMemo;
-};
-
-const getInspirationData = (): Record<string, any> => {
-    if (!inspirationDataMemo) {
-        inspirationDataMemo = require('../../data/inspirations.json') as Record<string, any>;
-    }
-    return inspirationDataMemo;
-};
-
-const getPassagesData = (): Record<string, any> => {
-    if (!passageDataMemo) {
-        passageDataMemo = require('../../data/passageCache.json') as Record<string, any>;
-    }
-    return passageDataMemo;
-};
-
-const getUsccbData = (): Record<string, { readings?: any, readingsList?: any[], masses?: any[] }> => {
-    if (!usccbDataMemo) {
-        usccbDataMemo = require('../../data/usccb-readings-dataset.json') as Record<string, { readings?: any, readingsList?: any[], masses?: any[] }>;
-    }
-    return usccbDataMemo;
-};
-
-const setCalendarCache = (date: string, value: any) => {
-    if (calendarCache.has(date)) {
-        calendarCache.delete(date);
-    }
-    calendarCache.set(date, value);
-    if (calendarCache.size > MAX_CALENDAR_CACHE_SIZE) {
-        const oldestKey = calendarCache.keys().next().value;
-        if (oldestKey) {
-            calendarCache.delete(oldestKey);
-        }
-    }
-};
+const calendarCache: Record<string, any> = {};
 
 export const getTodayIso = () => {
     return new Date().toISOString().slice(0, 10);
 };
 
 export const getCalendar = (date: string) => {
-    const cached = calendarCache.get(date);
-    if (cached) return cached;
-    const calendarData = getCalendarData();
+    if (calendarCache[date]) return calendarCache[date];
 
     // Primary source: pre-built per-year calendar files (highest fidelity —
     // includes sanctoral names, precise celebration types, etc.)
     if (calendarData[date]) {
-        setCalendarCache(date, calendarData[date]);
+        calendarCache[date] = calendarData[date];
         return calendarData[date];
     }
 
@@ -91,7 +49,7 @@ export const getCalendar = (date: string) => {
     // It is safe to use for any year from 2000–2040.
     try {
         const result = computeLiturgicalDay(date);
-        setCalendarCache(date, result);
+        calendarCache[date] = result;
         return result;
     } catch {
         return null;
@@ -138,7 +96,6 @@ const stripHeadersAndReferences = (text: string | null | undefined, reference?: 
 const getPassage = (reference?: string | null) => {
     if (!reference) return null;
 
-    const passages = getPassagesData();
     const normalizedReference = normalizeReferenceChunk(reference);
     if (passages[normalizedReference]) {
         return {
@@ -204,8 +161,8 @@ const buildPsalmBlock = (date: string, reference?: string | null): LiturgicalBlo
     return {
         id: `psalm-${date}-${reference}`,
         type: 'psalm',
-        label: LITURGICAL_LABELS.responsorialPsalm,
-        reference: reference ?? LITURGICAL_LABELS.unavailable,
+        label: 'Responsorial Psalm',
+        reference: reference ?? 'Unavailable',
         response: response,
         verses: finalVerses,
         text: textFallback || null
@@ -281,7 +238,6 @@ const buildReadingBlock = (
 });
 
 const resolveReadingSet = (date: string, calendar: any) => {
-    const readingsData = getReadingsData();
     const entry = readingsData[calendar.key];
     if (!entry) return null;
     if (entry.type === 'proper') return entry.proper ?? null;
@@ -299,7 +255,6 @@ const buildMissalDay = (date: string): MissalDay | null => {
 
     const antiphons = buildOptionalAntiphons({});
 
-    const usccbData = getUsccbData();
     const usccbEntry = usccbData[date];
     if (usccbEntry && (usccbEntry.readingsList || usccbEntry.readings || usccbEntry.masses)) {
         const variants: { id: string; title: string; readings: LiturgicalBlock[] }[] = [];
@@ -317,14 +272,14 @@ const buildMissalDay = (date: string): MissalDay | null => {
                     arr.push({
                         id: uniqueId,
                         type: 'psalm',
-                        label: item.label || LITURGICAL_LABELS.responsorialPsalm,
+                        label: item.label || 'Responsorial Psalm',
                         reference: item.reference,
                         response: parsedPsalm.response,
                         verses: parsedPsalm.verses,
                         text: cleanPsalmText || null
                     });
                 } else {
-                    arr.push(buildReadingBlock(uniqueId, item.type, item.label || LITURGICAL_LABELS.reading, item.reference, item.text));
+                    arr.push(buildReadingBlock(uniqueId, item.type, item.label || 'Reading', item.reference, item.text));
                 }
             });
             return arr;
@@ -334,26 +289,26 @@ const buildMissalDay = (date: string): MissalDay | null => {
             const arr: LiturgicalBlock[] = [];
             const titleSafe = massTitle ? massTitle.replace(/\s+/g, '-') : 'base';
 
-            if (ur.firstReading) arr.push(buildReadingBlock(`first-reading-${date}-${titleSafe}`, 'first_reading', LITURGICAL_LABELS.firstReading, ur.firstReading.reference, ur.firstReading.text));
+            if (ur.firstReading) arr.push(buildReadingBlock(`first-reading-${date}-${titleSafe}`, 'first_reading', 'First Reading', ur.firstReading.reference, ur.firstReading.text));
             if (ur.responsorialPsalm) {
                 const cleanPsalmText = stripHeadersAndReferences(ur.responsorialPsalm.text, ur.responsorialPsalm.reference) || '';
                 const parsedPsalm = parseUSCCBPsalmText(cleanPsalmText);
                 arr.push({
                     id: `psalm-${date}-${titleSafe}`,
                     type: 'psalm',
-                    label: LITURGICAL_LABELS.responsorialPsalm,
+                    label: 'Responsorial Psalm',
                     reference: ur.responsorialPsalm.reference,
                     response: parsedPsalm.response,
                     verses: parsedPsalm.verses,
                     text: cleanPsalmText || null
                 });
             }
-            if (ur.secondReading) arr.push(buildReadingBlock(`second-reading-${date}-${titleSafe}`, 'second_reading', LITURGICAL_LABELS.secondReading, ur.secondReading.reference, ur.secondReading.text));
+            if (ur.secondReading) arr.push(buildReadingBlock(`second-reading-${date}-${titleSafe}`, 'second_reading', 'Second Reading', ur.secondReading.reference, ur.secondReading.text));
             if (ur.gospelAcclamation) {
                 const cleanAcclamation = stripHeadersAndReferences(ur.gospelAcclamation.text, ur.gospelAcclamation.reference) || '';
-                arr.push(buildReadingBlock(`gospel-acclamation-${date}-${titleSafe}`, 'gospel_acclamation', LITURGICAL_LABELS.gospelAcclamation, ur.gospelAcclamation.reference, cleanAcclamation));
+                arr.push(buildReadingBlock(`gospel-acclamation-${date}-${titleSafe}`, 'gospel_acclamation', 'Gospel Acclamation', ur.gospelAcclamation.reference, cleanAcclamation));
             }
-            if (ur.gospel) arr.push(buildReadingBlock(`gospel-${date}-${titleSafe}`, 'gospel', LITURGICAL_LABELS.gospel, ur.gospel.reference, ur.gospel.text));
+            if (ur.gospel) arr.push(buildReadingBlock(`gospel-${date}-${titleSafe}`, 'gospel', 'Gospel', ur.gospel.reference, ur.gospel.text));
             return arr;
         };
 
@@ -401,7 +356,7 @@ const buildMissalDay = (date: string): MissalDay | null => {
 
     // Optional structure checking
     if (readingSet.entrance) {
-        readings.push(buildReadingBlock(`entrance-${date}`, 'entrance_antiphon', LITURGICAL_LABELS.entranceAntiphon, null, readingSet.entrance));
+        readings.push(buildReadingBlock(`entrance-${date}`, 'entrance_antiphon', 'Entrance Antiphon', null, readingSet.entrance));
     }
 
     // Process mappings dynamically based on dataset provided. 
@@ -411,13 +366,13 @@ const buildMissalDay = (date: string): MissalDay | null => {
             if (reading.type === 'psalm') {
                 readings.push(buildPsalmBlock(date, reading.reference));
             } else {
-                readings.push(buildReadingBlock(`reading-${idx}-${date}`, reading.type || 'supplemental_reading', reading.label || LITURGICAL_LABELS.reading, reading.reference, getPassage(reading.reference)?.text));
+                readings.push(buildReadingBlock(`reading-${idx}-${date}`, reading.type || 'supplemental_reading', reading.label || 'Reading', reading.reference, getPassage(reading.reference)?.text));
             }
         });
     } else {
         // Fallback for current Object-based dataset
         if (readingSet.first) {
-            readings.push(buildReadingBlock(`first-reading-${date}`, 'first_reading', LITURGICAL_LABELS.firstReading, readingSet.first, getPassage(readingSet.first)?.text));
+            readings.push(buildReadingBlock(`first-reading-${date}`, 'first_reading', 'First Reading', readingSet.first, getPassage(readingSet.first)?.text));
         }
 
         if (readingSet.psalm) {
@@ -425,7 +380,7 @@ const buildMissalDay = (date: string): MissalDay | null => {
         }
 
         if (readingSet.second) {
-            readings.push(buildReadingBlock(`second-reading-${date}`, 'second_reading', LITURGICAL_LABELS.secondReading, readingSet.second, getPassage(readingSet.second)?.text));
+            readings.push(buildReadingBlock(`second-reading-${date}`, 'second_reading', 'Second Reading', readingSet.second, getPassage(readingSet.second)?.text));
         }
 
         if (readingSet.gospel) {
@@ -456,8 +411,8 @@ const buildMissalDay = (date: string): MissalDay | null => {
             const dynamicVerse = getGospelAcclamationVerse();
             const acclamationFullText = `${gospelAcclamationText}\n\n${dynamicVerse}\n\n${gospelAcclamationText}`;
 
-            readings.push(buildReadingBlock(`gospel-acclamation-${date}`, 'gospel_acclamation', LITURGICAL_LABELS.gospelAcclamation, null, acclamationFullText));
-            readings.push(buildReadingBlock(`gospel-${date}`, 'gospel', LITURGICAL_LABELS.gospel, readingSet.gospel, getPassage(readingSet.gospel)?.text));
+            readings.push(buildReadingBlock(`gospel-acclamation-${date}`, 'gospel_acclamation', 'Gospel Acclamation', null, acclamationFullText));
+            readings.push(buildReadingBlock(`gospel-${date}`, 'gospel', 'Gospel', readingSet.gospel, getPassage(readingSet.gospel)?.text));
         }
     }
 
@@ -545,7 +500,6 @@ export const getInspirations = (date: string) => {
     const calendar = getCalendar(date);
     if (!calendar) return null;
 
-    const inspirationData = getInspirationData();
     const inspiration = inspirationData.celebrations?.[calendar.key] ?? inspirationData.defaults?.[calendar.season] ?? null;
 
     return {

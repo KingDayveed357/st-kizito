@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState, useCallback, memo, useEffect } from 'react';
+import React, { useMemo, useRef, useState, useCallback, useEffect, memo } from 'react';
 import {
     View,
     Text,
@@ -9,9 +9,8 @@ import {
     ListRenderItem,
     NativeSyntheticEvent,
     NativeScrollEvent,
-    LayoutChangeEvent,
-    useWindowDimensions,
 } from 'react-native';
+import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 import { useTheme } from '../src/hooks/useTheme';
 import { Header } from '../src/components/ui/Header';
 import { Ionicons } from '@expo/vector-icons';
@@ -21,209 +20,307 @@ import { LiturgicalBadge } from '../src/components/liturgical/LiturgicalBadge';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAppStore } from '../src/store/useAppStore';
 import { getCalendar, getDatePresentation, getTodayIso } from '../src/services/liturgicalData';
+import { TimelineRow, TimelineItem } from '../src/components/calendar/TimelineRow';
+import { buildTimelineDays } from '../src/domain/calendar/timeline';
 
 const todayIso = getTodayIso();
-const DAY_MILLIS = 24 * 60 * 60 * 1000;
-const INITIAL_DAYS = 365 * 2;
+const MIN_YEAR = 2000;
+const MAX_YEAR = 2040;
 const ROW_HEIGHT = 70;
+const MONTH_HEADER_HEIGHT = 44;
+const YEAR_NAV_HEIGHT = 56;
+const FOOTER_SAFE_SCROLL_SPACE = 150;
+
 const MONTHS = [
     'January', 'February', 'March', 'April', 'May', 'June',
     'July', 'August', 'September', 'October', 'November', 'December',
 ];
 
-type TimelineItem = {
-    date: string;
-    dayNum: number;
-    dayName: string;
-    isSunday: boolean;
-    celebration: string;
-    celebrationType: string;
-    color: string;
-};
+// ─── Types ────────────────────────────────────────────────────────────────────
 
-const TimelineRow = memo(({
-    item,
-    isSelected,
-    onSelect,
-    borderColor,
-    textPrimary,
-    textSecondary,
-    accent,
-    accentSoft,
-    surface,
-    surfaceElevated,
-    ordinaryColor,
-    christmasColor,
-}: {
-    item: TimelineItem;
-    isSelected: boolean;
-    onSelect: (d: string) => void;
-    borderColor: string;
+type CalendarData = ReturnType<typeof getCalendar>;
+
+type YearNavItem    = { type: 'year-nav';     direction: 'prev' | 'next'; year: number };
+type MonthHeaderItem = { type: 'month-header'; monthIndex: number; title: string };
+// calendar is pre-computed here so renderItem never calls getCalendar()
+type DayItem        = { type: 'day'; item: TimelineItem; calendar: CalendarData };
+type CalendarListItem = YearNavItem | MonthHeaderItem | DayItem;
+
+// ─── Cell colours bundle — passed as a single stable object ───────────────────
+
+interface CellColors {
+    background: string;
+    border: string;
     textPrimary: string;
     textSecondary: string;
     accent: string;
     accentSoft: string;
     surface: string;
     surfaceElevated: string;
-    ordinaryColor: string;
-    christmasColor: string;
-}) => {
-    const isSpecial = item.celebrationType === 'Solemnity' || item.celebrationType === 'Feast';
-    const liturgicalColor = item.color === 'white' ? ordinaryColor : (item.color === 'gold' ? christmasColor : item.color);
+    ordColor: string;
+    chrColor: string;
+}
 
-    return (
-        <TouchableOpacity
-            onPress={() => onSelect(item.date)}
-            activeOpacity={0.85}
-            style={[
-                styles.rowContainer,
-                { borderBottomColor: borderColor },
-                isSelected && { backgroundColor: surfaceElevated, borderBottomColor: accentSoft },
-            ]}
-        >
-            <View style={styles.dateColumn}>
-                <Text style={[styles.dayNameText, { color: item.isSunday ? accent : textSecondary }]}>
-                    {item.dayName}
-                </Text>
-                <View
-                    style={[
-                        styles.selectedDayBadge,
-                        isSelected && { backgroundColor: accent, borderColor: accent },
-                    ]}
-                >
-                    <Text style={[styles.dayNumberText, { color: isSelected ? surface : textPrimary }]}>
-                        {item.dayNum}
-                    </Text>
-                </View>
-            </View>
+// ─── Extracted memo cell components ──────────────────────────────────────────
+// Keeping these outside the parent ensures React never recreates them.
 
-            <View style={styles.contentColumn}>
-                <Text
-                    style={[
-                        styles.celebrationText,
-                        {
-                            color: item.isSunday || isSpecial ? textPrimary : textSecondary,
-                            fontWeight: item.isSunday || isSpecial ? '700' : '400',
-                            fontStyle: isSpecial ? 'italic' : 'normal',
-                        },
-                    ]}
-                    numberOfLines={1}
-                >
-                    {item.celebration}
-                </Text>
-                {item.celebrationType !== 'Weekday' && (
-                    <Text style={[styles.celebrationTypeText, { color: liturgicalColor }]}>
-                        {item.celebrationType}
-                    </Text>
-                )}
-            </View>
-
-            {isSelected && <View style={[styles.selectedRail, { backgroundColor: accent }]} />}
-        </TouchableOpacity>
-    );
-}, (prev, next) => (
-    prev.isSelected === next.isSelected &&
-    prev.item.date === next.item.date &&
-    prev.borderColor === next.borderColor &&
-    prev.textPrimary === next.textPrimary &&
-    prev.textSecondary === next.textSecondary &&
-    prev.accent === next.accent &&
-    prev.accentSoft === next.accentSoft &&
-    prev.surface === next.surface &&
-    prev.surfaceElevated === next.surfaceElevated &&
-    prev.ordinaryColor === next.ordinaryColor &&
-    prev.christmasColor === next.christmasColor
+interface MonthHeaderCellProps {
+    title: string;
+    background: string;
+    border: string;
+    textPrimary: string;
+}
+const MonthHeaderCell = memo(({ title, background, border, textPrimary }: MonthHeaderCellProps) => (
+    <View style={[styles.monthHeaderRow, { backgroundColor: background, borderBottomColor: border }]}>
+        <Text style={[styles.monthHeaderText, { color: textPrimary }]}>{title}</Text>
+    </View>
 ));
 
-const toMonthKey = (isoDate: string) => isoDate.slice(0, 7);
+interface YearNavCellProps {
+    year: number;
+    direction: 'prev' | 'next';
+    border: string;
+    onPress: (year: number) => void;
+}
+const YearNavCell = memo(({ year, direction, border, onPress }: YearNavCellProps) => {
+    const label = direction === 'prev' ? `Previous year (${year})` : `Next year (${year})`;
+    const handlePress = useCallback(() => onPress(year), [onPress, year]);
+    return (
+        <View style={[styles.yearNavRow, { borderBottomColor: border }]}>
+            <Button onPress={handlePress} size="sm" className="px-5 rounded-2xl h-11">
+                <Text style={styles.yearNavText}>{label}</Text>
+            </Button>
+        </View>
+    );
+});
+
+interface DayCellProps {
+    item: TimelineItem;
+    calendar: CalendarData;
+    isSelected: boolean;
+    colors: CellColors;
+    onSelect: (date: string) => void;
+}
+const DayCell = memo(({ item, calendar, isSelected, colors, onSelect }: DayCellProps) => (
+    <TimelineRow
+        item={item}
+        calendar={calendar}
+        isSelected={isSelected}
+        onSelect={onSelect}
+        borderColor={colors.border}
+        textPrimary={colors.textPrimary}
+        textSecondary={colors.textSecondary}
+        accent={colors.accent}
+        accentSoft={colors.accentSoft}
+        surface={colors.surface}
+        surfaceElevated={colors.surfaceElevated}
+        ordinaryColor={colors.ordColor}
+        christmasColor={colors.chrColor}
+    />
+));
+
+// ─── Main Screen ──────────────────────────────────────────────────────────────
 
 export default function CalendarScreen() {
     const { colors, allColors } = useTheme();
     const router = useRouter();
     const insets = useSafeAreaInsets();
-    const { height: windowHeight } = useWindowDimensions();
-    const { selectedDate, source, setLiturgicalContext } = useAppStore();
+    const selectedDate = useAppStore((state) => state.selectedDate);
+    const source = useAppStore((state) => state.source);
+    const setLiturgicalContext = useAppStore((state) => state.setLiturgicalContext);
 
     const listRef = useRef<FlatList>(null);
-    const visibleMonthKeyRef = useRef(toMonthKey(selectedDate));
-    const [visibleMonthDate, setVisibleMonthDate] = useState(selectedDate);
-    const selectedDateRef = useRef(selectedDate);
-    selectedDateRef.current = selectedDate;
-
-    const listViewportHeightRef = useRef(Math.max(ROW_HEIGHT * 6, windowHeight - 280));
     const [isPickerVisible, setPickerVisible] = useState(false);
 
     const selectedDateObject = useMemo(() => new Date(`${selectedDate}T12:00:00`), [selectedDate]);
+    const [visibleYear, setVisibleYear] = useState(selectedDateObject.getFullYear());
+    const [visibleMonthIndex, setVisibleMonthIndex] = useState(selectedDateObject.getMonth());
 
-    const timelineData = useMemo<TimelineItem[]>(() => {
-        const start = new Date(todayIso).getTime() - (INITIAL_DAYS / 2) * DAY_MILLIS;
-        return Array.from({ length: INITIAL_DAYS }).map((_, i) => {
-            const iso = new Date(start + i * DAY_MILLIS).toISOString().slice(0, 10);
-            const calendar = getCalendar(iso);
-            const d = new Date(`${iso}T12:00:00`);
+    // Ref so handleScroll stays stable without stale closures
+    const visibleMonthIndexRef = useRef(visibleMonthIndex);
+    visibleMonthIndexRef.current = visibleMonthIndex;
 
-            return {
-                date: iso,
-                dayNum: d.getDate(),
-                dayName: d.toLocaleDateString('en-US', { weekday: 'short' }),
-                isSunday: d.getDay() === 0,
-                celebration: calendar?.celebration ?? 'Liturgical Day',
-                celebrationType: calendar?.celebrationType ?? 'Weekday',
-                color: calendar?.color ?? 'green',
-            };
-        });
-    }, []);
+    useEffect(() => {
+        const selectedYear = selectedDateObject.getFullYear();
+        if (selectedYear < MIN_YEAR || selectedYear > MAX_YEAR) return;
+        setVisibleYear((prev) => (prev === selectedYear ? prev : selectedYear));
+        setVisibleMonthIndex(selectedDateObject.getMonth());
+    }, [selectedDateObject]);
 
-    const timelineIndexMap = useMemo(() => {
-        const map = new Map<string, number>();
-        timelineData.forEach((item, index) => map.set(item.date, index));
-        return map;
-    }, [timelineData]);
+    // Bundle theme colours into a single stable object so DayCell dependency is one ref
+    const cellColors = useMemo<CellColors>(() => ({
+        background:     colors.background,
+        border:         colors.border,
+        textPrimary:    colors.textPrimary,
+        textSecondary:  colors.textSecondary,
+        accent:         colors.accent,
+        accentSoft:     colors.accentSoft,
+        surface:        colors.surface,
+        surfaceElevated: colors.surfaceElevated,
+        ordColor:       allColors.liturgical.ordinaryTime,
+        chrColor:       allColors.liturgical.christmasEaster,
+    }), [colors, allColors]);
 
-    const monthFirstIndexMap = useMemo(() => {
-        const map = new Map<string, number>();
-        timelineData.forEach((item, index) => {
-            const monthKey = toMonthKey(item.date);
-            if (!map.has(monthKey)) {
-                map.set(monthKey, index);
+    const {
+        listData,
+        dateToOffsetMap,
+        monthOffsets,
+        stickyHeaderIndices,
+        layoutOffsets,
+    } = useMemo(() => {
+        const startIso = `${visibleYear}-01-01`;
+        const endIso   = `${visibleYear}-12-31`;
+        const days = buildTimelineDays(startIso, endIso);
+
+        const items: CalendarListItem[] = [];
+        const dateToOffset = new Map<string, number>();
+        const monthStartOffsets: { monthIndex: number; offset: number }[] = [];
+        const sticky: number[] = [];
+        const offsets: number[] = [];
+        let runningOffset = 0;
+        let lastMonth = -1;
+
+        if (visibleYear > MIN_YEAR) {
+            items.push({ type: 'year-nav', direction: 'prev', year: visibleYear - 1 });
+            offsets.push(runningOffset);
+            runningOffset += YEAR_NAV_HEIGHT;
+        }
+
+        days.forEach((day) => {
+            const d = new Date(`${day.date}T12:00:00`);
+            const month = d.getMonth();
+
+            if (month !== lastMonth) {
+                sticky.push(items.length);
+                items.push({ type: 'month-header', monthIndex: month, title: `${MONTHS[month]} ${visibleYear}` });
+                offsets.push(runningOffset);
+                monthStartOffsets.push({ monthIndex: month, offset: runningOffset });
+                runningOffset += MONTH_HEADER_HEIGHT;
+                lastMonth = month;
             }
+
+            // Pre-compute calendar data here — never again inside renderItem
+            items.push({ type: 'day', item: day, calendar: getCalendar(day.date) });
+            offsets.push(runningOffset);
+            dateToOffset.set(day.date, runningOffset);
+            runningOffset += ROW_HEIGHT;
         });
-        return map;
-    }, [timelineData]);
 
-    const selectedInfo = useMemo(() => getCalendar(selectedDate), [selectedDate]);
-    const presentation = useMemo(() => getDatePresentation(selectedDate), [selectedDate]);
+        if (visibleYear < MAX_YEAR) {
+            items.push({ type: 'year-nav', direction: 'next', year: visibleYear + 1 });
+            offsets.push(runningOffset);
+            runningOffset += YEAR_NAV_HEIGHT;
+        }
+
+        return {
+            listData: items,
+            dateToOffsetMap: dateToOffset,
+            monthOffsets: monthStartOffsets,
+            stickyHeaderIndices: sticky,
+            layoutOffsets: offsets,
+        };
+    }, [visibleYear]);
 
     useEffect(() => {
-        const index = timelineIndexMap.get(selectedDate);
-        if (index !== undefined && index !== -1) {
-            requestAnimationFrame(() => {
-                listRef.current?.scrollToIndex({ index, animated: false, viewPosition: 0.3 });
-            });
-        }
-    }, [selectedDate, timelineIndexMap]);
+        const offset = dateToOffsetMap.get(selectedDate);
+        if (offset === undefined) return;
+        const id = setTimeout(() => {
+            listRef.current?.scrollToOffset({ offset, animated: false });
+        }, 0);
+        return () => clearTimeout(id);
+    }, [selectedDate, dateToOffsetMap]);
 
-    useEffect(() => {
-        const selectedMonthKey = toMonthKey(selectedDate);
-        if (selectedMonthKey !== visibleMonthKeyRef.current) {
-            visibleMonthKeyRef.current = selectedMonthKey;
-            setVisibleMonthDate(selectedDate);
+    // monthOffsets only changes when visibleYear changes — stable the rest of the time
+    const handleScroll = useCallback((event: NativeSyntheticEvent<NativeScrollEvent>) => {
+        const offsetY = event.nativeEvent.contentOffset.y;
+        let month = monthOffsets[0]?.monthIndex ?? 0;
+        for (let i = monthOffsets.length - 1; i >= 0; i--) {
+            if (offsetY + 8 >= monthOffsets[i].offset) {
+                month = monthOffsets[i].monthIndex;
+                break;
+            }
         }
-    }, [selectedDate]);
+        if (month !== visibleMonthIndexRef.current) {
+            setVisibleMonthIndex(month);
+        }
+    }, [monthOffsets]);
+
+    const handleYearNav = useCallback((nextYear: number) => {
+        if (nextYear < MIN_YEAR || nextYear > MAX_YEAR) return;
+        const month = selectedDateObject.getMonth();
+        const day   = selectedDateObject.getDate();
+        const daysInTargetMonth = new Date(nextYear, month + 1, 0).getDate();
+        const safeDay = Math.min(day, daysInTargetMonth);
+        const nextDate = `${nextYear}-${String(month + 1).padStart(2, '0')}-${String(safeDay).padStart(2, '0')}`;
+        setVisibleYear(nextYear);
+        setVisibleMonthIndex(month);
+        setLiturgicalContext(nextDate, source);
+    }, [selectedDateObject, setLiturgicalContext, source]);
 
     const handleJumpToToday = useCallback(() => {
+        setVisibleYear(new Date(`${todayIso}T12:00:00`).getFullYear());
         setLiturgicalContext(todayIso, source);
-        const index = timelineIndexMap.get(todayIso);
-        if (index !== undefined && index !== -1) {
-            listRef.current?.scrollToIndex({ index, animated: true, viewPosition: 0.3 });
-        }
-    }, [setLiturgicalContext, source, timelineIndexMap]);
+    }, [setLiturgicalContext, source]);
 
     const handleDateSelect = useCallback((date: string) => {
         setLiturgicalContext(date, source);
     }, [setLiturgicalContext, source]);
 
-    const [pickerYear, setPickerYear] = useState(selectedDateObject.getFullYear());
+    // ─── renderItem — minimal work, delegates to memo cells ───────────────────
+    const renderItem = useCallback<ListRenderItem<CalendarListItem>>(({ item }) => {
+        if (item.type === 'month-header') {
+            return (
+                <MonthHeaderCell
+                    title={item.title}
+                    background={cellColors.background}
+                    border={cellColors.border}
+                    textPrimary={cellColors.textPrimary}
+                />
+            );
+        }
+        if (item.type === 'year-nav') {
+            return (
+                <YearNavCell
+                    year={item.year}
+                    direction={item.direction}
+                    border={cellColors.border}
+                    onPress={handleYearNav}
+                />
+            );
+        }
+        return (
+            <DayCell
+                item={item.item}
+                calendar={item.calendar}
+                isSelected={selectedDate === item.item.date}
+                colors={cellColors}
+                onSelect={handleDateSelect}
+            />
+        );
+    }, [selectedDate, cellColors, handleYearNav, handleDateSelect]);
+    // Note: selectedDate and cellColors are the only things that need to be here.
+    // selectedDate changes on tap — that's intentional and unavoidable.
+    // cellColors only changes on theme switch.
+
+    const getItemLayout = useCallback((_: unknown, index: number) => {
+        const entry = listData[index];
+        const length = entry?.type === 'month-header'
+            ? MONTH_HEADER_HEIGHT
+            : entry?.type === 'year-nav'
+                ? YEAR_NAV_HEIGHT
+                : ROW_HEIGHT;
+        return { length, offset: layoutOffsets[index] ?? 0, index };
+    }, [listData, layoutOffsets]);
+
+    const keyExtractor = useCallback(
+        (item: CalendarListItem, index: number) =>
+            item.type === 'day' ? item.item.date : `${item.type}-${index}`,
+        [],
+    );
+
+    // ─── Picker state ─────────────────────────────────────────────────────────
+
+    const [pickerYear, setPickerYear]   = useState(selectedDateObject.getFullYear());
     const [pickerMonth, setPickerMonth] = useState(selectedDateObject.getMonth());
 
     useEffect(() => {
@@ -232,20 +329,16 @@ export default function CalendarScreen() {
         setPickerMonth(d.getMonth());
     }, [selectedDate]);
 
-    const years = useMemo(() => Array.from({ length: 41 }).map((_, i) => 2000 + i), []);
+    const years = useMemo(() => Array.from({ length: MAX_YEAR - MIN_YEAR + 1 }).map((_, i) => MIN_YEAR + i), []);
 
     const confirmPickerDate = useCallback(() => {
         const monthPart = String(pickerMonth + 1).padStart(2, '0');
-        const monthKey = `${pickerYear}-${monthPart}`;
-        const newDate = `${monthKey}-01`;
-
+        const newDate = `${pickerYear}-${monthPart}-01`;
+        setVisibleYear(pickerYear);
+        setVisibleMonthIndex(pickerMonth);
         setLiturgicalContext(newDate, source);
-        const index = monthFirstIndexMap.get(monthKey);
-        if (index !== undefined) {
-            listRef.current?.scrollToIndex({ index, animated: false, viewPosition: 0 });
-        }
         setPickerVisible(false);
-    }, [pickerYear, pickerMonth, setLiturgicalContext, source, monthFirstIndexMap]);
+    }, [pickerYear, pickerMonth, setLiturgicalContext, source]);
 
     const navigateToReading = useCallback(() => {
         if (source === 'readings') router.push({ pathname: '/readings', params: { date: selectedDate } });
@@ -253,69 +346,11 @@ export default function CalendarScreen() {
         else router.push('/inspiration');
     }, [source, router, selectedDate]);
 
-    const renderTimelineRow = useCallback<ListRenderItem<TimelineItem>>(({ item }) => (
-        <TimelineRow
-            item={item}
-            isSelected={selectedDateRef.current === item.date}
-            onSelect={handleDateSelect}
-            borderColor={colors.border}
-            textPrimary={colors.textPrimary}
-            textSecondary={colors.textSecondary}
-            accent={colors.accent}
-            accentSoft={colors.accentSoft}
-            surface={colors.surface}
-            surfaceElevated={colors.surfaceElevated}
-            ordinaryColor={allColors.liturgical.ordinaryTime}
-            christmasColor={allColors.liturgical.christmasEaster}
-        />
-    ), [
-        handleDateSelect,
-        colors.border,
-        colors.textPrimary,
-        colors.textSecondary,
-        colors.accent,
-        colors.accentSoft,
-        colors.surface,
-        colors.surfaceElevated,
-        allColors.liturgical.ordinaryTime,
-        allColors.liturgical.christmasEaster,
-    ]);
+    const selectedInfo  = useMemo(() => getCalendar(selectedDate), [selectedDate]);
+    const presentation  = useMemo(() => getDatePresentation(selectedDate), [selectedDate]);
 
-    const handleListLayout = useCallback((event: LayoutChangeEvent) => {
-        const height = event.nativeEvent.layout.height;
-        if (height > 0) {
-            listViewportHeightRef.current = height;
-        }
-    }, []);
-
-    const handleListScroll = useCallback((event: NativeSyntheticEvent<NativeScrollEvent>) => {
-        const offsetY = event.nativeEvent.contentOffset.y;
-        const viewportHeight = listViewportHeightRef.current;
-        const anchorIndex = Math.max(
-            0,
-            Math.min(
-                timelineData.length - 1,
-                Math.floor((offsetY + viewportHeight * 0.35) / ROW_HEIGHT)
-            )
-        );
-
-        const anchorItem = timelineData[anchorIndex];
-        if (!anchorItem?.date) {
-            return;
-        }
-
-        const nextMonthKey = toMonthKey(anchorItem.date);
-        if (nextMonthKey === visibleMonthKeyRef.current) {
-            return;
-        }
-
-        visibleMonthKeyRef.current = nextMonthKey;
-        setVisibleMonthDate(anchorItem.date);
-    }, [timelineData]);
-
-    const visibleMonthObject = useMemo(() => new Date(`${visibleMonthDate}T12:00:00`), [visibleMonthDate]);
-    const selectedMonth = MONTHS[visibleMonthObject.getMonth()];
-    const selectedYear = visibleMonthObject.getFullYear();
+    const selectedMonth = MONTHS[visibleMonthIndex];
+    const selectedYear  = visibleYear;
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
@@ -328,15 +363,19 @@ export default function CalendarScreen() {
                             activeOpacity={0.85}
                             style={[
                                 styles.monthPickerPill,
-                                {
-                                    backgroundColor: colors.surfaceElevated,
-                                    borderColor: colors.border,
-                                },
+                                { backgroundColor: colors.surfaceElevated, borderColor: colors.border },
                             ]}
                         >
-                            <Text style={[styles.headerMonthText, { color: colors.textPrimary }]} numberOfLines={1}>
-                                {selectedMonth} {selectedYear}
-                            </Text>
+                            <Animated.View
+                                key={`${selectedMonth}-${selectedYear}`}
+                                entering={FadeIn.duration(250)}
+                                exiting={FadeOut.duration(150)}
+                                style={styles.headerTextContainer}
+                            >
+                                <Text style={[styles.headerMonthText, { color: colors.textPrimary }]} numberOfLines={1}>
+                                    {selectedMonth} {selectedYear}
+                                </Text>
+                            </Animated.View>
                             <Ionicons name="chevron-down" size={16} color={colors.textSecondary} />
                         </TouchableOpacity>
                         <Text style={[styles.headerMetaText, { color: colors.textSecondary }]}>
@@ -359,26 +398,30 @@ export default function CalendarScreen() {
                 }
             />
 
-            <View style={{ flex: 1 }} onLayout={handleListLayout}>
+            <View style={{ flex: 1 }}>
                 <FlatList
                     ref={listRef}
-                    data={timelineData}
-                    keyExtractor={(item) => item.date}
-                    renderItem={renderTimelineRow}
-                    extraData={selectedDate}
-                    initialNumToRender={12}
-                    maxToRenderPerBatch={8}
-                    updateCellsBatchingPeriod={32}
-                    windowSize={5}
+                    data={listData}
+                    keyExtractor={keyExtractor}
+                    renderItem={renderItem}
+                    initialNumToRender={20}
+                    maxToRenderPerBatch={10}
+                    updateCellsBatchingPeriod={50}
+                    windowSize={7}
                     removeClippedSubviews
-                    getItemLayout={(_, index) => ({ length: ROW_HEIGHT, offset: ROW_HEIGHT * index, index })}
-                    onScrollToIndexFailed={({ index }) => {
-                        const fallbackOffset = index * ROW_HEIGHT;
+                    stickyHeaderIndices={stickyHeaderIndices}
+                    getItemLayout={getItemLayout}
+                    onScrollToIndexFailed={({ index, highestMeasuredFrameIndex }) => {
+                        const safeIndex = Math.max(0, Math.min(index, highestMeasuredFrameIndex));
+                        const fallbackOffset = layoutOffsets[safeIndex] ?? 0;
                         listRef.current?.scrollToOffset({ offset: fallbackOffset, animated: false });
                     }}
-                    onScroll={handleListScroll}
-                    scrollEventThrottle={16}
+                    onScroll={handleScroll}
+                    scrollEventThrottle={32}
                     showsVerticalScrollIndicator={false}
+                    contentContainerStyle={{
+                        paddingBottom: Math.max(insets.bottom, 14) + FOOTER_SAFE_SCROLL_SPACE,
+                    }}
                 />
             </View>
 
@@ -461,12 +504,27 @@ export default function CalendarScreen() {
 }
 
 const styles = StyleSheet.create({
-    rowContainer: {
-        height: 70,
-        flexDirection: 'row',
-        alignItems: 'center',
+    monthHeaderRow: {
+        height: MONTH_HEADER_HEIGHT,
+        justifyContent: 'center',
         paddingHorizontal: 20,
         borderBottomWidth: StyleSheet.hairlineWidth,
+    },
+    monthHeaderText: {
+        fontSize: 14,
+        fontWeight: '800',
+        textTransform: 'uppercase',
+        letterSpacing: 1,
+    },
+    yearNavRow: {
+        height: YEAR_NAV_HEIGHT,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderBottomWidth: StyleSheet.hairlineWidth,
+    },
+    yearNavText: {
+        fontSize: 13,
+        fontWeight: '900',
     },
     headerCenterWrap: {
         alignItems: 'center',
@@ -494,6 +552,10 @@ const styles = StyleSheet.create({
         letterSpacing: 1.4,
         marginTop: 4,
     },
+    headerTextContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
     todayIconButton: {
         width: 40,
         height: 40,
@@ -501,54 +563,6 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         alignItems: 'center',
         justifyContent: 'center',
-    },
-    dateColumn: {
-        width: 50,
-        alignItems: 'center',
-        marginRight: 10,
-    },
-    selectedDayBadge: {
-        minWidth: 36,
-        height: 36,
-        borderRadius: 18,
-        borderWidth: 0,
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginTop: 2,
-    },
-    dayNameText: {
-        fontSize: 10,
-        fontWeight: '700',
-        textTransform: 'uppercase',
-        letterSpacing: 0.2,
-    },
-    dayNumberText: {
-        fontSize: 20,
-        fontWeight: '900',
-    },
-    contentColumn: {
-        flex: 1,
-        justifyContent: 'center',
-    },
-    celebrationText: {
-        fontSize: 18,
-        lineHeight: 22,
-    },
-    celebrationTypeText: {
-        fontSize: 10,
-        fontWeight: '700',
-        textTransform: 'uppercase',
-        letterSpacing: 1.2,
-        marginTop: 4,
-        opacity: 0.8,
-    },
-    selectedRail: {
-        position: 'absolute',
-        left: 0,
-        width: 4,
-        height: '66%',
-        borderTopRightRadius: 999,
-        borderBottomRightRadius: 999,
     },
     selectionFooter: {
         position: 'absolute',

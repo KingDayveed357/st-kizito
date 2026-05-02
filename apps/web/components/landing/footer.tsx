@@ -92,8 +92,22 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-outline/20 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-foreground/60">
+        <div className="border-t border-outline/20 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-foreground/60 gap-3">
           <p>&copy; {currentYear} The Digital Sanctuary. All rights reserved.</p>
+          <div className="text-center md:text-right">
+            <p>
+              Built by{" "}
+              <a
+                href="https://david-aniago-ai.vercel.app/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary hover:underline underline-offset-4"
+              >
+                David Aniago
+              </a>
+            </p>
+            <p className="text-xs text-foreground/70">Open for collaborations, contact, and support.</p>
+          </div>
         </div>
       </div>
     </footer>

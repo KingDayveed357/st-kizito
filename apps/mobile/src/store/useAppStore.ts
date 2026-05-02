@@ -14,7 +14,7 @@ interface AppState {
     setLiturgicalContext: (date: string, source: 'readings' | 'divineOffice' | 'inspirations') => void;
 }
 
-const todayIso = new Date().toISOString().slice(0, 10);
+const getTodayIso = () => new Date().toISOString().slice(0, 10);
 
 export const useAppStore = create<AppState>()(
     persist(
@@ -23,7 +23,7 @@ export const useAppStore = create<AppState>()(
             setHasSeeded: (hasSeeded) => set({ hasSeeded }),
             lastSyncTime: null,
             setLastSyncTime: (lastSyncTime) => set({ lastSyncTime }),
-            selectedDate: todayIso,
+            selectedDate: getTodayIso(),
             setSelectedDate: (selectedDate) => set({ selectedDate }),
             source: 'readings',
             setSource: (source) => set({ source }),

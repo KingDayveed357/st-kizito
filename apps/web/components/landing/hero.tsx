@@ -3,6 +3,8 @@ import { Download, Play, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export const HeroSection = () => {
+  const apkUrl = "https://expo.dev/artifacts/eas/oiEyTWEtwKSze3dVsehmpC.apk";
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#FDFCF9] dark:bg-slate-950 pt-28 pb-16 px-6 lg:px-8">
       <div className="absolute inset-0 overflow-hidden pointer-events-none select-none">
@@ -33,51 +35,73 @@ export const HeroSection = () => {
             </h1>
 
             <p className="text-lg md:text-xl lg:text-2xl text-slate-600 dark:text-slate-400 max-w-xl leading-relaxed font-light">
-              A holy digital home for our parishioners and families. Receive daily readings,
-              the Divine Office, Mass updates, and parish notices that keep your faith life
-              rooted in prayer and communion.
+              A holy digital home for our parishioners and families. This is our Android-only beta release:
+              download the APK today, explore the early version, and help us shape the full launch. iOS is coming soon.
             </p>
+
+            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2.5">
+              <span className="rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300 px-3 py-1 text-xs font-semibold uppercase tracking-wide">
+                Beta Version
+              </span>
+              <span className="rounded-full bg-sky-100 text-sky-800 dark:bg-sky-900/30 dark:text-sky-300 px-3 py-1 text-xs font-semibold uppercase tracking-wide">
+                Android Only
+              </span>
+              <span className="rounded-full bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300 px-3 py-1 text-xs font-semibold uppercase tracking-wide">
+                iOS Coming Soon
+              </span>
+            </div>
 
             <div className="flex flex-col sm:flex-row items-center gap-5 pt-4 w-full sm:w-auto">
               <Button asChild size="lg"
                 className="group relative w-full sm:w-auto rounded-2xl px-10 py-8 h-auto text-lg font-medium bg-emerald-900 hover:bg-emerald-950 dark:bg-emerald-600 dark:hover:bg-emerald-500 text-white transition-all duration-500 shadow-[0_25px_50px_-12px_rgba(6,95,70,0.4)] dark:shadow-none hover:-translate-y-1.5 overflow-hidden border-none"
               >
-                <a href="#" aria-label="Download the St. Kizito Parish app">
+                <a href={apkUrl} target="_blank" rel="noopener noreferrer" aria-label="Download Android APK beta of St. Kizito Parish app">
                   <span className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
                   <Download className="mr-2.5 h-6 w-6" />
-                  Download the Parish App
+                  Download Android APK
                 </a>
               </Button>
               
-              <Button asChild variant="outline" size="lg"
-                className="w-full sm:w-auto rounded-2xl px-10 py-8 h-auto text-lg font-medium border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-900 transition-all duration-300 gap-3 text-slate-700 dark:text-slate-300 backdrop-blur-sm"
-              >
-                <a href="#" aria-label="Learn how the app helps parishioners">
-                  <span className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center transition-colors">
-                    <Play className="h-4 w-4 fill-slate-900 dark:fill-white text-slate-900 dark:text-white ml-1" />
+              <div className="relative group w-full sm:w-auto">
+                <Button disabled variant="outline" size="lg"
+                  className="w-full sm:w-auto rounded-2xl px-10 py-8 h-auto text-lg font-medium border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 opacity-60 cursor-not-allowed gap-3 text-slate-400 dark:text-slate-500 backdrop-blur-sm"
+                >
+                  <span className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
+                    <Play className="h-4 w-4 fill-slate-400 dark:fill-slate-600 text-slate-400 dark:text-slate-600 ml-1" />
                   </span>
                   See How It Helps
-                </a>
-              </Button>
+                </Button>
+                <span className="absolute -top-3 -right-2 px-2.5 py-1 bg-amber-100 dark:bg-amber-900/50 text-amber-800 dark:text-amber-300 text-[10px] font-bold uppercase tracking-wider rounded-lg border border-amber-200 dark:border-amber-800 shadow-sm z-20">
+                  Coming Soon
+                </span>
+              </div>
             </div>
 
             <div className="flex flex-col sm:flex-row items-center gap-6 pt-10 border-t border-slate-200/50 dark:border-slate-800/50 w-full lg:w-auto">
-              <div className="flex -space-x-3.5">
-                {["SK", "PA", "MK", "CG", "JN"].map((label) => (
-                  <div key={label} className="h-11 w-11 rounded-full border-2 border-white dark:border-slate-950 bg-slate-100 overflow-hidden shadow-lg ring-1 ring-slate-200/20 flex items-center justify-center text-[10px] font-semibold text-slate-700">
-                    {label}
+              <div className="flex -space-x-4">
+                {[1, 2, 3, 4, 5].map((i) => (
+                  <div key={i} className="relative h-12 w-12 rounded-full border-2 border-white dark:border-slate-950 overflow-hidden shadow-xl hover:z-10 transition-transform hover:scale-110">
+                    <Image
+                      src={`/assets/avatars/avatar${i}.png`}
+                      alt={`Parishioner ${i}`}
+                      fill
+                      className="object-cover"
+                    />
                   </div>
                 ))}
+                <div className="h-12 w-12 rounded-full border-2 border-white dark:border-slate-950 bg-emerald-500 flex items-center justify-center text-[10px] font-bold text-white shadow-xl z-10">
+                  +2k
+                </div>
               </div>
               <div className="flex flex-col items-center lg:items-start text-center lg:text-left">
                 <div className="flex items-center gap-1 mb-1">
                   {[1, 2, 3, 4, 5].map((i) => (
-                    <Star key={i} className="h-3.5 w-3.5 fill-amber-400 text-amber-400 drop-shadow-sm" />
+                    <Star key={i} className="h-4 w-4 fill-amber-400 text-amber-400 drop-shadow-sm" />
                   ))}
-                  <span className="text-xs font-bold text-slate-900 dark:text-white ml-1.5 uppercase tracking-widest">Faith-Centered Experience</span>
+                  <span className="text-xs font-bold text-slate-900 dark:text-white ml-2 uppercase tracking-widest">Active Community</span>
                 </div>
-                <p className="text-[11px] font-bold text-slate-400 uppercase tracking-[0.2em]">
-                  Made with love for St. Kizito Parishioners
+                <p className="text-xs font-medium text-slate-500 dark:text-slate-400">
+                  Made with <span className="text-rose-500">❤️</span> for St. Kizito Parishioners
                 </p>
               </div>
             </div>
@@ -160,4 +184,3 @@ const FloatingNotification = ({
     </div>
   </div>
 );
-

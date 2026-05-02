@@ -246,29 +246,29 @@ export default function MassBookingsPage() {
       ) : null}
 
       {/* Stats */}
-      <div className="grid grid-cols-3 gap-4 mt-6">
-        <Card>
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-8">
+        <Card className="bg-surface-container-low/40">
           <CardContent className="pt-6 text-center">
             <p className="text-3xl font-bold text-success mb-1">
               {bookings.filter((b) => b.status === "approved").length}
             </p>
-            <p className="text-sm text-muted-foreground">Approved Intentions</p>
+            <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Approved</p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="bg-surface-container-low/40">
           <CardContent className="pt-6 text-center">
             <p className="text-3xl font-bold text-warning mb-1">
               {bookings.filter((b) => b.status === "pending").length}
             </p>
-            <p className="text-sm text-muted-foreground">Pending Review</p>
+            <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Pending</p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="bg-surface-container-low/40">
           <CardContent className="pt-6 text-center">
             <p className="text-3xl font-bold text-foreground mb-1">
               {bookings.length}
             </p>
-            <p className="text-sm text-muted-foreground">Total Bookings</p>
+            <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Total</p>
           </CardContent>
         </Card>
       </div>

@@ -1,4 +1,4 @@
-import { CalendarClock, CalendarDays, CreditCard, FileText, HandCoins, Home, Megaphone, Phone, Settings, Users } from 'lucide-react'
+import { CalendarClock, CalendarDays, CreditCard, FileText, HandCoins, Home, Megaphone, MessageSquareQuote, Phone, Settings, Users } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
 export interface SidebarNavItem {
@@ -34,6 +34,7 @@ export const ADMIN_NAV_SECTIONS: SidebarNavSection[] = [
     items: [
       { label: 'Mass Bookings', href: '/admin/mass-bookings', icon: FileText },
       { label: 'Donations', href: '/admin/donations', icon: HandCoins },
+      { label: 'Feedback Inbox', href: '/admin/feedback', icon: MessageSquareQuote },
       { label: 'Payment Details', href: '/admin/payment-details', icon: CreditCard },
       { label: 'Contact Details', href: '/admin/contact-details', icon: Phone },
     ],

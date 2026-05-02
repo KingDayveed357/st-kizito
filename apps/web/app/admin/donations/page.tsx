@@ -236,29 +236,29 @@ export default function DonationsPage() {
       ) : null}
 
       {/* Stats */}
-      <div className="grid grid-cols-3 gap-4 mt-6">
-        <Card>
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-8">
+        <Card className="bg-surface-container-low/40">
           <CardContent className="pt-6 text-center">
-            <p className="text-3xl font-bold text-primary mb-1">
+            <p className="text-2xl font-bold text-primary mb-1">
               {formatCurrency(donations.filter((d) => d.status === "approved").reduce((sum, d) => sum + (d.amount || 0), 0))}
             </p>
-            <p className="text-sm text-muted-foreground">Total Approved Donations</p>
+            <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Approved Total</p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="bg-surface-container-low/40">
           <CardContent className="pt-6 text-center">
             <p className="text-3xl font-bold text-warning mb-1">
               {donations.filter((d) => d.status === "pending").length}
             </p>
-            <p className="text-sm text-muted-foreground">Pending Review</p>
+            <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Pending Review</p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="bg-surface-container-low/40">
           <CardContent className="pt-6 text-center">
             <p className="text-3xl font-bold text-foreground mb-1">
               {donations.length}
             </p>
-            <p className="text-sm text-muted-foreground">Total Donations</p>
+            <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Total Donations</p>
           </CardContent>
         </Card>
       </div>

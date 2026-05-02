@@ -8,6 +8,7 @@ import { useTheme } from '../../src/hooks/useTheme';
 import { useThemeStore, LineSpacing, ThemeMode } from '../../src/store/useThemeStore';
 import { PreferenceThemeCard } from '../../src/components/more/PreferenceThemeCard';
 import { useNotifications } from '../../src/hooks/useNotifications';
+import { shareApp } from '../../src/utils/shareApp';
 
 const APPEARANCE_OPTIONS: Array<{
     key: ThemeMode;
@@ -301,26 +302,33 @@ export default function SettingsScreen() {
                         { icon: 'library-outline', label: 'Parish History' },
                         { icon: 'star-outline', label: 'Rate the App' },
                         { icon: 'share-social-outline', label: 'Share with Friends' },
-                    ].map((item, index, array) => (
-                        <View
-                            key={item.label}
-                            style={{
-                                flexDirection: 'row',
-                                gap: 12,
-                                alignItems: 'center',
-                                paddingHorizontal: 18,
-                                paddingVertical: 18,
-                                borderBottomWidth: index === array.length - 1 ? 0 : 1,
-                                borderBottomColor: colors.border,
-                            }}
-                        >
-                            <Ionicons name={item.icon as never} size={20} color={colors.textPrimary} />
-                            <Text style={{ color: colors.textPrimary }} className="font-sans text-[15px] ml-3 flex-1">
-                                {item.label}
-                            </Text>
-                            <Ionicons name="chevron-forward" size={18} color={colors.textMuted} />
-                        </View>
-                    ))}
+                    ].map((item, index, array) => {
+                        const isShareAction = item.label === 'Share with Friends';
+
+                        return (
+                            <TouchableOpacity
+                                key={item.label}
+                                activeOpacity={isShareAction ? 0.75 : 1}
+                                disabled={!isShareAction}
+                                onPress={isShareAction ? shareApp : undefined}
+                                style={{
+                                    flexDirection: 'row',
+                                    gap: 12,
+                                    alignItems: 'center',
+                                    paddingHorizontal: 18,
+                                    paddingVertical: 18,
+                                    borderBottomWidth: index === array.length - 1 ? 0 : 1,
+                                    borderBottomColor: colors.border,
+                                }}
+                            >
+                                <Ionicons name={item.icon as never} size={20} color={colors.textPrimary} />
+                                <Text style={{ color: colors.textPrimary }} className="font-sans text-[15px] ml-3 flex-1">
+                                    {item.label}
+                                </Text>
+                                <Ionicons name="chevron-forward" size={18} color={colors.textMuted} />
+                            </TouchableOpacity>
+                        );
+                    })}
                 </View>
 
                 <View style={{ marginTop: 32, alignItems: 'center', gap: 4 }}>

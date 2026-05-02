@@ -19,7 +19,7 @@ export function extractBibleText(reference: string): { reference: string; text: 
     let allVerses: string[] = [];
     let currentBook = '';
 
-    parts.forEach((part) => {
+    parts.forEach((part, partIdx) => {
         // Match Book, Chapter, and Verse parts
         // regex: (Book Name) (Chapter):(Verses)
         // Cases: "Genesis 1:1-5", "1 John 2:3", "Exodus 20"
@@ -50,35 +50,35 @@ export function extractBibleText(reference: string): { reference: string; text: 
     };
 }
 
-const bookMapExt: Record<string, string> = Object.fromEntries([
-    ['1 Kgs', '1 Kings'], ['2 Kgs', '2 Kings'],
-    ['1 Sam', '1 Samuel'], ['2 Sam', '2 Samuel'],
-    ['1 Chr', '1 Chronicles'], ['2 Chr', '2 Chronicles'],
-    ['Sg', 'Song of Solomon'], ['Song', 'Song of Solomon'],
-    ['Wisdom', 'Wisdom'], ['Wis', 'Wisdom'], ['Sirach', 'Sirach'], ['Sir', 'Sirach'],
-    ['Is', 'Isaiah'], ['Isa', 'Isaiah'], ['Isaiah', 'Isaiah'], ['Jer', 'Jeremiah'], ['Ez', 'Ezekiel'],
-    ['Ezek', 'Ezekiel'], ['Ezekiel', 'Ezekiel'], ['Prv', 'Proverbs'], ['Prov', 'Proverbs'],
-    ['Eccl', 'Ecclesiastes'], ['Zech', 'Zechariah'],
-    ['Mal', 'Malachi'], ['Zep', 'Zephaniah'], ['Zeph', 'Zephaniah'], ['Zc', 'Zechariah'],
-    ['Ex', 'Exodus'], ['Exod', 'Exodus'], ['Gen', 'Genesis'],
-    ['Lev', 'Leviticus'], ['Nm', 'Numbers'], ['Num', 'Numbers'],
-    ['Dt', 'Deuteronomy'], ['Deut', 'Deuteronomy'],
-    ['Jos', 'Joshua'], ['Josh', 'Joshua'], ['Jgs', 'Judges'],
-    ['Ru', 'Ruth'], ['Ezr', 'Ezra'], ['Neh', 'Nehemiah'],
-    ['Tb', 'Tobit'], ['Jdt', 'Judith'], ['Est', 'Esther'],
-    ['1 Mc', '1 Maccabees'], ['2 Mc', '2 Maccabees'], ['1 Macc', '1 Maccabees'], ['2 Macc', '2 Maccabees'],
-    ['Mt', 'Matthew'], ['Matt', 'Matthew'], ['Matthew', 'Matthew'], ['Mk', 'Mark'], ['Mark', 'Mark'], ['Lk', 'Luke'], ['Jn', 'John'], ['John', 'John'],
-    ['Rom', 'Romans'], ['Romans', 'Romans'], ['1 Cor', '1 Corinthians'], ['2 Cor', '2 Corinthians'],
-    ['Gal', 'Galatians'], ['Eph', 'Ephesians'], ['Phil', 'Philippians'], ['Philippians', 'Philippians'],
-    ['Col', 'Colossians'], ['1 Thes', '1 Thessalonians'], ['1 Thess', '1 Thessalonians'],
-    ['2 Thes', '2 Thessalonians'], ['2 Thess', '2 Thessalonians'], ['1 Tm', '1 Timothy'], ['1 Tim', '1 Timothy'],
-    ['2 Tm', '2 Timothy'], ['2 Tim', '2 Timothy'], ['Ti', 'Titus'], ['Phlm', 'Philemon'],
-    ['Heb', 'Hebrews'], ['Jas', 'James'], ['James', 'James'], ['1 Pt', '1 Peter'], ['1 Pet', '1 Peter'],
-    ['2 Pt', '2 Peter'], ['2 Pet', '2 Peter'], ['1 Jn', '1 John'], ['2 Jn', '2 John'],
-    ['Hos', 'Hosea'], ['Jl', 'Joel'], ['Am', 'Amos'], ['Ob', 'Obadiah'],
-    ['Jon', 'Jonah'], ['Mi', 'Micah'], ['Mic', 'Micah'], ['Na', 'Nahum'], ['Hb', 'Habakkuk'], ['Hab', 'Habakkuk'],
-    ['Ps', 'Psalms'], ['Psalm', 'Psalms'], ['Psalms', 'Psalms'], ['Daniel', 'Daniel'], ['Dan', 'Daniel'],
-]);
+const bookMapExt: Record<string, string> = {
+    '1 Kgs': '1 Kings', '2 Kgs': '2 Kings',
+    '1 Sam': '1 Samuel', '2 Sam': '2 Samuel',
+    '1 Chr': '1 Chronicles', '2 Chr': '2 Chronicles',
+    'Sg': 'Song of Solomon', 'Song': 'Song of Solomon',
+    'Wisdom': 'Wisdom', 'Wis': 'Wisdom', 'Sirach': 'Sirach', 'Sir': 'Sirach',
+    'Is': 'Isaiah', 'Isa': 'Isaiah', 'Isaiah': 'Isaiah', 'Jer': 'Jeremiah', 'Ez': 'Ezekiel',
+    'Ezek': 'Ezekiel', 'Ezekiel': 'Ezekiel', 'Prv': 'Proverbs', 'Prov': 'Proverbs',
+    'Eccl': 'Ecclesiastes', 'Zech': 'Zechariah',
+    'Mal': 'Malachi', 'Zep': 'Zephaniah', 'Zeph': 'Zephaniah', 'Zc': 'Zechariah',
+    'Ex': 'Exodus', 'Exod': 'Exodus', 'Gen': 'Genesis',
+    'Lev': 'Leviticus', 'Nm': 'Numbers', 'Num': 'Numbers',
+    'Dt': 'Deuteronomy', 'Deut': 'Deuteronomy',
+    'Jos': 'Joshua', 'Josh': 'Joshua', 'Jgs': 'Judges',
+    'Ru': 'Ruth', 'Ezr': 'Ezra', 'Neh': 'Nehemiah',
+    'Tb': 'Tobit', 'Jdt': 'Judith', 'Est': 'Esther',
+    '1 Mc': '1 Maccabees', '2 Mc': '2 Maccabees', '1 Macc': '1 Maccabees', '2 Macc': '2 Maccabees',
+    'Mt': 'Matthew', 'Matt': 'Matthew', 'Matthew': 'Matthew', 'Mk': 'Mark', 'Mark': 'Mark', 'Lk': 'Luke', 'Jn': 'John', 'John': 'John',
+    'Rom': 'Romans', 'Romans': 'Romans', '1 Cor': '1 Corinthians', '2 Cor': '2 Corinthians',
+    'Gal': 'Galatians', 'Eph': 'Ephesians', 'Phil': 'Philippians', 'Philippians': 'Philippians',
+    'Col': 'Colossians', '1 Thes': '1 Thessalonians', '1 Thess': '1 Thessalonians',
+    '2 Thes': '2 Thessalonians', '2 Thess': '2 Thessalonians', '1 Tm': '1 Timothy', '1 Tim': '1 Timothy',
+    '2 Tm': '2 Timothy', '2 Tim': '2 Timothy', 'Ti': 'Titus', 'Phlm': 'Philemon',
+    'Heb': 'Hebrews', 'Jas': 'James', 'James': 'James', '1 Pt': '1 Peter', '1 Pet': '1 Peter',
+    '2 Pt': '2 Peter', '2 Pet': '2 Peter', '1 Jn': '1 John', '2 Jn': '2 John',
+    'Hos': 'Hosea', 'Jl': 'Joel', 'Am': 'Amos', 'Ob': 'Obadiah',
+    'Jon': 'Jonah', 'Mi': 'Micah', 'Mic': 'Micah', 'Na': 'Nahum', 'Hb': 'Habakkuk', 'Hab': 'Habakkuk',
+    'Ps': 'Psalms', 'Psalm': 'Psalms', 'Psalms': 'Psalms', 'Daniel': 'Daniel', 'Dan': 'Daniel'
+};
 
 function getVersesFromChapter(book: string, chapter: string, rangeStr: string): string[] {
     const resolvedBook = bookMapExt[book] || book;
