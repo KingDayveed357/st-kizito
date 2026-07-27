@@ -12,7 +12,7 @@ export function CTASection() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [status, setStatus] = useState<"idle" | "success" | "error">("idle")
 
-  const apkUrl = "https://expo.dev/artifacts/eas/oiEyTWEtwKSze3dVsehmpC.apk"
+  const apkUrl = "https://quintessentialmart.com/downloads/st-kizito-apk.apk"
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()

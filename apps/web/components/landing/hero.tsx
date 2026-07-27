@@ -3,7 +3,7 @@ import { Download, Play, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export const HeroSection = () => {
-  const apkUrl = "https://expo.dev/artifacts/eas/oiEyTWEtwKSze3dVsehmpC.apk";
+  const apkUrl = "https://quintessentialmart.com/downloads/st-kizito-apk.apk";
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#FDFCF9] dark:bg-slate-950 pt-28 pb-16 px-6 lg:px-8">
