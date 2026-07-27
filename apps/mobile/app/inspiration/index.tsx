@@ -61,8 +61,13 @@ const THEME_CONFIG = {
 } as const;
 
 export default function InspirationScreen() {
-    const { colors, allColors, isDark } = useTheme();
+    const { colors, allColors, isDark, textScale, lineHeightScale } = useTheme();
     const router = useRouter();
+    // Reflections must honor the global text-size control like readings/psalm do (audit #6).
+    const scaled = (size: number, line: number) => ({
+        fontSize: size * textScale,
+        lineHeight: line * textScale * lineHeightScale,
+    });
     const { selectedDate, setSource } = useAppStore();
     const { isFavourite, toggleFavourite } = useFavourites('inspiration');
 
@@ -93,7 +98,7 @@ export default function InspirationScreen() {
                 {/* Hero Card */}
                 <View style={[styles.heroCard, { backgroundColor: colors.surface, borderColor: colors.border }]}>
                     <Ionicons name="chatbubbles-outline" size={32} color={allColors.liturgical.christmasEaster} style={{ opacity: 0.2, marginBottom: -10 }} />
-                    <Text style={[styles.heroText, { color: colors.textPrimary }]} className="font-serif">
+                    <Text style={[styles.heroText, { color: colors.textPrimary }, scaled(24, 34)]} className="font-serif">
                         {inspiration.heroVerse.text}
                     </Text>
                     <Text style={[styles.heroRef, { color: colors.accent }]}>
@@ -151,10 +156,10 @@ export default function InspirationScreen() {
                                     {item.theme.toUpperCase()}
                                 </Text>
                             </View>
-                            <Text style={[styles.reflectionVerse, { color: colors.textPrimary }]} className="font-serif">
+                            <Text style={[styles.reflectionVerse, { color: colors.textPrimary }, scaled(18, 26)]} className="font-serif">
                                 {item.verse}
                             </Text>
-                            <Text style={[styles.reflectionText, { color: colors.textSecondary }]}>
+                            <Text style={[styles.reflectionText, { color: colors.textSecondary }, scaled(14, 22)]}>
                                 {item.reflection}
                             </Text>
                         </View>
@@ -163,7 +168,7 @@ export default function InspirationScreen() {
 
                 {/* Saint Quote */}
                 <View style={[styles.saintCard, { borderLeftColor: allColors.liturgical.ordinaryTime }]}>
-                    <Text style={[styles.saintQuote, { color: colors.textPrimary }]} className="font-serif">
+                    <Text style={[styles.saintQuote, { color: colors.textPrimary }, scaled(16, 26)]} className="font-serif">
                         "{inspiration.saintQuote.quote}"
                     </Text>
                     <View style={styles.saintFooter}>

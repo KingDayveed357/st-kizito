@@ -1,10 +1,12 @@
 import { Tabs } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../../src/hooks/useTheme';
 import { Ionicons } from '@expo/vector-icons';
 import { typography, spacing } from '../../src/theme';
 
 export default function TabLayout() {
     const { colors } = useTheme();
+    const insets = useSafeAreaInsets();
 
     return (
         <Tabs
@@ -13,8 +15,11 @@ export default function TabLayout() {
                 tabBarStyle: {
                     backgroundColor: colors.surface,
                     borderTopColor: colors.surfaceElevated,
-                    height: spacing.tabBarHeight,
-                    paddingBottom: 8,
+                    // Grow the bar by the bottom safe-area inset so labels/icons never sit under
+                    // the Android gesture pill or a notch. Hardcoding height + paddingBottom:8
+                    // defeated React Navigation's automatic inset handling (see audit #1).
+                    height: spacing.tabBarHeight + insets.bottom,
+                    paddingBottom: insets.bottom + 8,
                     paddingTop: 8,
                 },
                 tabBarActiveTintColor: colors.accent,

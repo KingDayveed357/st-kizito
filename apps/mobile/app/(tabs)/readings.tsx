@@ -33,8 +33,15 @@ const HORIZONTAL_PADDING = 24;
 const SECTION_SCROLL_OFFSET = 148;
 
 export default function ReadingsScreen() {
-    const { colors, allColors } = useTheme();
+    const { colors, allColors, textScale, lineHeightScale } = useTheme();
     const insets = useSafeAreaInsets();
+
+    // Responsorial Psalm text scaling (audit #6/#11): the inline psalm previously used hardcoded
+    // NativeWind sizes and so ignored the text-size control, unlike readings/gospel.
+    const psalmBodySize = 18 * textScale;
+    const psalmVerseSize = 16 * textScale;
+    const psalmLineHeight = 28 * textScale * lineHeightScale;
+    const psalmMarkerSize = 18 * textScale;
     const router = useRouter();
     const scrollViewRef = useRef<ScrollView>(null);
     const { toggleFavourite, isFavourite } = useFavourites();
@@ -54,7 +61,10 @@ export default function ReadingsScreen() {
     } = useCelebration(effectiveDate);
 
     const [activeTabId, setActiveTabId] = useState<string | null>(null);
-    const [sectionOffsets, setSectionOffsets] = useState<Record<string, number>>({});
+    // Section Y-offsets are stored in a ref, NOT state: onLayout refires when custom fonts finish
+    // loading (text metrics change), and writing that to state caused a re-render → layout shift →
+    // active-pill oscillation loop (the "flicker", see audit #2). A ref updates silently.
+    const sectionOffsetsRef = useRef<Record<string, number>>({});
 
     const colorMap = {
         green: allColors.liturgical.ordinaryTime,
@@ -82,13 +92,12 @@ export default function ReadingsScreen() {
     }, [visibleBlocks, activeTabId]);
 
     const handleSectionLayout = (id: string) => (event: LayoutChangeEvent) => {
-        const { y } = event.nativeEvent.layout;
-        setSectionOffsets((current) => ({ ...current, [id]: y }));
+        sectionOffsetsRef.current[id] = event.nativeEvent.layout.y;
     };
 
     const handleTabPress = (id: string) => {
         setActiveTabId(id);
-        const offset = sectionOffsets[id];
+        const offset = sectionOffsetsRef.current[id];
         if (offset !== undefined) {
             scrollViewRef.current?.scrollTo({
                 y: Math.max(0, offset - SECTION_SCROLL_OFFSET),
@@ -104,7 +113,7 @@ export default function ReadingsScreen() {
         let minDiff = Infinity;
 
         // Find closest section
-        for (const [id, offset] of Object.entries(sectionOffsets)) {
+        for (const [id, offset] of Object.entries(sectionOffsetsRef.current)) {
             if (currentY >= offset - 50) {
                 const diff = currentY - offset;
                 if (diff < minDiff) {
@@ -297,10 +306,10 @@ export default function ReadingsScreen() {
 
                                     {block.response && (
                                         <View className="mt-7 items-center">
-                                            <Text style={{ color: colors.accent }} className="font-serif text-[18px] font-bold italic">
+                                            <Text style={{ color: colors.accent, fontSize: psalmMarkerSize }} className="font-serif font-bold italic">
                                                 R/
                                             </Text>
-                                            <Text style={{ color: colors.textPrimary }} className="mt-2 text-center font-serif text-[18px] font-bold leading-8">
+                                            <Text style={{ color: colors.textPrimary, fontSize: psalmBodySize, lineHeight: psalmLineHeight }} className="mt-2 text-center font-serif font-bold">
                                                 {block.response}
                                             </Text>
                                         </View>
@@ -308,10 +317,10 @@ export default function ReadingsScreen() {
 
                                     {selectPsalmBodyVerses(block.verses).map((verse, index) => (
                                         <View key={`${verse.text}-${index}`} style={styles.psalmVerseRow}>
-                                            <Text style={{ color: colors.accent, marginTop: 3 }} className="mr-3 font-serif text-[18px] font-bold italic">
+                                            <Text style={{ color: colors.accent, marginTop: 3, fontSize: psalmMarkerSize }} className="mr-3 font-serif font-bold italic">
                                                 {verse.type === 'response' ? 'R/' : 'V/'}
                                             </Text>
-                                            <Text style={{ color: colors.textPrimary, flex: 1 }} className="font-serif text-[16px] leading-8">
+                                            <Text style={{ color: colors.textPrimary, flex: 1, fontSize: psalmVerseSize, lineHeight: psalmLineHeight }} className="font-serif">
                                                 {verse.text}
                                             </Text>
                                         </View>
@@ -319,17 +328,17 @@ export default function ReadingsScreen() {
 
                                     {block.response && (
                                         <View className="mt-6 items-center">
-                                            <Text style={{ color: colors.accent }} className="font-serif text-[18px] font-bold italic">
+                                            <Text style={{ color: colors.accent, fontSize: psalmMarkerSize }} className="font-serif font-bold italic">
                                                 R/
                                             </Text>
-                                            <Text style={{ color: colors.textPrimary }} className="mt-2 text-center font-serif text-[18px] font-bold leading-8">
+                                            <Text style={{ color: colors.textPrimary, fontSize: psalmBodySize, lineHeight: psalmLineHeight }} className="mt-2 text-center font-serif font-bold">
                                                 {block.response}
                                             </Text>
                                         </View>
                                     )}
 
                                     {!block.verses?.length && block.text && (
-                                        <Text style={{ color: colors.textPrimary }} className="mt-4 text-center font-serif text-[16px] leading-8">
+                                        <Text style={{ color: colors.textPrimary, fontSize: psalmVerseSize, lineHeight: psalmLineHeight }} className="mt-4 text-center font-serif">
                                             {block.text}
                                         </Text>
                                     )}
