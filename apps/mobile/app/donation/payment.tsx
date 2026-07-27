@@ -37,8 +37,14 @@ export default function DonationPaymentScreen() {
     const params = useLocalSearchParams<{ draft?: string }>();
 
     const draft = useMemo(() => parseDraftParam(params.draft), [params.draft]);
-    const { data: paymentDetails, isLoading: loadingPaymentDetails } = usePaymentDetails();
+    const { data: paymentDetails, isLoading: loadingPaymentDetails, isRefreshing, refetch } = usePaymentDetails();
     const { isOffline } = useOfflineStatus();
+
+    // Payment can only be confirmed if we actually have an account number to transfer to —
+    // whether it came from the network or the offline cache. Without it, showing "I Have Paid"
+    // is a dead-end (the user has nowhere to send money). See audit #7.
+    const hasVerifiableDetails = !!paymentDetails?.account_number;
+    const detailsUnavailable = !loadingPaymentDetails && !hasVerifiableDetails;
 
     const [paymentName, setPaymentName] = useState('');
     const [paymentReference, setPaymentReference] = useState('');
@@ -174,6 +180,39 @@ export default function DonationPaymentScreen() {
 
                     {loadingPaymentDetails ? (
                         <Text style={{ color: colors.textSecondary, fontSize: 13 }}>Loading payment details...</Text>
+                    ) : detailsUnavailable ? (
+                        <View>
+                            <Text style={{ color: colors.textPrimary, fontSize: 15, fontWeight: '700', marginBottom: 6 }}>
+                                {isOffline ? "You're offline" : "Details unavailable"}
+                            </Text>
+                            <Text style={{ color: colors.textSecondary, fontSize: 13, lineHeight: 19, marginBottom: 14 }}>
+                                {isOffline
+                                    ? 'Connect to the internet to load the parish account details. Once loaded, they stay available offline.'
+                                    : 'We could not load the parish account details right now. Please check your connection and try again.'}
+                            </Text>
+                            <TouchableOpacity
+                                onPress={() => { void refetch(); }}
+                                disabled={isRefreshing}
+                                style={{
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
+                                    alignSelf: 'flex-start',
+                                    gap: 8,
+                                    borderRadius: 12,
+                                    borderWidth: 1,
+                                    borderColor: `${accent}55`,
+                                    backgroundColor: `${accent}12`,
+                                    paddingHorizontal: 14,
+                                    paddingVertical: 10,
+                                    opacity: isRefreshing ? 0.6 : 1,
+                                }}
+                            >
+                                <Ionicons name="refresh" size={16} color={accent} />
+                                <Text style={{ color: accent, fontSize: 13, fontWeight: '700' }}>
+                                    {isRefreshing ? 'Retrying…' : 'Retry'}
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
                     ) : (
                         <>
                             <View style={{ marginBottom: 12 }}>
@@ -275,7 +314,7 @@ export default function DonationPaymentScreen() {
                 </View>
 
                 {!completed ? (
-                    <Button onPress={handleSubmit} disabled={isSubmitting || !draft || loadingPaymentDetails}>
+                    <Button onPress={handleSubmit} disabled={isSubmitting || !draft || loadingPaymentDetails || !hasVerifiableDetails}>
                         {isSubmitting ? 'Submitting...' : 'I Have Paid'}
                     </Button>
                 ) : (

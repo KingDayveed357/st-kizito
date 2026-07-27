@@ -63,8 +63,8 @@ export default function BookingScreen() {
                 showBack
                 title="Book a Mass"
                 rightElement={
-                    <View style={{ paddingRight: 20, paddingVertical: 4, backgroundColor: `${accent}14`, borderRadius: 10, paddingHorizontal: 10 }}>
-                        <Text style={{ color: accent, fontSize: 11, fontWeight: '700', letterSpacing: 1 }}>
+                    <View style={{ paddingVertical: 4, backgroundColor: `${accent}14`, borderRadius: 10, paddingHorizontal: 10 }}>
+                        <Text numberOfLines={1} style={{ color: accent, fontSize: 11, fontWeight: '700', letterSpacing: 1 }}>
                             STEP 1 OF 3
                         </Text>
                     </View>

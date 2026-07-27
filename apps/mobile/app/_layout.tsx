@@ -8,6 +8,7 @@ import { configureNotificationHandler } from '../src/services/notifications/noti
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useTheme } from '../src/hooks/useTheme';
+import { useDailyRefresh } from '../src/hooks/useDailyRefresh';
 import '../global.css';
 
 SplashScreen.preventAutoHideAsync().catch(() => {
@@ -21,6 +22,9 @@ const queryClient = new QueryClient();
 export default function RootLayout() {
     const [appIsReady, setAppIsReady] = useState(false);
     const { colors, isDark } = useTheme();
+
+    // Keep readings/office on today's date across cold launches and day rollovers (#9).
+    useDailyRefresh();
 
     const onLayoutRootView = useCallback(async () => {
         if (!appIsReady) {

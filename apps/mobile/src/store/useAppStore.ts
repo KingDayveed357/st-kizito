@@ -32,6 +32,14 @@ export const useAppStore = create<AppState>()(
         {
             name: 'app-storage',
             storage: createJSONStorage(() => AsyncStorage),
+            // `selectedDate` and `source` are intentionally NOT persisted. Persisting the
+            // selected date caused the app to reopen on a previous day's readings/office
+            // (see docs/ENGINEERING-AUDIT.md #9). The date must always default to *today* on a
+            // cold launch; intentional historical browsing is a within-session concern only.
+            partialize: (state) => ({
+                hasSeeded: state.hasSeeded,
+                lastSyncTime: state.lastSyncTime,
+            }),
         }
     )
 );

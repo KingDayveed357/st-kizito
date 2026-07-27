@@ -26,6 +26,8 @@ import { useAppStore } from '../../src/store/useAppStore';
 import { getCalendar, getDatePresentation, getTodayIso } from '../../src/services/liturgicalData';
 import { useCelebration } from '../../src/hooks/useCelebration';
 import { CelebrationSelector } from '../../src/components/liturgical/CelebrationSelector';
+import { getLiturgicalClosing } from '../../src/utils/liturgicalClosings';
+import { selectPsalmBodyVerses } from '../../src/utils/psalm';
 
 const HORIZONTAL_PADDING = 24;
 const SECTION_SCROLL_OFFSET = 148;
@@ -304,7 +306,7 @@ export default function ReadingsScreen() {
                                         </View>
                                     )}
 
-                                    {block.verses && block.verses.slice(1).map((verse, index) => (
+                                    {selectPsalmBodyVerses(block.verses).map((verse, index) => (
                                         <View key={`${verse.text}-${index}`} style={styles.psalmVerseRow}>
                                             <Text style={{ color: colors.accent, marginTop: 3 }} className="mr-3 font-serif text-[18px] font-bold italic">
                                                 {verse.type === 'response' ? 'R/' : 'V/'}
@@ -359,6 +361,7 @@ export default function ReadingsScreen() {
                                 showDropCap
                                 contentPaddingHorizontal={HORIZONTAL_PADDING}
                                 contentPaddingBottom={36}
+                                closing={block.text ? getLiturgicalClosing(block.type) : null}
                             />
                         </View>
                     );

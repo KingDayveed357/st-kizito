@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { useTheme } from '../../hooks/useTheme';
+import type { LiturgicalClosing } from '../../utils/liturgicalClosings';
 
 interface ReadingSectionProps {
     label: string;
@@ -9,6 +10,8 @@ interface ReadingSectionProps {
     showDropCap?: boolean;
     contentPaddingHorizontal?: number;
     contentPaddingBottom?: number;
+    /** Optional closing versicle/response ("The word of the Lord." / "Thanks be to God."). */
+    closing?: LiturgicalClosing | null;
 }
 
 export const ReadingSection: React.FC<ReadingSectionProps> = ({
@@ -18,6 +21,7 @@ export const ReadingSection: React.FC<ReadingSectionProps> = ({
     showDropCap = false,
     contentPaddingHorizontal = 24,
     contentPaddingBottom = 24,
+    closing = null,
 }) => {
     const { colors, textScale, lineHeightScale } = useTheme();
 
@@ -71,6 +75,31 @@ export const ReadingSection: React.FC<ReadingSectionProps> = ({
                     {formattedText}
                 </Text>
             </View>
+
+            {!!closing && (
+                <View style={styles.closing}>
+                    <Text
+                        style={{
+                            color: colors.textSecondary,
+                            fontSize: 16 * textScale,
+                            lineHeight: 26 * textScale * lineHeightScale,
+                        }}
+                        className="font-serif italic"
+                    >
+                        {closing.versicle}
+                    </Text>
+                    <Text
+                        style={{
+                            color: colors.accent,
+                            fontSize: 16 * textScale,
+                            lineHeight: 26 * textScale * lineHeightScale,
+                        }}
+                        className="font-serif font-bold italic"
+                    >
+                        {closing.response}
+                    </Text>
+                </View>
+            )}
         </View>
     );
 };
@@ -79,6 +108,11 @@ const styles = StyleSheet.create({
     body: {
         alignItems: 'flex-start',
         flexDirection: 'row',
+    },
+    closing: {
+        alignItems: 'flex-end',
+        marginTop: 18,
+        gap: 2,
     },
     header: {
         alignItems: 'center',

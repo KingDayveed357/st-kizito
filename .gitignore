@@ -51,6 +51,8 @@ yarn-error.*
 # generated native folders
 /ios
 /android
+apps/*/ios
+apps/*/android
 
 # local reference cache
 /tmp

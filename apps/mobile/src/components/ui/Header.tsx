@@ -41,7 +41,7 @@ export const Header: React.FC<HeaderProps> = ({
             }}
             className="flex-row items-center"
         >
-            <View style={{ width: 52 }} className="items-start justify-center">
+            <View style={{ minWidth: 52, flexShrink: 0 }} className="items-start justify-center">
                 {leftElement ? leftElement : showBack ? (
                     <TouchableOpacity
                         onPress={handleBack}
@@ -78,7 +78,7 @@ export const Header: React.FC<HeaderProps> = ({
                     </Text>
                 )}
             </View>
-            <View style={{ width: 52 }} className="items-end justify-center">
+            <View style={{ minWidth: 52, flexShrink: 0 }} className="items-end justify-center">
                 {rightElement}
             </View>
         </View>
