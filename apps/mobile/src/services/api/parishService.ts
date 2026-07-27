@@ -149,6 +149,40 @@ export const parishService = {
     return firstAttempt
   },
 
+  fetchSacramentTypes: async () => {
+    return supabase
+      .from('sacrament_request_types')
+      .select('*')
+      .eq('active', true)
+      .order('sort_order', { ascending: true })
+  },
+
+  submitSacramentRequest: async (data: any) => {
+    const firstAttempt = await supabase
+      .from('sacrament_requests')
+      .insert(data)
+
+    if (!firstAttempt.error || !isClientRequestIdColumnError(firstAttempt.error)) {
+      return firstAttempt
+    }
+
+    const { client_request_id, ...fallbackPayload } = data ?? {}
+    return supabase
+      .from('sacrament_requests')
+      .insert(fallbackPayload)
+  },
+
+  fetchSacramentStatuses: async (requestIds: string[]) => {
+    const ids = requestIds.map(normalizeRequestId).filter((v) => v.length > 0)
+    if (!ids.length) {
+      return { data: [] as any[], error: null as unknown }
+    }
+    return supabase
+      .from('sacrament_requests')
+      .select('client_request_id, status, admin_note, updated_at, created_at')
+      .in('client_request_id', ids)
+  },
+
   fetchRequestStatuses: async (requestIds: string[]) => {
     if (!requestIds.length) {
       return { data: [] as RemoteRequestStatusRow[], error: null as unknown }

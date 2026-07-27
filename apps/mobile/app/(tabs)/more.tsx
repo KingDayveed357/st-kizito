@@ -43,6 +43,14 @@ const QUICK_ACTIONS = [
 
 const PARISH_SERVICES = [
     {
+        id: 'sacraments',
+        title: 'Sacramental Requests',
+        subtitle: 'Request a baptismal card & more',
+        icon: 'water-outline' as const,
+        route: '/sacraments',
+        accent: '#4A7C59',
+    },
+    {
         id: 'requests',
         title: 'My Requests',
         subtitle: 'Track donation and booking status',

@@ -186,4 +186,12 @@ const setupDatabase = async (database: SQLite.SQLiteDatabase) => {
       created_at INTEGER
     );
   `);
+
+    await database.execAsync(`
+    CREATE TABLE IF NOT EXISTS pending_sacrament_requests (
+      local_id TEXT PRIMARY KEY,
+      data_json TEXT,
+      created_at INTEGER
+    );
+  `);
 };

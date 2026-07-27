@@ -2,6 +2,8 @@ export const STORAGE_KEYS = {
     parishContacts: 'parish_contacts_cache_v1',
     parishPaymentDetails: 'parish_payment_details_cache_v1',
     requestHistory: 'parish_request_history_v1',
+    sacramentRequests: 'parish_sacrament_requests_v1',
+    sacramentTypesCache: 'parish_sacrament_types_cache_v1',
     notificationPreferences: 'notification_preferences_v1',
     prayerReminders: 'prayer_reminders_v1',
     liturgyCalendarData: 'liturgy_calendar_data_v1',

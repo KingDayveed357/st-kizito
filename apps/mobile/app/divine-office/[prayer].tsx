@@ -1,17 +1,14 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useRef } from 'react';
 import {
     View,
     ScrollView,
     Text,
     TouchableOpacity,
     StyleSheet,
-    NativeSyntheticEvent,
-    NativeScrollEvent,
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
-import Animated, { useAnimatedStyle, interpolate, Extrapolation } from 'react-native-reanimated';
-import { useReadingMode } from '../../src/components/reading/ReadingModeProvider';
-import { useReadingChrome } from '../../src/hooks/useReadingChrome';
+import Animated, { useAnimatedScrollHandler, useSharedValue } from 'react-native-reanimated';
+import { ScrollToTopButton } from '../../src/components/ui/ScrollToTopButton';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -203,19 +200,16 @@ export default function PrayerDetailScreen() {
 
     const officeMeta = OFFICE_META[prayerKey ?? ''] ?? { icon: 'book-outline', subtitle: 'Prayer' };
 
-    // Immersive reading: the header glides away on scroll-down and returns on scroll-up, reusing
-    // the same shared chrome value as the tab bar so the interaction is identical app-wide.
-    const { chrome } = useReadingMode();
-    const { onScroll: onReadingScroll } = useReadingChrome();
-    const [headerHeight, setHeaderHeight] = useState(196);
-    const headerAnimatedStyle = useAnimatedStyle(() => ({
-        transform: [{ translateY: interpolate(chrome.value, [0, 1], [-headerHeight, 0], Extrapolation.CLAMP) }],
-        opacity: chrome.value,
-    }));
-    const handleScroll = useCallback(
-        (e: NativeSyntheticEvent<NativeScrollEvent>) => onReadingScroll(e.nativeEvent.contentOffset.y),
-        [onReadingScroll],
-    );
+    // The header now scrolls naturally with the content (it is the first child of the scroll view),
+    // rather than being an absolute overlay. A shared scroll offset drives the Scroll-to-Top button.
+    const scrollRef = useRef<ScrollView>(null);
+    const scrollY = useSharedValue(0);
+    const scrollHandler = useAnimatedScrollHandler((e) => {
+        scrollY.value = e.contentOffset.y;
+    });
+    const scrollToTop = useCallback(() => {
+        scrollRef.current?.scrollTo({ y: 0, animated: true });
+    }, []);
 
     const handleBack = useCallback(() => router.back(), [router]);
 
@@ -235,26 +229,14 @@ export default function PrayerDetailScreen() {
                 backgroundColor="transparent"
             />
 
-            {/* Prayer body — content flows under the header, which is an absolute overlay so it
-                can glide away for a distraction-free read. */}
-            <ScrollView
+            {/* Prayer body — the header is the first child so it scrolls naturally with the text. */}
+            <Animated.ScrollView
+                ref={scrollRef as never}
                 style={{ flex: 1, backgroundColor: bgColor }}
-                contentContainerStyle={{ paddingTop: headerHeight + 16, paddingBottom: 64 }}
+                contentContainerStyle={{ paddingBottom: 64 }}
                 showsVerticalScrollIndicator={false}
-                onScroll={handleScroll}
+                onScroll={scrollHandler}
                 scrollEventThrottle={16}
-            >
-                {hasParts ? (
-                    <PrayerBlockRenderer blocks={prayerBlocks} accentColor={accentColor} />
-                ) : (
-                    <EmptyState accentColor={accentColor} colors={colors} />
-                )}
-            </ScrollView>
-
-            {/* Header (absolute overlay, glides up on scroll-down / returns on scroll-up) */}
-            <Animated.View
-                onLayout={(e) => setHeaderHeight(e.nativeEvent.layout.height)}
-                style={[styles.headerOverlay, headerAnimatedStyle]}
             >
                 <PrayerHeader
                     title={detail?.title ?? 'Prayer'}
@@ -266,7 +248,15 @@ export default function PrayerDetailScreen() {
                     isDark={isDark ?? false}
                     onBack={handleBack}
                 />
-            </Animated.View>
+
+                {hasParts ? (
+                    <PrayerBlockRenderer blocks={prayerBlocks} accentColor={accentColor} />
+                ) : (
+                    <EmptyState accentColor={accentColor} colors={colors} />
+                )}
+            </Animated.ScrollView>
+
+            <ScrollToTopButton scrollY={scrollY} onPress={scrollToTop} bottomOffset={24} />
         </SafeAreaView>
     );
 }
@@ -274,13 +264,6 @@ export default function PrayerDetailScreen() {
 // ─── Styles ───────────────────────────────────────────────────────────────
 
 const styles = StyleSheet.create({
-    headerOverlay: {
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        zIndex: 10,
-    },
     header: {
         paddingBottom: 24,
         paddingHorizontal: 20,

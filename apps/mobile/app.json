@@ -21,7 +21,7 @@
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/android-icon.png"
       },
-      "softwareKeyboardLayoutMode": "pan",
+      "softwareKeyboardLayoutMode": "resize",
       "predictiveBackGestureEnabled": false,
       "package": "com.dave.js.stkizito"
     },

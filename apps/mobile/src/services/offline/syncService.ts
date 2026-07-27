@@ -4,7 +4,7 @@ import { BookingStatus } from '../../types/booking.types';
 
 const submissionLocks = new Set<string>();
 
-const getSubmissionKey = (prefix: 'booking' | 'donation', payload: object) =>
+const getSubmissionKey = (prefix: 'booking' | 'donation' | 'sacrament', payload: object) =>
     `${prefix}:${JSON.stringify(payload)}`;
 
 const withSubmissionLock = async <T>(key: string, fn: () => Promise<T>) => {
@@ -72,6 +72,31 @@ export const syncPendingSubmissions = async () => {
             }
         } catch (e) {
             console.error(`[Sync] Error syncing donation ${row.local_id}:`, e);
+        }
+    }
+
+    // Flush pending sacrament requests.
+    const pendingSacraments = await withDb(
+        (db) => db.getAllAsync('SELECT * FROM pending_sacrament_requests ORDER BY created_at ASC'),
+        'Load pending sacrament requests'
+    );
+
+    for (const row of pendingSacraments as any[]) {
+        try {
+            const data = JSON.parse(row.data_json);
+            const { error } = await parishService.submitSacramentRequest(data);
+
+            if (!error) {
+                await withDb(
+                    (db) => db.runAsync('DELETE FROM pending_sacrament_requests WHERE local_id = ?', row.local_id),
+                    'Delete synced sacrament request queue item'
+                );
+                console.log(`[Sync] Synced sacrament request ${row.local_id}`);
+            } else {
+                console.warn(`[Sync] Sacrament request ${row.local_id} failed:`, error.message);
+            }
+        } catch (e) {
+            console.error(`[Sync] Error syncing sacrament request ${row.local_id}:`, e);
         }
     }
 };
@@ -178,6 +203,34 @@ export const submitDonation = async (data: object, isOffline: boolean) => {
                     Date.now()
                 ),
             'Queue donation submission'
+        );
+        return { localId, queued: true };
+    });
+};
+
+/**
+ * Submit a sacramental request - direct to Supabase if online, or queued locally if offline.
+ * The payload already carries its own `status: 'pending'` and `client_request_id`.
+ */
+export const submitSacramentRequest = async (data: object, isOffline: boolean) => {
+    const payload = data;
+    const lockKey = getSubmissionKey('sacrament', payload);
+
+    return withSubmissionLock(lockKey, async () => {
+        if (!isOffline) {
+            return parishService.submitSacramentRequest(payload);
+        }
+
+        const localId = `sacrament_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
+        await withDb(
+            (db) =>
+                db.runAsync(
+                    'INSERT INTO pending_sacrament_requests (local_id, data_json, created_at) VALUES (?, ?, ?)',
+                    localId,
+                    JSON.stringify(payload),
+                    Date.now()
+                ),
+            'Queue sacrament request submission'
         );
         return { localId, queued: true };
     });

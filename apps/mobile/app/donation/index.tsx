@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { KeyboardAvoidingView, Platform, ScrollView, Text, TextInput, View } from 'react-native';
+import { Text, TextInput, View } from 'react-native';
 import { useTheme } from '../../src/hooks/useTheme';
 import { Header } from '../../src/components/ui/Header';
 import { Button } from '../../src/components/ui/Button';
+import { KeyboardAwareForm } from '../../src/components/ui/KeyboardAwareForm';
 import { useRouter } from 'expo-router';
 import { DonationDraft } from '../../src/types/booking.types';
 
@@ -58,8 +59,7 @@ export default function DonationScreen() {
                 }
             />
                
-         <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-            <ScrollView contentContainerStyle={{ paddingHorizontal: 20, paddingTop: 14, paddingBottom: 52 }} showsVerticalScrollIndicator={false}>
+         <KeyboardAwareForm contentContainerStyle={{ paddingHorizontal: 20, paddingTop: 14 }}>
                 <View
                     style={{
                         borderRadius: 22,
@@ -176,8 +176,7 @@ export default function DonationScreen() {
                 />
 
                 <Button onPress={handleContinue}>Continue</Button>
-            </ScrollView>
-    </KeyboardAvoidingView>
+            </KeyboardAwareForm>
         </SafeAreaView>
     );
 }

@@ -1,9 +1,11 @@
 import React, { useMemo, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { KeyboardAvoidingView, Platform, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { useTheme } from '../../src/hooks/useTheme';
 import { Header } from '../../src/components/ui/Header';
 import { Button } from '../../src/components/ui/Button';
+import { KeyboardAwareForm } from '../../src/components/ui/KeyboardAwareForm';
+import { DatePickerField } from '../../src/components/ui/DatePickerField';
 import { useRouter } from 'expo-router';
 import { BookingDraft, BookingIntentionType } from '../../src/types/booking.types';
 
@@ -71,14 +73,7 @@ export default function BookingScreen() {
                 }
             />
 
-            <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-                <ScrollView
-                    contentContainerStyle={{ paddingHorizontal: 20, paddingTop: 14, paddingBottom: 120 }}
-                    showsVerticalScrollIndicator={false}
-                    keyboardShouldPersistTaps="handled"
-                    keyboardDismissMode="on-drag"
-                    automaticallyAdjustKeyboardInsets
-                >
+            <KeyboardAwareForm contentContainerStyle={{ paddingHorizontal: 20, paddingTop: 14 }}>
                     <View
                         style={{
                             borderRadius: 22,
@@ -152,29 +147,17 @@ export default function BookingScreen() {
                         })}
                     </View>
 
-                    <Text style={{ color: colors.textMuted, fontSize: 11, fontWeight: '700', letterSpacing: 2, textTransform: 'uppercase', marginBottom: 8 }}>
-                        Date (YYYY-MM-DD)
-                    </Text>
-                    <TextInput
+                    <DatePickerField
+                        label="Date"
                         value={date}
-                        onChangeText={(value) => {
-                            setDate(value);
+                        onChange={(iso) => {
+                            setDate(iso);
                             if (errors.date) setErrors((current) => ({ ...current, date: undefined }));
                         }}
-                        placeholder="2026-04-20"
-                        placeholderTextColor={colors.textMuted}
-                        style={{
-                            minHeight: 52,
-                            borderRadius: 14,
-                            borderWidth: 1,
-                            borderColor: errors.date ? '#B5303C' : colors.border,
-                            backgroundColor: colors.surface,
-                            paddingHorizontal: 14,
-                            color: colors.textPrimary,
-                            marginBottom: errors.date ? 4 : 18,
-                        }}
+                        minimumDate={new Date()}
+                        error={!!errors.date}
+                        helperText={errors.date}
                     />
-                    {errors.date ? <Text style={{ color: '#B5303C', fontSize: 12, marginBottom: 14 }}>{errors.date}</Text> : null}
 
                     <Text style={{ color: colors.textMuted, fontSize: 11, fontWeight: '700', letterSpacing: 2, textTransform: 'uppercase', marginBottom: 8 }}>
                         Note / Description
@@ -225,8 +208,7 @@ export default function BookingScreen() {
                     </View>
 
                     <Button onPress={handleContinue}>Continue</Button>
-                </ScrollView>
-            </KeyboardAvoidingView>
+            </KeyboardAwareForm>
         </SafeAreaView>
     );
 }

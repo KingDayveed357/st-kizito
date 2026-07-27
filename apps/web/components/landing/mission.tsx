@@ -33,7 +33,9 @@ export function MissionSection() {
         </p>
 
         <a 
-          href="#"
+          href="https://chat.whatsapp.com/K8jiVJQZG5g9JDZv63iysz"
+          target="_blank"
+          rel="noopener noreferrer"
           className="inline-flex items-center justify-center px-8 py-3 bg-tertiary text-primary font-semibold rounded-full hover:bg-tertiary/90 transition-colors"
         >
           Join Our Community
