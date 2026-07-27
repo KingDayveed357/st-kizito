@@ -46,6 +46,20 @@ type MonthHeaderItem = { type: 'month-header'; monthIndex: number; title: string
 type DayItem        = { type: 'day'; item: TimelineItem; calendar: CalendarData };
 type CalendarListItem = YearNavItem | MonthHeaderItem | DayItem;
 
+type BuiltCalendarList = {
+    listData: CalendarListItem[];
+    dateToOffsetMap: Map<string, number>;
+    dateToIndexMap: Map<string, number>;
+    monthOffsets: { monthIndex: number; offset: number }[];
+    stickyHeaderIndices: number[];
+    layoutOffsets: number[];
+};
+
+// Module-level cache: the per-year list (365 rows + offsets) is built once and reused across
+// screen mounts, so re-opening the calendar is instant. Building synchronously on mount (rather
+// than deferring behind a spinner) avoids a 0→365 VirtualizedList "slow to update" churn (audit #8).
+const yearListCache = new Map<number, BuiltCalendarList>();
+
 // ─── Cell colours bundle — passed as a single stable object ───────────────────
 
 interface CellColors {
@@ -164,16 +178,21 @@ export default function CalendarScreen() {
     const {
         listData,
         dateToOffsetMap,
+        dateToIndexMap,
         monthOffsets,
         stickyHeaderIndices,
         layoutOffsets,
-    } = useMemo(() => {
+    } = useMemo<BuiltCalendarList>(() => {
+        const cached = yearListCache.get(visibleYear);
+        if (cached) return cached;
+
         const startIso = `${visibleYear}-01-01`;
         const endIso   = `${visibleYear}-12-31`;
         const days = buildTimelineDays(startIso, endIso);
 
         const items: CalendarListItem[] = [];
         const dateToOffset = new Map<string, number>();
+        const dateToIndex = new Map<string, number>();
         const monthStartOffsets: { monthIndex: number; offset: number }[] = [];
         const sticky: number[] = [];
         const offsets: number[] = [];
@@ -200,6 +219,7 @@ export default function CalendarScreen() {
             }
 
             // Pre-compute calendar data here — never again inside renderItem
+            dateToIndex.set(day.date, items.length);
             items.push({ type: 'day', item: day, calendar: getCalendar(day.date) });
             offsets.push(runningOffset);
             dateToOffset.set(day.date, runningOffset);
@@ -212,16 +232,33 @@ export default function CalendarScreen() {
             runningOffset += YEAR_NAV_HEIGHT;
         }
 
-        return {
+        const built: BuiltCalendarList = {
             listData: items,
             dateToOffsetMap: dateToOffset,
+            dateToIndexMap: dateToIndex,
             monthOffsets: monthStartOffsets,
             stickyHeaderIndices: sticky,
             layoutOffsets: offsets,
         };
+        yearListCache.set(visibleYear, built);
+        return built;
     }, [visibleYear]);
 
+    // Render the list AT the selected date on first mount (initialScrollIndex) so the visible
+    // window is never blank on open. The post-mount scroll effect below then only handles later
+    // date changes — it skips the first run to avoid fighting initialScrollIndex (audit #1).
+    const initialScrollIndex = useMemo(
+        () => dateToIndexMap.get(selectedDate),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [], // mount-time only
+    );
+    const didInitialScrollRef = useRef(false);
+
     useEffect(() => {
+        if (!didInitialScrollRef.current) {
+            didInitialScrollRef.current = true;
+            return; // initialScrollIndex already positioned the list
+        }
         const offset = dateToOffsetMap.get(selectedDate);
         if (offset === undefined) return;
         const id = setTimeout(() => {
@@ -384,17 +421,26 @@ export default function CalendarScreen() {
                     </View>
                 }
                 rightElement={
-                    <TouchableOpacity
-                        onPress={handleJumpToToday}
-                        hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-                        activeOpacity={0.85}
-                        style={[
-                            styles.todayIconButton,
-                            { backgroundColor: `${colors.accent}12`, borderColor: `${colors.accent}35` },
-                        ]}
-                    >
-                        <Ionicons name="today-outline" size={18} color={colors.accent} />
-                    </TouchableOpacity>
+                    // Only show the "return to today" control when the user has navigated away from
+                    // today — a labelled pill (not a bare icon) makes its purpose unambiguous, and
+                    // its contextual appearance teaches the interaction without cluttering (audit #4).
+                    selectedDate !== todayIso ? (
+                        <Animated.View entering={FadeIn.duration(200)} exiting={FadeOut.duration(150)}>
+                            <TouchableOpacity
+                                onPress={handleJumpToToday}
+                                hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+                                activeOpacity={0.85}
+                                accessibilityRole="button"
+                                accessibilityLabel="Return to today's readings"
+                                style={[styles.todayPill, { backgroundColor: colors.accent }]}
+                            >
+                                <Ionicons name="arrow-undo" size={13} color="#FFFFFF" />
+                                <Text style={styles.todayPillText}>TODAY</Text>
+                            </TouchableOpacity>
+                        </Animated.View>
+                    ) : (
+                        <View style={styles.todayPillPlaceholder} />
+                    )
                 }
             />
 
@@ -404,12 +450,18 @@ export default function CalendarScreen() {
                     data={listData}
                     keyExtractor={keyExtractor}
                     renderItem={renderItem}
-                    initialNumToRender={20}
-                    maxToRenderPerBatch={10}
-                    updateCellsBatchingPeriod={50}
-                    windowSize={7}
-                    removeClippedSubviews
-                    stickyHeaderIndices={stickyHeaderIndices}
+                    initialScrollIndex={initialScrollIndex}
+                    initialNumToRender={14}
+                    maxToRenderPerBatch={12}
+                    updateCellsBatchingPeriod={40}
+                    // windowSize 11 (~5 screens each way) keeps more rows pre-rendered so fast
+                    // scrolling shows far fewer blank gaps before content fills in (audit #1).
+                    windowSize={11}
+                    // NOTE: removeClippedSubviews was removed — on the new architecture (Fabric) it
+                    // crashes with `ReactClippingViewManager … addViewAt: IndexOutOfBounds` when the
+                    // list data + stickyHeaderIndices populate together. FlatList windowing
+                    // (windowSize/maxToRenderPerBatch) already virtualizes without it (audit #8).
+                    // stickyHeaderIndices={stickyHeaderIndices}
                     getItemLayout={getItemLayout}
                     onScrollToIndexFailed={({ index, highestMeasuredFrameIndex }) => {
                         const safeIndex = Math.max(0, Math.min(index, highestMeasuredFrameIndex));
@@ -556,13 +608,23 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
     },
-    todayIconButton: {
-        width: 40,
-        height: 40,
-        borderRadius: 20,
-        borderWidth: 1,
+    todayPill: {
+        flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'center',
+        gap: 5,
+        height: 34,
+        paddingHorizontal: 12,
+        borderRadius: 999,
+    },
+    todayPillText: {
+        color: '#FFFFFF',
+        fontSize: 11,
+        fontWeight: '800',
+        letterSpacing: 1,
+    },
+    todayPillPlaceholder: {
+        width: 40,
+        height: 34,
     },
     selectionFooter: {
         position: 'absolute',

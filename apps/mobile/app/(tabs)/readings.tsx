@@ -32,7 +32,7 @@ import { selectPsalmBodyVerses } from '../../src/utils/psalm';
 const HORIZONTAL_PADDING = 24;
 const SECTION_SCROLL_OFFSET = 148;
 
-export default function ReadingsScreen() {
+export default function ReadingsScreen({ showBack = false }: { showBack?: boolean } = {}) {
     const { colors, allColors, textScale, lineHeightScale } = useTheme();
     const insets = useSafeAreaInsets();
 
@@ -65,6 +65,14 @@ export default function ReadingsScreen() {
     // loading (text metrics change), and writing that to state caused a re-render → layout shift →
     // active-pill oscillation loop (the "flicker", see audit #2). A ref updates silently.
     const sectionOffsetsRef = useRef<Record<string, number>>({});
+    // While a tab-press animates the scroll, ignore scroll-spy so intermediate sections don't
+    // briefly steal the active pill (e.g. psalm flashing selected on the way to gospel).
+    const programmaticScrollRef = useRef(false);
+    const programmaticScrollTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+    useEffect(() => () => {
+        if (programmaticScrollTimer.current) clearTimeout(programmaticScrollTimer.current);
+    }, []);
 
     const colorMap = {
         green: allColors.liturgical.ordinaryTime,
@@ -99,6 +107,12 @@ export default function ReadingsScreen() {
         setActiveTabId(id);
         const offset = sectionOffsetsRef.current[id];
         if (offset !== undefined) {
+            // Lock scroll-spy for the duration of the animated scroll.
+            programmaticScrollRef.current = true;
+            if (programmaticScrollTimer.current) clearTimeout(programmaticScrollTimer.current);
+            programmaticScrollTimer.current = setTimeout(() => {
+                programmaticScrollRef.current = false;
+            }, 500);
             scrollViewRef.current?.scrollTo({
                 y: Math.max(0, offset - SECTION_SCROLL_OFFSET),
                 animated: true,
@@ -107,6 +121,9 @@ export default function ReadingsScreen() {
     };
 
     const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+        // Ignore scroll events triggered by a tab-press animation — the target pill is already set.
+        if (programmaticScrollRef.current) return;
+
         const currentY = event.nativeEvent.contentOffset.y + SECTION_SCROLL_OFFSET;
 
         let nextActiveId = activeTabId;
@@ -168,6 +185,20 @@ export default function ReadingsScreen() {
         <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
             <View style={styles.headerShell}>
                 <View style={[styles.headerRow, { paddingHorizontal: HORIZONTAL_PADDING }]}>
+                    {showBack && (
+                        // Opened as a stack screen (from Favourites/Calendar) there is no tab bar,
+                        // so provide an explicit, accessible way back — otherwise users are stranded
+                        // with only the system gesture (audit #3).
+                        <TouchableOpacity
+                            accessibilityRole="button"
+                            accessibilityLabel="Go back"
+                            onPress={() => router.back()}
+                            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+                            style={[styles.backButton, { backgroundColor: colors.surfaceElevated }]}
+                        >
+                            <Ionicons name="chevron-back" size={20} color={colors.textPrimary} />
+                        </TouchableOpacity>
+                    )}
                     <View style={styles.titleBlock}>
                         <Text style={{ color: colors.textPrimary }} className="font-serif text-[22px] font-bold">
                             {presentation?.formattedDate ?? effectiveDate}
@@ -248,6 +279,7 @@ export default function ReadingsScreen() {
                     paddingBottom: 140 + insets.bottom,
                 }}
                 onScroll={handleScroll}
+                onMomentumScrollEnd={() => { programmaticScrollRef.current = false; }}
                 scrollEventThrottle={16}
                 showsVerticalScrollIndicator={false}
             >
@@ -499,5 +531,13 @@ const styles = StyleSheet.create({
     titleBlock: {
         flex: 1,
         paddingRight: 16,
+    },
+    backButton: {
+        width: 40,
+        height: 40,
+        borderRadius: 20,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginRight: 12,
     },
 });

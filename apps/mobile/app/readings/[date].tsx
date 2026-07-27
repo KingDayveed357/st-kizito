@@ -14,5 +14,5 @@ export default function ReadingByDateScreen() {
 		}
 	}, [date, setSelectedDate]);
 
-	return <ReadingsScreen />;
+	return <ReadingsScreen showBack />;
 }

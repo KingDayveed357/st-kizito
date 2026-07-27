@@ -1,4 +1,4 @@
-import { getCalendar } from './liturgicalData';
+import { getCalendar } from './calendarService';
 import { resolveCelebration } from './calendarEngine';
 import { normalizeOfficeKey } from './liturgicalCalendar';
 import divineOfficeData from '../../data/divineOffice.json';

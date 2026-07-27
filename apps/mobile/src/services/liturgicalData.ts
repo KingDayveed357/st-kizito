@@ -10,23 +10,16 @@ import type {
     PsalmVerse,
 } from '../types/readings.types';
 
-import { computeLiturgicalDay } from './liturgicalCalendar';
+// getCalendar and its calendar-data cache live in calendarService to break a require cycle
+// (this module imports buildStructuredOffice from divineOfficeEngine, which needs getCalendar).
+import { getCalendar } from './calendarService';
+export { getCalendar } from './calendarService';
+import { normalizeBlockType } from '../utils/readingBlocks';
 
-const MAX_CALENDAR_CACHE_SIZE = 2500;
-const calendarCache = new Map<string, any>();
-
-let calendarDataMemo: Record<string, any> | null = null;
 let readingsDataMemo: Record<string, any> | null = null;
 let inspirationDataMemo: Record<string, any> | null = null;
 let passageDataMemo: Record<string, any> | null = null;
 let usccbDataMemo: Record<string, { readings?: any, readingsList?: any[], masses?: any[] }> | null = null;
-
-const getCalendarData = (): Record<string, any> => {
-    if (!calendarDataMemo) {
-        calendarDataMemo = require('../../data/calendar/2026.json') as Record<string, any>;
-    }
-    return calendarDataMemo;
-};
 
 const getReadingsData = (): Record<string, any> => {
     if (!readingsDataMemo) {
@@ -56,46 +49,8 @@ const getUsccbData = (): Record<string, { readings?: any, readingsList?: any[], 
     return usccbDataMemo;
 };
 
-const setCalendarCache = (date: string, value: any) => {
-    if (calendarCache.has(date)) {
-        calendarCache.delete(date);
-    }
-    calendarCache.set(date, value);
-    if (calendarCache.size > MAX_CALENDAR_CACHE_SIZE) {
-        const oldestKey = calendarCache.keys().next().value;
-        if (oldestKey) {
-            calendarCache.delete(oldestKey);
-        }
-    }
-};
-
 export const getTodayIso = () => {
     return new Date().toISOString().slice(0, 10);
-};
-
-export const getCalendar = (date: string) => {
-    const cached = calendarCache.get(date);
-    if (cached) return cached;
-    const calendarData = getCalendarData();
-
-    // Primary source: pre-built per-year calendar files (highest fidelity —
-    // includes sanctoral names, precise celebration types, etc.)
-    if (calendarData[date]) {
-        setCalendarCache(date, calendarData[date]);
-        return calendarData[date];
-    }
-
-    // Fallback: authoritative liturgical calendar engine.
-    // computeLiturgicalDay() is the canonical algorithm, shared with the scraper,
-    // so divine office keys will always match the stored data.
-    // It is safe to use for any year from 2000–2040.
-    try {
-        const result = computeLiturgicalDay(date);
-        setCalendarCache(date, result);
-        return result;
-    } catch {
-        return null;
-    }
 };
 
 const sanitizeText = (text?: string | null) =>
@@ -324,7 +279,11 @@ const buildMissalDay = (date: string): MissalDay | null => {
                         text: cleanPsalmText || null
                     });
                 } else {
-                    arr.push(buildReadingBlock(uniqueId, item.type, item.label || LITURGICAL_LABELS.reading, item.reference, item.text));
+                    // Normalize mistyped blocks (e.g. the Lenten "Verse Before the Gospel" which the
+                    // dataset types as `gospel`) so acclamations never render as a Gospel reading or
+                    // receive the Gospel closing. See utils/readingBlocks + audit item #2.
+                    const normalizedType = normalizeBlockType(item.type, item.label);
+                    arr.push(buildReadingBlock(uniqueId, normalizedType, item.label || LITURGICAL_LABELS.reading, item.reference, item.text));
                 }
             });
             return arr;

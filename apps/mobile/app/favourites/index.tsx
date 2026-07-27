@@ -150,6 +150,15 @@ export default function FavouritesScreen() {
                             <TouchableOpacity
                                 activeOpacity={0.86}
                                 onPress={() => {
+                                    // Reading favourites carry their date in the id (`reading-YYYY-MM-DD`).
+                                    // Open that specific day's full reading via the dated route, rather
+                                    // than the current-day readings tab (which is what a bare `/readings`
+                                    // route did).
+                                    const dateMatch = item.id.match(/\d{4}-\d{2}-\d{2}/);
+                                    if (item.category === 'reading' && dateMatch) {
+                                        router.push(`/readings/${dateMatch[0]}`);
+                                        return;
+                                    }
                                     if (item.route) {
                                         router.push(item.route as never);
                                     }

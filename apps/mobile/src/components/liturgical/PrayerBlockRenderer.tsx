@@ -28,20 +28,11 @@ export const PrayerBlockRenderer: React.FC<PrayerBlockRendererProps> = ({ blocks
     const baseSize = 18 * textScale;
     const baseLine = 30 * textScale * lineHeightScale;
 
-    const DEBUG_FULL_RENDER = true;
-
-    const renderWrappedBlock = (idx: number, type: string, content: React.ReactNode) => {
-        if (!DEBUG_FULL_RENDER) return content;
-        
-        return (
-            <View key={`debug-${idx}`} style={[styles.debugWrapper, { borderColor: accentColor }]}>
-                <View style={[styles.debugLabel, { backgroundColor: accentColor }]}>
-                    <Text style={styles.debugLabelText}>{type}</Text>
-                </View>
-                {content}
-            </View>
-        );
-    };
+    // Each block is returned inside a keyed fragment. (A debug mode that wrapped every block in a
+    // dashed border + type label was previously left enabled in production — see audit #10.)
+    const renderWrappedBlock = (idx: number, _type: string, content: React.ReactNode) => (
+        <React.Fragment key={`block-${idx}`}>{content}</React.Fragment>
+    );
 
     return (
         <View style={styles.container}>
@@ -317,30 +308,5 @@ const styles = StyleSheet.create({
     },
     intercessionItem: {
         marginBottom: 16,
-    },
-    debugWrapper: {
-        borderWidth: 2,
-        borderStyle: 'dashed',
-        padding: 4,
-        marginVertical: 4,
-        marginHorizontal: 16,
-        borderRadius: 8,
-        position: 'relative',
-    },
-    debugLabel: {
-        position: 'absolute',
-        top: -10,
-        left: 10,
-        paddingHorizontal: 8,
-        paddingVertical: 2,
-        borderRadius: 4,
-        zIndex: 1,
-    },
-    debugLabelText: {
-        color: 'white',
-        fontSize: 10,
-        fontFamily: 'Inter-Bold',
-        letterSpacing: 1,
-        textTransform: 'uppercase',
     },
 });
