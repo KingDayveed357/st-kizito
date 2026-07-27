@@ -6,6 +6,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ParishContact, useParishContacts } from '../../src/hooks/useParishContacts';
+import { useTabBarClearance } from '../../src/hooks/useTabBarClearance';
 
 // ─── Data ────────────────────────────────────────────────────────────────────
 
@@ -132,6 +133,7 @@ const QuickActionCard = ({
 
 export default function MoreScreen() {
     const { colors, allColors, mode } = useTheme();
+    const tabBarClearance = useTabBarClearance();
     const router = useRouter();
     const { data: contacts, isLoading: contactsLoading } = useParishContacts();
 
@@ -143,7 +145,7 @@ export default function MoreScreen() {
             <Header title="More" />
 
             <ScrollView
-                contentContainerStyle={{ paddingHorizontal: 20, paddingTop: 8, paddingBottom: 60 }}
+                contentContainerStyle={{ paddingHorizontal: 20, paddingTop: 8, paddingBottom: tabBarClearance + 16 }}
                 showsVerticalScrollIndicator={false}
             >
                 {/* ── Parish identity card ── */}
@@ -178,7 +180,7 @@ export default function MoreScreen() {
                             Port harcourt • Catholic Diocese
                         </Text>
                     </View>
-                    <Ionicons name="chevron-forward" size={18} color={colors.textMuted} />
+                   
                 </TouchableOpacity>
 
                 {/* ── Section: Essentials ── */}

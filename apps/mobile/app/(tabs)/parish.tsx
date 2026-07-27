@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { View, ScrollView, Text, TouchableOpacity, RefreshControl } from 'react-native';
 import { useTheme } from '../../src/hooks/useTheme';
+import { useTabBarClearance } from '../../src/hooks/useTabBarClearance';
 import { Header } from '../../src/components/ui/Header';
 import { useRouter } from 'expo-router';
 import { AnnouncementCard } from '../../src/components/parish/AnnouncementCard';
@@ -22,6 +23,7 @@ const PARISH_TABS = ['Announcements', 'Events', 'Mass Times', 'Gallery'] as cons
 
 export default function ParishScreen() {
     const { colors, allColors } = useTheme();
+    const tabBarClearance = useTabBarClearance();
     const router = useRouter();
     const [activeTab, setActiveTab] = useState<(typeof PARISH_TABS)[number]>('Announcements');
     const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null);
@@ -186,10 +188,10 @@ export default function ParishScreen() {
             <ScrollView
                 className="flex-1 px-screen pt-4"
                 showsVerticalScrollIndicator={false}
+                contentContainerStyle={{ paddingBottom: tabBarClearance }}
                 refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={onRefresh} />}
             >
                 {renderContent()}
-                <View className="h-20" />
             </ScrollView>
 
             <OfflineBanner />

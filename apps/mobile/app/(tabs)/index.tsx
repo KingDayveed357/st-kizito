@@ -15,9 +15,11 @@ import { useAppStore } from '../../src/store/useAppStore';
 import { getCalendar, getDatePresentation, getReadings, getTodayIso } from '../../src/services/liturgicalData';
 import { useAnnouncements } from '../../src/hooks/useAnnouncements';
 import { useEvents } from '../../src/hooks/useEvents';
+import { useTabBarClearance } from '../../src/hooks/useTabBarClearance';
 
 export default function HomeScreen() {
     const { colors, allColors } = useTheme();
+    const tabBarClearance = useTabBarClearance();
     const router = useRouter();
     const { selectedDate, setSource } = useAppStore();
 
@@ -64,7 +66,7 @@ export default function HomeScreen() {
                 }
             />
 
-            <ScrollView className="flex-1 px-screen pt-4" showsVerticalScrollIndicator={false}>
+            <ScrollView className="flex-1 px-screen pt-4" showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: tabBarClearance }}>
                 <Card accentColor={allColors.liturgical.ordinaryTime} className="mb-8" elevated>
                     <View className="flex-row justify-between items-start mb-4">
                         <Text style={{ color: allColors.liturgical.ordinaryTime }} className="font-sans font-bold text-[10px] tracking-widest uppercase">
@@ -245,7 +247,6 @@ export default function HomeScreen() {
                     )}
                 </View>
 
-                <View className="h-20" />
             </ScrollView>
         </SafeAreaView>
     );

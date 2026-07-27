@@ -28,6 +28,7 @@ import { useCelebration } from '../../src/hooks/useCelebration';
 import { CelebrationSelector } from '../../src/components/liturgical/CelebrationSelector';
 import { getLiturgicalClosing } from '../../src/utils/liturgicalClosings';
 import { selectPsalmBodyVerses } from '../../src/utils/psalm';
+import { useReadingChrome } from '../../src/hooks/useReadingChrome';
 
 const HORIZONTAL_PADDING = 24;
 const SECTION_SCROLL_OFFSET = 148;
@@ -46,6 +47,7 @@ export default function ReadingsScreen({ showBack = false }: { showBack?: boolea
     const scrollViewRef = useRef<ScrollView>(null);
     const { toggleFavourite, isFavourite } = useFavourites();
     const { selectedDate, setSource } = useAppStore();
+    const readingChrome = useReadingChrome();
 
     const effectiveDate = getCalendar(selectedDate) ? selectedDate : getTodayIso();
     const presentation = getDatePresentation(effectiveDate);
@@ -123,6 +125,10 @@ export default function ReadingsScreen({ showBack = false }: { showBack?: boolea
     const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
         // Ignore scroll events triggered by a tab-press animation — the target pill is already set.
         if (programmaticScrollRef.current) return;
+
+        // Drive the immersive tab bar (hide on scroll down, reveal on scroll up). This only writes
+        // to a shared value — no re-render — so the scroll-spy below is unaffected.
+        readingChrome.onScroll(event.nativeEvent.contentOffset.y);
 
         const currentY = event.nativeEvent.contentOffset.y + SECTION_SCROLL_OFFSET;
 

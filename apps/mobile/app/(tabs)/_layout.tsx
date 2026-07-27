@@ -3,6 +3,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../../src/hooks/useTheme';
 import { Ionicons } from '@expo/vector-icons';
 import { typography, spacing } from '../../src/theme';
+import { ImmersiveTabBar } from '../../src/components/reading/ImmersiveTabBar';
 
 export default function TabLayout() {
     const { colors } = useTheme();
@@ -10,6 +11,7 @@ export default function TabLayout() {
 
     return (
         <Tabs
+            tabBar={(props) => <ImmersiveTabBar {...props} />}
             screenOptions={{
                 headerShown: false,
                 tabBarStyle: {

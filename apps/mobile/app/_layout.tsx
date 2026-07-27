@@ -9,6 +9,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useTheme } from '../src/hooks/useTheme';
 import { useDailyRefresh } from '../src/hooks/useDailyRefresh';
+import { ReadingModeProvider } from '../src/components/reading/ReadingModeProvider';
 import '../global.css';
 
 SplashScreen.preventAutoHideAsync().catch(() => {
@@ -78,13 +79,15 @@ export default function RootLayout() {
     return (
         <GestureHandlerRootView onLayout={onLayoutRootView} style={{ flex: 1, backgroundColor: colors.background }}>
             <QueryClientProvider client={queryClient}>
-                <StatusBar style={isDark ? 'light' : 'dark'} translucent={false} backgroundColor={colors.background} />
-                <Stack
-                    screenOptions={{
-                        headerShown: false,
-                        contentStyle: { backgroundColor: colors.background },
-                    }}
-                />
+                <ReadingModeProvider>
+                    <StatusBar style={isDark ? 'light' : 'dark'} translucent={false} backgroundColor={colors.background} />
+                    <Stack
+                        screenOptions={{
+                            headerShown: false,
+                            contentStyle: { backgroundColor: colors.background },
+                        }}
+                    />
+                </ReadingModeProvider>
             </QueryClientProvider>
         </GestureHandlerRootView>
     );

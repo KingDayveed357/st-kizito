@@ -1,14 +1,19 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import {
     View,
     ScrollView,
     Text,
     TouchableOpacity,
     StyleSheet,
-    StatusBar,
+    NativeSyntheticEvent,
+    NativeScrollEvent,
 } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
+import Animated, { useAnimatedStyle, interpolate, Extrapolation } from 'react-native-reanimated';
+import { useReadingMode } from '../../src/components/reading/ReadingModeProvider';
+import { useReadingChrome } from '../../src/hooks/useReadingChrome';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../../src/hooks/useTheme';
 import { useAppStore } from '../../src/store/useAppStore';
@@ -95,30 +100,51 @@ const PrayerHeader: React.FC<PrayerHeaderProps> = ({
 }) => {
     const { colors } = useTheme();
     const bgTint = isDark ? SEASON_DARK_TINT[season] ?? SEASON_DARK_TINT.default : SEASON_TINT[season] ?? SEASON_TINT.default;
+    const insets = useSafeAreaInsets();
 
     return (
-        <View style={[styles.header, { backgroundColor: bgTint, borderBottomColor: accentColor + '30' }]}>
+        <View
+            style={[
+                styles.header,
+                {
+                    backgroundColor: bgTint,
+                    borderBottomColor: accentColor + '25',
+                    paddingTop: Math.max(insets.top, 16) + 12,
+                    shadowColor: '#000000',
+                    shadowOffset: { width: 0, height: 4 },
+                    shadowOpacity: isDark ? 0.25 : 0.05,
+                    shadowRadius: 10,
+                    elevation: 4,
+                },
+            ]}
+        >
             <View style={styles.headerTopRow}>
-                <TouchableOpacity
-                    onPress={onBack}
-                    style={[styles.backButton, { backgroundColor: accentColor + '18' }]}
-                    hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
-                >
-                    <Ionicons name="chevron-back" size={20} color={accentColor} />
-                </TouchableOpacity>
+                <View style={{ zIndex: 2 }}>
+                    <TouchableOpacity
+                        onPress={onBack}
+                        style={[styles.backButton, { backgroundColor: accentColor + '15', borderColor: accentColor + '30', borderWidth: 1 }]}
+                        hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+                    >
+                        <Ionicons name="chevron-back" size={20} color={accentColor} />
+                    </TouchableOpacity>
+                </View>
 
-                <View style={styles.headerCenter}>
+                {/* <View style={[StyleSheet.absoluteFill, { alignItems: 'center', justifyContent: 'center' }]} pointerEvents="none">
                     <Text style={[styles.headerSubtitle, { color: accentColor, fontFamily: 'Inter-Bold' }]}>
                         {subtitle.toUpperCase()}
                     </Text>
-                </View>
+                </View> */}
 
-                <TextSizeControl />
+                <View style={{ zIndex: 2, marginLeft: 'auto' }}>
+                    <TextSizeControl />
+                </View>
             </View>
 
-            {/* Icon */}
-            <View style={[styles.officeIconWrap, { backgroundColor: accentColor + '18' }]}>
-                <Ionicons name={icon as any} size={28} color={accentColor} />
+            {/* Icon Medallion */}
+            <View style={[styles.iconOuterRing, { backgroundColor: accentColor + '10', borderColor: accentColor + '25' }]}>
+                <View style={[styles.iconInnerRing, { backgroundColor: accentColor + '18', borderColor: accentColor + '40' }]}>
+                    <Ionicons name={icon as any} size={28} color={accentColor} />
+                </View>
             </View>
 
             {/* Prayer title */}
@@ -127,12 +153,14 @@ const PrayerHeader: React.FC<PrayerHeaderProps> = ({
             </Text>
 
             {/* Celebration name */}
-            <View style={[styles.celebrationPill, { backgroundColor: accentColor + '20', borderColor: accentColor + '40' }]}>
-                <View style={[styles.celebrationDot, { backgroundColor: accentColor }]} />
-                <Text style={[styles.celebrationText, { color: accentColor, fontFamily: 'Inter-Bold' }]}>
-                    {celebration}
-                </Text>
-            </View>
+            {celebration ? (
+                <View style={[styles.celebrationPill, { backgroundColor: accentColor + '15', borderColor: accentColor + '35' }]}>
+                    <View style={[styles.celebrationDot, { backgroundColor: accentColor }]} />
+                    <Text style={[styles.celebrationText, { color: accentColor, fontFamily: 'Inter-Bold' }]}>
+                        {celebration}
+                    </Text>
+                </View>
+            ) : null}
         </View>
     );
 };
@@ -175,6 +203,20 @@ export default function PrayerDetailScreen() {
 
     const officeMeta = OFFICE_META[prayerKey ?? ''] ?? { icon: 'book-outline', subtitle: 'Prayer' };
 
+    // Immersive reading: the header glides away on scroll-down and returns on scroll-up, reusing
+    // the same shared chrome value as the tab bar so the interaction is identical app-wide.
+    const { chrome } = useReadingMode();
+    const { onScroll: onReadingScroll } = useReadingChrome();
+    const [headerHeight, setHeaderHeight] = useState(196);
+    const headerAnimatedStyle = useAnimatedStyle(() => ({
+        transform: [{ translateY: interpolate(chrome.value, [0, 1], [-headerHeight, 0], Extrapolation.CLAMP) }],
+        opacity: chrome.value,
+    }));
+    const handleScroll = useCallback(
+        (e: NativeSyntheticEvent<NativeScrollEvent>) => onReadingScroll(e.nativeEvent.contentOffset.y),
+        [onReadingScroll],
+    );
+
     const handleBack = useCallback(() => router.back(), [router]);
 
     const hasParts = !!detail?.parts;
@@ -186,29 +228,21 @@ export default function PrayerDetailScreen() {
     }, [detail]);
 
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: bgColor }}>
+        <SafeAreaView edges={['left', 'right', 'bottom']} style={{ flex: 1, backgroundColor: bgColor }}>
             <StatusBar
-                barStyle={isDark ? 'light-content' : 'dark-content'}
-                backgroundColor={isDark ? SEASON_DARK_TINT[season] : SEASON_TINT[season]}
+                style={isDark ? 'light' : 'dark'}
+                translucent={true}
+                backgroundColor="transparent"
             />
 
-            {/* Header */}
-            <PrayerHeader
-                title={detail?.title ?? 'Prayer'}
-                subtitle={officeMeta.subtitle}
-                celebration={detail?.celebration ?? calendar?.celebration ?? ''}
-                icon={officeMeta.icon}
-                season={season}
-                accentColor={accentColor}
-                isDark={isDark ?? false}
-                onBack={handleBack}
-            />
-
-            {/* Prayer body */}
+            {/* Prayer body — content flows under the header, which is an absolute overlay so it
+                can glide away for a distraction-free read. */}
             <ScrollView
                 style={{ flex: 1, backgroundColor: bgColor }}
-                contentContainerStyle={{ paddingTop: 28, paddingBottom: 64 }}
+                contentContainerStyle={{ paddingTop: headerHeight + 16, paddingBottom: 64 }}
                 showsVerticalScrollIndicator={false}
+                onScroll={handleScroll}
+                scrollEventThrottle={16}
             >
                 {hasParts ? (
                     <PrayerBlockRenderer blocks={prayerBlocks} accentColor={accentColor} />
@@ -216,6 +250,23 @@ export default function PrayerDetailScreen() {
                     <EmptyState accentColor={accentColor} colors={colors} />
                 )}
             </ScrollView>
+
+            {/* Header (absolute overlay, glides up on scroll-down / returns on scroll-up) */}
+            <Animated.View
+                onLayout={(e) => setHeaderHeight(e.nativeEvent.layout.height)}
+                style={[styles.headerOverlay, headerAnimatedStyle]}
+            >
+                <PrayerHeader
+                    title={detail?.title ?? 'Prayer'}
+                    subtitle={officeMeta.subtitle}
+                    celebration={detail?.celebration ?? calendar?.celebration ?? ''}
+                    icon={officeMeta.icon}
+                    season={season}
+                    accentColor={accentColor}
+                    isDark={isDark ?? false}
+                    onBack={handleBack}
+                />
+            </Animated.View>
         </SafeAreaView>
     );
 }
@@ -223,10 +274,16 @@ export default function PrayerDetailScreen() {
 // ─── Styles ───────────────────────────────────────────────────────────────
 
 const styles = StyleSheet.create({
+    headerOverlay: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        zIndex: 10,
+    },
     header: {
-        paddingTop: 8,
         paddingBottom: 24,
-        paddingHorizontal: 24,
+        paddingHorizontal: 20,
         borderBottomWidth: StyleSheet.hairlineWidth,
         alignItems: 'center',
     },
@@ -237,42 +294,49 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
     backButton: {
-        width: 36,
-        height: 36,
-        borderRadius: 18,
+        width: 42,
+        height: 42,
+        borderRadius: 21,
         alignItems: 'center',
         justifyContent: 'center',
-    },
-    headerCenter: {
-        flex: 1,
-        alignItems: 'center',
     },
     headerSubtitle: {
         fontSize: 10,
         letterSpacing: 2.5,
         textTransform: 'uppercase',
     },
-    officeIconWrap: {
-        width: 60,
-        height: 60,
-        borderRadius: 30,
+    iconOuterRing: {
+        width: 72,
+        height: 72,
+        borderRadius: 36,
+        borderWidth: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        marginBottom: 14,
+        marginBottom: 16,
+    },
+    iconInnerRing: {
+        width: 56,
+        height: 56,
+        borderRadius: 28,
+        borderWidth: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
     },
     headerTitle: {
-        fontSize: 24,
+        fontSize: 26,
         textAlign: 'center',
-        marginBottom: 12,
-        lineHeight: 32,
+        marginBottom: 14,
+        lineHeight: 34,
+        letterSpacing: -0.4,
+        paddingHorizontal: 12,
     },
     celebrationPill: {
         flexDirection: 'row',
         alignItems: 'center',
-        paddingHorizontal: 14,
-        paddingVertical: 6,
+        paddingHorizontal: 16,
+        paddingVertical: 7,
         borderRadius: 20,
-        borderWidth: StyleSheet.hairlineWidth,
+        borderWidth: 1,
     },
     celebrationDot: {
         width: 6,
@@ -282,7 +346,7 @@ const styles = StyleSheet.create({
     },
     celebrationText: {
         fontSize: 11,
-        letterSpacing: 0.6,
+        letterSpacing: 0.8,
         textTransform: 'uppercase',
     },
     emptyState: {

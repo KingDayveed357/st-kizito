@@ -11,9 +11,11 @@ import { Button } from '../../src/components/ui/Button';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAppStore } from '../../src/store/useAppStore';
 import { getCalendar, getDailyInspiration, getDatePresentation, getDivineOfficePrayer, getTodayIso } from '../../src/services/liturgicalData';
+import { useTabBarClearance } from '../../src/hooks/useTabBarClearance';
 
 export default function DivineOfficeScreen() {
     const { colors, allColors } = useTheme();
+    const tabBarClearance = useTabBarClearance();
     const router = useRouter();
     const { selectedDate, setSource, setLiturgicalContext } = useAppStore();
     const effectiveDate = getCalendar(selectedDate) ? selectedDate : getTodayIso();
@@ -43,7 +45,7 @@ export default function DivineOfficeScreen() {
                 }
             />
 
-            <ScrollView className="flex-1 px-screen pt-2" showsVerticalScrollIndicator={false}>
+            <ScrollView className="flex-1 px-screen pt-2" showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: tabBarClearance }}>
                 <Text style={{ color: colors.textSecondary }} className="font-sans font-bold text-[10px] tracking-widest uppercase mb-1 ">
                     LITURGY OF THE HOURS
                 </Text>
@@ -126,7 +128,6 @@ export default function DivineOfficeScreen() {
                     </View>
                 </View>
 
-                <View className="h-10" />
             </ScrollView>
         </SafeAreaView>
     );
