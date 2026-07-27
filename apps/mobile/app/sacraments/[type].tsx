@@ -223,15 +223,38 @@ export default function SacramentRequestScreen() {
                         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
                             <View style={{ paddingHorizontal: 10, paddingVertical: 5, borderRadius: 10, backgroundColor: `${accent}18` }}>
                                 <Text style={{ color: accent, fontSize: 11, fontWeight: '800' }}>
-                                    {config.is_free ? 'FREE' : `FEE: ₦${config.amount.toLocaleString()}`}
+                                    {config.is_free ? 'FREE' : `FEE: ${config.currency}${config.amount.toLocaleString()}`}
                                 </Text>
                             </View>
-                            {!config.is_free && (
-                                <Text style={{ color: colors.textMuted, fontSize: 11, flex: 1 }}>
-                                    The parish office will advise on payment after review.
-                                </Text>
-                            )}
                         </View>
+
+                        {/* Admin-configured payment details (shown when the request has a fee) */}
+                        {!config.is_free && (
+                            <View style={{ marginTop: 14, borderRadius: 14, borderWidth: 1, borderColor: `${accent}33`, backgroundColor: `${accent}0D`, padding: 14 }}>
+                                <Text style={{ color: accent, fontSize: 10, fontWeight: '800', letterSpacing: 1.4, textTransform: 'uppercase', marginBottom: 8 }}>
+                                    Payment Details
+                                </Text>
+                                {config.payment_instructions ? (
+                                    <Text style={{ color: colors.textSecondary, fontSize: 13, lineHeight: 19, marginBottom: 10 }}>{config.payment_instructions}</Text>
+                                ) : null}
+                                {[
+                                    ['Bank', config.bank_name],
+                                    ['Account Name', config.account_name],
+                                    ['Account Number', config.account_number],
+                                ].filter(([, v]) => !!v).map(([label, v]) => (
+                                    <View key={label as string} style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 6 }}>
+                                        <Text style={{ color: colors.textMuted, fontSize: 12 }}>{label}</Text>
+                                        <Text style={{ color: colors.textPrimary, fontSize: 13, fontWeight: '700', flexShrink: 1, textAlign: 'right', marginLeft: 12 }}>{v}</Text>
+                                    </View>
+                                ))}
+                                {config.payment_notes ? (
+                                    <Text style={{ color: colors.textMuted, fontSize: 12, lineHeight: 17, marginTop: 6, fontStyle: 'italic' }}>{config.payment_notes}</Text>
+                                ) : null}
+                                {!config.bank_name && !config.account_number && !config.payment_instructions ? (
+                                    <Text style={{ color: colors.textMuted, fontSize: 12 }}>The parish office will advise on payment after review.</Text>
+                                ) : null}
+                            </View>
+                        )}
                     </View>
 
                     <Label text="Full Name" colors={colors} />

@@ -10,17 +10,6 @@ export interface SacramentField {
     options?: string[]; // for 'select'
 }
 
-export interface SacramentPaymentConfig {
-    is_paid: boolean;
-    amount: number;
-    currency: string;          // e.g. '₦'
-    instructions: string | null;
-    account_name: string | null;
-    account_number: string | null;
-    bank_name: string | null;
-    notes: string | null;
-}
-
 export interface SacramentType {
     type: string;                 // e.g. 'baptismal_card'
     title: string;
@@ -28,6 +17,13 @@ export interface SacramentType {
     icon: string | null;
     is_free: boolean;
     amount: number;
+    // Payment configuration (used when is_free === false)
+    currency: string;             // e.g. '₦'
+    payment_instructions: string | null;
+    account_name: string | null;
+    account_number: string | null;
+    bank_name: string | null;
+    payment_notes: string | null;
     required_fields: SacramentField[];
     allow_attachment: boolean;
     active: boolean;
@@ -61,6 +57,12 @@ export const DEFAULT_SACRAMENT_TYPES: SacramentType[] = [
         icon: 'water-outline',
         is_free: true,
         amount: 0,
+        currency: '₦',
+        payment_instructions: null,
+        account_name: null,
+        account_number: null,
+        bank_name: null,
+        payment_notes: null,
         allow_attachment: true,
         active: true,
         sort_order: 10,

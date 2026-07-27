@@ -12,15 +12,29 @@ create table if not exists public.sacrament_request_types (
   description     text,
   icon            text,                            -- Ionicons name for the mobile UI
   is_free         boolean not null default true,
-  amount          numeric not null default 0,      -- fee when not free (parish currency)
-  -- required_fields: [{ "key": "...", "label": "...", "type": "text|longtext|date|phone",
-  --                     "required": true }]
+  amount          numeric not null default 0,      -- fee when not free
+  currency        text not null default '₦',
+  payment_instructions text,
+  account_name    text,
+  account_number  text,
+  bank_name       text,
+  payment_notes   text,
+  -- required_fields: [{ "key","label","type": text|longtext|date|phone|email|select,
+  --                     "required": bool, "helperText"?, "placeholder"?, "options"?: [] }]
   required_fields jsonb not null default '[]'::jsonb,
   allow_attachment boolean not null default true,
   active          boolean not null default true,
   sort_order      integer not null default 100,
   updated_at      timestamptz not null default now()
 );
+
+-- Payment-config columns (idempotent add for databases created before these were introduced).
+alter table public.sacrament_request_types add column if not exists currency text not null default '₦';
+alter table public.sacrament_request_types add column if not exists payment_instructions text;
+alter table public.sacrament_request_types add column if not exists account_name text;
+alter table public.sacrament_request_types add column if not exists account_number text;
+alter table public.sacrament_request_types add column if not exists bank_name text;
+alter table public.sacrament_request_types add column if not exists payment_notes text;
 
 -- ── Submissions ─────────────────────────────────────────────────────────────
 create table if not exists public.sacrament_requests (
