@@ -1,7 +1,7 @@
 "use client"
 
 import { Activity, CalendarClock, CheckCircle2, HandCoins, Hourglass, Megaphone } from "lucide-react"
-import { AdminLayout } from "@/components/layout/admin-layout"
+import { AdminPage } from "@/components/layout/admin-page"
 import { SummaryCard, SummaryCardSkeleton } from "@/components/dashboard/summary-card"
 import { RecentActivity } from "@/components/dashboard/recent-activity"
 import { Button } from "@/components/ui/button-custom"
@@ -75,22 +75,36 @@ export default function DashboardPage() {
   ]
 
   return (
-    <AdminLayout title="Dashboard" subtitle="Operational overview and live parish activity" navbarActions={navbarActions}>
+    <AdminPage title="Dashboard" subtitle="Operational overview and live parish activity" navbarActions={navbarActions}>
       <section className="space-y-6">
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
-          {metrics.isLoading
-            ? Array.from({ length: 6 }).map((_, idx) => <SummaryCardSkeleton key={idx} />)
-            : metricCards.map((card) => (
-                <SummaryCard
-                  key={card.title}
-                  title={card.title}
-                  value={card.value}
-                  description={card.description}
-                  icon={card.icon}
-                  deltaLabel={card.deltaLabel}
-                />
-              ))}
-        </div>
+        {metrics.error && !metrics.isLoading ? (
+          <Card className="border-error/30 bg-error/5">
+            <CardContent className="flex flex-col items-center gap-3 py-10 text-center">
+              <p className="text-sm font-medium text-error">{metrics.error}</p>
+              <p className="text-xs text-muted-foreground">
+                The parish database didn&apos;t respond. Check your connection and try again.
+              </p>
+              <Button variant="outline" size="sm" onClick={() => metrics.refresh()}>
+                Retry
+              </Button>
+            </CardContent>
+          </Card>
+        ) : (
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+            {metrics.isLoading
+              ? Array.from({ length: 6 }).map((_, idx) => <SummaryCardSkeleton key={idx} />)
+              : metricCards.map((card) => (
+                  <SummaryCard
+                    key={card.title}
+                    title={card.title}
+                    value={card.value}
+                    description={card.description}
+                    icon={card.icon}
+                    deltaLabel={card.deltaLabel}
+                  />
+                ))}
+          </div>
+        )}
 
         <div className="grid grid-cols-1 gap-6 xl:grid-cols-[2fr,1fr]">
           <RecentActivity
@@ -129,6 +143,6 @@ export default function DashboardPage() {
           </Card>
         </div>
       </section>
-    </AdminLayout>
+    </AdminPage>
   )
 }

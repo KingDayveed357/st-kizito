@@ -8,7 +8,6 @@ import { Card } from '../../src/components/ui/Card';
 import { LiturgicalBadge } from '../../src/components/liturgical/LiturgicalBadge';
 import { Button } from '../../src/components/ui/Button';
 import { Chip } from '../../src/components/ui/Chip';
-import { ScriptureQuote } from '../../src/components/liturgical/ScriptureQuote';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useAppStore } from '../../src/store/useAppStore';
@@ -16,6 +15,68 @@ import { getCalendar, getDatePresentation, getReadings, getTodayIso } from '../.
 import { useAnnouncements } from '../../src/hooks/useAnnouncements';
 import { useEvents } from '../../src/hooks/useEvents';
 import { useTabBarClearance } from '../../src/hooks/useTabBarClearance';
+import { useFavourites } from '../../src/hooks/useFavourites';
+import { getInspirationForDate } from '../../src/utils/dailyInspiration';
+import { VerseOfTheDayCard } from '../../src/components/liturgical/VerseOfTheDayCard';
+import { AnnouncementCard } from '../../src/components/parish/AnnouncementCard';
+import { EventCard } from '../../src/components/parish/EventCard';
+import { SkeletonLoader } from '../../src/components/ui/SkeletonLoader';
+
+/**
+ * Placeholder for a Pulse card while it loads.
+ *
+ * Matches the real card's footprint so the section does not jump in height when data arrives —
+ * the previous version showed a line of "Loading announcements..." text and then reflowed.
+ */
+const PulseSkeleton = ({ colors }: { colors: ReturnType<typeof useTheme>['colors'] }) => (
+    <View
+        accessibilityLabel="Loading"
+        style={{
+            borderRadius: 20,
+            backgroundColor: colors.surface,
+            borderWidth: 1,
+            borderColor: colors.border,
+            padding: 16,
+            marginBottom: 12,
+        }}
+    >
+        <SkeletonLoader width="42%" height={12} />
+        <View style={{ height: 12 }} />
+        <SkeletonLoader width="85%" height={17} />
+        <View style={{ height: 10 }} />
+        <SkeletonLoader width="60%" height={13} />
+    </View>
+);
+
+/** Quiet empty state, sized like a card so the section keeps its rhythm. */
+const PulseEmpty = ({
+    colors,
+    icon,
+    message,
+}: {
+    colors: ReturnType<typeof useTheme>['colors'];
+    icon: React.ComponentProps<typeof Ionicons>['name'];
+    message: string;
+}) => (
+    <View
+        style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            gap: 10,
+            borderRadius: 20,
+            backgroundColor: colors.surface,
+            borderWidth: 1,
+            borderStyle: 'dashed',
+            borderColor: colors.border,
+            paddingVertical: 20,
+            paddingHorizontal: 16,
+            marginBottom: 12,
+        }}
+    >
+        <Ionicons name={icon} size={18} color={colors.textMuted} />
+        <Text style={{ color: colors.textMuted, fontSize: 13, flex: 1 }}>{message}</Text>
+    </View>
+);
 
 export default function HomeScreen() {
     const { colors, allColors } = useTheme();
@@ -35,7 +96,10 @@ export default function HomeScreen() {
     const firstReadingBlock = readings?.readings.find(
         (r) => r.type === 'first_reading' || r.type === 'reading' || r.type === 'vigil_reading'
     );
-    const gospelBlock = readings?.readings.find((r) => r.type === 'gospel');
+
+    const dailyInspiration = getInspirationForDate(effectiveDate);
+    const { toggleFavourite, isFavourite } = useFavourites('inspiration');
+    const isInspirationSaved = !!dailyInspiration && isFavourite(dailyInspiration.id);
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
@@ -84,8 +148,19 @@ export default function HomeScreen() {
                         />
                     </View>
 
-                    <Text style={{ color: colors.textPrimary }} className="font-serif italic font-bold text-[22px] leading-[28px] mb-4">
-                        "{firstReadingBlock?.text?.slice(0, 92) ?? 'Daily reading unavailable.'}"
+                    {/*
+                      * Truncate by LINES, not characters. `slice(0, 92)` cut mid-word with no
+                      * ellipsis, so the card looked broken/incomplete rather than deliberately
+                      * shortened. `numberOfLines` ends on a natural boundary and appends "…", and
+                      * the "Read Now" button below is the explicit way to see the whole reading.
+                      */}
+                    <Text
+                        numberOfLines={4}
+                        ellipsizeMode="tail"
+                        style={{ color: colors.textPrimary }}
+                        className="font-serif italic font-bold text-[22px] leading-[28px] mb-4"
+                    >
+                        "{firstReadingBlock?.text ?? 'Daily reading unavailable.'}"
                     </Text>
 
                     <Text style={{ color: colors.textSecondary }} className="font-sans text-[14px] leading-[20px] mb-6">
@@ -108,144 +183,121 @@ export default function HomeScreen() {
                 <Text style={{ color: colors.textPrimary }} className="font-sans font-bold text-[10px] tracking-widest uppercase mb-4">
                     LITURGICAL ACTIONS
                 </Text>
+                {/*
+                  Horizontally scrolling, so adding a fifth action does not crowd the screen — the
+                  row already extends past the right edge.
+                */}
                 <ScrollView horizontal showsHorizontalScrollIndicator={false} className="mb-8 flex-row pr-screen">
                     <Chip
                         label="Divine Office"
+                        icon="book-outline"
+                        accessibilityLabel="Divine Office. Open the Liturgy of the Hours."
                         onPress={() => {
                             setSource('divineOffice');
                             router.push('/divine-office');
                         }}
                     />
-                    <Chip label="Mass Time" onPress={() => router.push('/parish')} />
-                    <Chip label="Book Mass" onPress={() => {
-                        router.push('/booking');
-                    }} />
-                     <Chip label="Support the Parish" onPress={() => {
-                        router.push('/donation');
-                    }} />
+                    <Chip
+                        label="Mass Time"
+                        icon="time-outline"
+                        accessibilityLabel="Mass times. Open the parish Mass schedule."
+                        onPress={() => router.push('/parish')}
+                    />
+                    <Chip
+                        label="Book Mass"
+                        icon="calendar-outline"
+                        accessibilityLabel="Book a Mass intention."
+                        onPress={() => router.push('/booking')}
+                    />
+                    {/*
+                      Sacramental Requests was previously reachable only by knowing the route — it
+                      had no entry point from the home screen at all.
+                    */}
+                    <Chip
+                        label="Sacramental Requests"
+                        icon="document-text-outline"
+                        accessibilityLabel="Sacramental requests. Request a baptismal card or other parish record."
+                        onPress={() => router.push('/sacraments')}
+                    />
+                    <Chip
+                        label="Support the Parish"
+                        icon="heart-outline"
+                        accessibilityLabel="Support the parish with a donation."
+                        onPress={() => router.push('/donation')}
+                    />
                 </ScrollView>
 
-                <ScriptureQuote
-                    text={gospelBlock?.text?.slice(0, 120) ?? 'Daily Gospel unavailable.'}
-                    reference={gospelBlock?.reference?.toUpperCase() ?? 'GOSPEL'}
-                />
+                {/*
+                  Verse of the Day.
 
-                <Text style={{ color: colors.textPrimary }} className="font-sans font-bold text-[10px] tracking-widest uppercase mt-4 mb-4">
-                    PARISH PULSE
-                </Text>
+                  Keeps the quote-card treatment the parish preferred — big italic serif, the
+                  oversized quotation mark, the pink heart — but the heart now actually saves. The
+                  content is the day's verse from the 366-entry bank, resolved offline, rather than
+                  an excerpt of the Gospel (which duplicated the reading card directly above it).
+                */}
+                {dailyInspiration ? (
+                    <VerseOfTheDayCard
+                        text={dailyInspiration.text}
+                        reference={dailyInspiration.reference}
+                        saved={isInspirationSaved}
+                        onToggleSave={() =>
+                            // Keyed on `inspiration-<date>`, so toggling twice cannot leave two
+                            // copies in Favourites.
+                            toggleFavourite({
+                                id: dailyInspiration.id,
+                                category: 'inspiration',
+                                title: dailyInspiration.reference,
+                                subtitle: presentation?.formattedDate ?? effectiveDate,
+                                body: dailyInspiration.text,
+                                accentColor: colors.accent,
+                                route: '/inspiration',
+                                sourceLabel: 'Verse of the Day',
+                            })
+                        }
+                        onPress={() => {
+                            setSource('inspirations');
+                            router.push('/inspiration');
+                        }}
+                    />
+                ) : null}
 
-                <View
-                    style={{
-                        backgroundColor: colors.surface,
-                        borderRadius: 20,
-                        borderWidth: 1,
-                        borderColor: colors.border,
-                        padding: 16,
-                        marginBottom: 12,
-                    }}
-                >
-                    <View className="flex-row items-center justify-between mb-4">
-                        <View className="flex-row items-center">
-                            <View
-                                style={{
-                                    width: 36,
-                                    height: 36,
-                                    borderRadius: 12,
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    backgroundColor: `${allColors.liturgical.ordinaryTime}18`,
-                                }}
-                            >
-                                <Ionicons name="megaphone-outline" size={18} color={allColors.liturgical.ordinaryTime} />
-                            </View>
-                            <Text style={{ color: allColors.liturgical.ordinaryTime }} className="font-sans font-bold text-[10px] tracking-widest uppercase px-3 ml-3">
-                                Latest Announcement
-                            </Text>
-                        </View>
-                        <TouchableOpacity onPress={() => router.push('/parish/announcements')}>
-                            {/* <Text style={{ color: allColors.liturgical.ordinaryTime }} className="font-sans font-semibold text-[12px]">
-                                View
-                            </Text> */}
-                        </TouchableOpacity>
-                    </View>
+                {/*
+                  Both Pulse cards were hand-rolled inline here, with a second, differently-styled
+                  copy of the same data living on the Parish tab. They now render the SAME
+                  components the Parish tab uses, in `compact` form — so an improvement to an
+                  announcement card cannot silently apply to one screen and not the other.
+                */}
+                {loadingAnnouncements ? (
+                    <PulseSkeleton colors={colors} />
+                ) : latestAnnouncement ? (
+                    <AnnouncementCard
+                        announcement={latestAnnouncement}
+                        compact
+                        onPress={() => router.push({ pathname: '/parish', params: { tab: 'Announcements' } })}
+                    />
+                ) : (
+                    <PulseEmpty
+                        colors={colors}
+                        icon="megaphone-outline"
+                        message="No announcements yet."
+                    />
+                )}
 
-                    {loadingAnnouncements ? (
-                        <Text style={{ color: colors.textSecondary }} className="font-sans text-[13px]">Loading announcements...</Text>
-                    ) : latestAnnouncement ? (
-                        <>
-                            <Text style={{ color: colors.textPrimary }} className="font-serif font-bold text-[18px] leading-[24px] mb-2">
-                                {latestAnnouncement.title}
-                            </Text>
-                            <Text style={{ color: colors.textSecondary }} className="font-sans text-[13px] leading-[19px] mb-3">
-                                {latestAnnouncement.excerpt}
-                            </Text>
-                            <Text style={{ color: colors.textMuted }} className="font-sans font-bold text-[10px] tracking-widest uppercase">
-                                {latestAnnouncement.date} � PARISH OFFICE
-                            </Text>
-                        </>
-                    ) : (
-                        <Text style={{ color: colors.textSecondary }} className="font-sans text-[13px]">No announcements published yet.</Text>
-                    )}
-                </View>
-
-                <View
-                    style={{
-                        backgroundColor: colors.surface,
-                        borderRadius: 20,
-                        borderWidth: 1,
-                        borderColor: colors.border,
-                        padding: 16,
-                        marginBottom: 8,
-                    }}
-                >
-                    <View className="flex-row items-center justify-between mb-4">
-                        <View className="flex-row items-center">
-                            <View
-                                style={{
-                                    width: 36,
-                                    height: 36,
-                                    borderRadius: 12,
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    backgroundColor: `${allColors.liturgical.adventLent}18`,
-                                }}
-                            >
-                                <Ionicons name="calendar-outline" size={18} color={allColors.liturgical.adventLent} />
-                            </View>
-                            <Text style={{ color: allColors.liturgical.adventLent }} className="font-sans font-bold text-[10px] tracking-widest uppercase px-3 ml-3">
-                                Upcoming Event
-                            </Text>
-                        </View>
-                        <TouchableOpacity onPress={() => router.push('/parish/events')}>
-                            {/* <Text style={{ color: allColors.liturgical.adventLent }} className="font-sans font-semibold text-[12px]">
-                                View
-                            </Text> */}
-                        </TouchableOpacity>
-                    </View>
-
-                    {loadingEvents ? (
-                        <Text style={{ color: colors.textSecondary }} className="font-sans text-[13px]">Loading events...</Text>
-                    ) : upcomingEvent ? (
-                        <>
-                            <Text style={{ color: colors.textPrimary }} className="font-serif font-bold text-[18px] leading-[24px] mb-2">
-                                {upcomingEvent.title}
-                            </Text>
-                            <Text style={{ color: colors.textSecondary }} className="font-sans text-[13px] leading-[19px] mb-3">
-                                {upcomingEvent.description}
-                            </Text>
-                            <View className="flex-row items-center justify-between">
-                                <Text style={{ color: colors.textMuted }} className="font-sans font-bold text-[10px] tracking-widest uppercase">
-                                    {`${upcomingEvent.day} ${upcomingEvent.month}`}
-                                </Text>
-                                <Text style={{ color: colors.textSecondary }} className="font-sans text-[12px]">
-                                    {upcomingEvent.location ?? 'Parish grounds'}
-                                </Text>
-                            </View>
-                        </>
-                    ) : (
-                        <Text style={{ color: colors.textSecondary }} className="font-sans text-[13px]">No upcoming events right now.</Text>
-                    )}
-                </View>
+                {loadingEvents ? (
+                    <PulseSkeleton colors={colors} />
+                ) : upcomingEvent ? (
+                    <EventCard
+                        event={upcomingEvent}
+                        compact
+                        onPress={() => router.push({ pathname: '/parish', params: { tab: 'Events' } })}
+                    />
+                ) : (
+                    <PulseEmpty
+                        colors={colors}
+                        icon="calendar-outline"
+                        message="Nothing on the parish calendar yet."
+                    />
+                )}
 
             </ScrollView>
         </SafeAreaView>

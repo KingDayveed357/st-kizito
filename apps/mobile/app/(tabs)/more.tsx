@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, Text, TouchableOpacity, View, Linking, Image } from 'react-native';
+import { ScrollView, Text, TouchableOpacity, View, Linking, Image, useWindowDimensions } from 'react-native';
 import { useTheme } from '../../src/hooks/useTheme';
 import { Header } from '../../src/components/ui/Header';
 import { Ionicons } from '@expo/vector-icons';
@@ -11,6 +11,15 @@ import { useTabBarClearance } from '../../src/hooks/useTabBarClearance';
 // ─── Data ────────────────────────────────────────────────────────────────────
 
 const QUICK_ACTIONS = [
+    {
+        // The "Essentials" heading below promised "daily tools for your prayer life" while linking
+        // to no prayers at all — the only prayer texts in the app were inside the Divine Office.
+        title: 'Prayers',
+        subtitle: 'Angelus, Rosary & devotions',
+        icon: 'book-outline' as const,
+        route: '/prayers',
+        accent: '#4A7C59',
+    },
     {
         title: 'Inspirations',
         subtitle: 'Scripture & reflections',
@@ -25,13 +34,8 @@ const QUICK_ACTIONS = [
         route: '/favourites',
         accent: '#B5303C',
     },
-    {
-        title: 'Donations',
-        subtitle: 'Give with confidence',
-        icon: 'gift-outline' as const,
-        route: '/donation',
-        accent: '#4A7C59',
-    },
+
+
     {
         title: 'Settings',
         subtitle: 'Theme & preferences',
@@ -67,26 +71,37 @@ const PARISH_SERVICES = [
         accent: '#4A7C59',
     },
     {
-        id: 'history',
-        title: 'Parish History',
-        subtitle: 'Our story, witness & growth',
-        icon: 'library-outline' as const,
-        route: '/history',
-        accent: '#C9A84C',
+        id: 'donations',
+        title: 'Donations',
+        subtitle: 'Give with confidence',
+        icon: 'gift-outline' as const,
+        route: '/donation',
+        accent: '#4A7C59',
     },
+    // {
+    //     id: 'history',
+    //     title: 'Parish History',
+    //     subtitle: 'Our story, witness & growth',
+    //     icon: 'library-outline' as const,
+    //     route: '/history',
+    //     accent: '#C9A84C',
+    // },
 ];
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
 
-interface QuickActionCardProps {
-    title: string;
-    subtitle: string;
-    icon: React.ComponentProps<typeof Ionicons>['name'];
-    accent: string;
-    onPress: () => void;
-    colors: ReturnType<ReturnType<typeof useTheme>['colors']['background'] extends string ? never : typeof useTheme>['colors'];
-}
-
+/**
+ * An Essentials tile.
+ *
+ * The previous version set `borderRadius: 0` against an app of soft 20–24px corners, sat in a
+ * `gap-6 flex-wrap` row at `width: 48.5%` (so the two columns did not add up and the grid drifted),
+ * and used `minHeight` — which left every tile a different height wherever a subtitle wrapped to
+ * two lines, producing the ragged bottom edge in the screenshot.
+ *
+ * It is now a fixed-height tile on a measured two-column grid, so the block reads as one aligned
+ * unit. `width` is passed in rather than hardcoded as a percentage: the parent measures the screen
+ * once, which keeps the columns exact on a 320dp phone and on a tablet.
+ */
 const QuickActionCard = ({
     title,
     subtitle,
@@ -94,6 +109,7 @@ const QuickActionCard = ({
     accent,
     onPress,
     colors,
+    width,
 }: {
     title: string;
     subtitle: string;
@@ -101,41 +117,57 @@ const QuickActionCard = ({
     accent: string;
     onPress: () => void;
     colors: ReturnType<typeof useTheme>['colors'];
+    width: number;
 }) => (
     <TouchableOpacity
         activeOpacity={0.85}
+        accessibilityRole="button"
+        accessibilityLabel={`${title}. ${subtitle}`}
         onPress={onPress}
         style={{
-            width: '48.5%',
-            borderRadius: 0,
+            width,
+            // Fixed, not minimum: equal-height tiles are what make the grid read as a grid.
+            height: 148,
+            borderRadius: 20,
             backgroundColor: colors.surface,
             borderWidth: 1,
             borderColor: colors.border,
-            padding: 18,
-            minHeight: 140,
+            padding: 16,
+            justifyContent: 'space-between',
         }}
     >
         <View
             style={{
-                width: 44,
-                height: 44,
+                width: 42,
+                height: 42,
                 borderRadius: 14,
                 backgroundColor: `${accent}18`,
                 alignItems: 'center',
                 justifyContent: 'center',
-                marginBottom: 16,
             }}
         >
-            <Ionicons name={icon} size={22} color={accent} />
+            <Ionicons name={icon} size={21} color={accent} />
         </View>
-        <Text style={{ color: colors.textPrimary, fontSize: 16, fontFamily: 'Georgia', fontWeight: '700', marginBottom: 4 }}>
-            {title}
-        </Text>
-        <Text style={{ color: colors.textSecondary, fontSize: 12, lineHeight: 17 }}>
-            {subtitle}
-        </Text>
+
+        <View>
+            <Text
+                numberOfLines={1}
+                style={{ color: colors.textPrimary, fontSize: 15.5, fontFamily: 'Georgia', fontWeight: '700', marginBottom: 3 }}
+            >
+                {title}
+            </Text>
+            {/* Two lines maximum, so a longer subtitle cannot make one tile taller than its
+                neighbour and break the grid's baseline. */}
+            <Text numberOfLines={2} style={{ color: colors.textSecondary, fontSize: 12, lineHeight: 16 }}>
+                {subtitle}
+            </Text>
+        </View>
     </TouchableOpacity>
 );
+
+/** Screen padding either side, and the gutter between the two columns. */
+const SCREEN_PADDING = 20;
+const GRID_GAP = 12;
 
 // ─── Screen ───────────────────────────────────────────────────────────────────
 
@@ -144,6 +176,11 @@ export default function MoreScreen() {
     const tabBarClearance = useTabBarClearance();
     const router = useRouter();
     const { data: contacts, isLoading: contactsLoading } = useParishContacts();
+    const { width: screenWidth } = useWindowDimensions();
+
+    // Measured once, so both columns are exact rather than approximated with a percentage.
+    // `Math.floor` avoids a sub-pixel remainder that would round one column a hair wider.
+    const tileWidth = Math.floor((screenWidth - SCREEN_PADDING * 2 - GRID_GAP) / 2);
 
     const isDarkMode = mode === 'dark' || mode === 'high-contrast';
     const parishBadgeBg = isDarkMode ? colors.surfaceElevated : '#E8F0E6';
@@ -201,11 +238,21 @@ export default function MoreScreen() {
                     </Text>
                 </View>
 
-                <View className='flex justify-between flex-row flex-wrap gap-6 mb-28'>
+                {/*
+                  A measured two-column grid.
+
+                  The previous `flex-wrap gap-6` row with `width: 48.5%` tiles could not add up:
+                  two 48.5% columns plus a 24px gap overflow the row, so the second column crept
+                  and the last tile sat alone against a ragged edge. Deriving the tile width from
+                  the actual content width means the columns are exact at any screen size, and the
+                  trailing odd tile simply occupies the left column at the same width as the rest.
+                */}
+                <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: GRID_GAP, marginBottom: 8 }}>
                     {QUICK_ACTIONS.map((item) => (
                         <QuickActionCard
                             key={item.title}
                             {...item}
+                            width={tileWidth}
                             onPress={() => router.push(item.route as never)}
                             colors={colors}
                         />
@@ -435,3 +482,4 @@ function ContactSection({
         </View>
     );
 }
+

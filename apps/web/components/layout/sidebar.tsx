@@ -24,23 +24,13 @@ export function Sidebar({
   onCollapsedChange,
 }: SidebarProps) {
   const pathname = usePathname()
-  const [open, setOpen] = React.useState(true)
-  const [collapsed, setCollapsed] = React.useState(isCollapsed)
-  const [mounted, setMounted] = React.useState(false)
   const { isLoggingOut, logoutError, logoutSuccess, handleLogout } = useLogout()
 
-  React.useEffect(() => {
-    setMounted(true)
-    setOpen(isOpen)
-  }, [isOpen])
-
   const handleCollapsedChange = (value: boolean) => {
-    setCollapsed(value)
     onCollapsedChange?.(value)
   }
 
   const handleOpenChange = (value: boolean) => {
-    setOpen(value)
     onOpenChange?.(value)
   }
 
@@ -52,14 +42,12 @@ export function Sidebar({
     return pathname === href || pathname.startsWith(`${href}/`)
   }
 
-  if (!mounted) return null
-
   return (
     <>
       <div
         className={cn(
           "fixed inset-0 bg-black/50 z-30 transition-opacity duration-300 md:hidden",
-          open ? "opacity-100" : "opacity-0 pointer-events-none"
+          isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
         )}
         onClick={() => handleOpenChange(false)}
       />
@@ -68,16 +56,16 @@ export function Sidebar({
         className={cn(
           "flex flex-col h-screen bg-sidebar text-sidebar-foreground transition-all duration-300 z-40 fixed md:relative border-r border-sidebar-border",
           "md:translate-x-0",
-          !open && "-translate-x-full md:translate-x-0",
-          collapsed ? "w-20 md:w-20" : "w-72 md:w-72"
+          !isOpen && "-translate-x-full md:translate-x-0",
+          isCollapsed ? "w-20 md:w-20" : "w-64 md:w-64"
         )}
       >
         <div className="flex items-center justify-between border-b border-sidebar-border px-4 py-4">
-          <div className={cn("flex items-center gap-3 min-w-0", collapsed && "justify-center w-full") }>
+          <div className={cn("flex items-center gap-3 min-w-0", isCollapsed && "justify-center w-full") }>
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-sidebar-primary text-sidebar-primary-foreground text-sm font-semibold">
               SK
             </div>
-            {!collapsed && (
+            {!isCollapsed && (
               <div className="min-w-0">
                 <p className="text-sm font-semibold leading-tight truncate">St. Kizito Parish</p>
                 <p className="text-xs text-sidebar-foreground/60 truncate">Admin Console</p>
@@ -87,11 +75,11 @@ export function Sidebar({
 
           <div className="flex items-center gap-1">
             <button
-              onClick={() => handleCollapsedChange(!collapsed)}
+              onClick={() => handleCollapsedChange(!isCollapsed)}
               className="hidden md:inline-flex p-1.5 hover:bg-sidebar-accent/20 rounded-lg transition-colors"
-              aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+              aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
             >
-              {collapsed ? <PanelLeftOpen className="h-4 w-4" /> : <PanelLeftClose className="h-4 w-4" />}
+              {isCollapsed ? <PanelLeftOpen className="h-4 w-4" /> : <PanelLeftClose className="h-4 w-4" />}
             </button>
             <button
               onClick={() => handleOpenChange(false)}
@@ -107,7 +95,7 @@ export function Sidebar({
           <div className="space-y-6">
             {sections.map((section) => (
               <div key={section.title}>
-                {!collapsed && (
+                {!isCollapsed && (
                   <p className="px-3 mb-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-sidebar-foreground/45">
                     {section.title}
                   </p>
@@ -125,12 +113,12 @@ export function Sidebar({
                             className={cn(
                               "group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-all duration-200",
                               "cursor-not-allowed text-sidebar-foreground/45",
-                              collapsed && "md:justify-center"
+                              isCollapsed && "md:justify-center"
                             )}
-                            title={collapsed ? item.label : undefined}
+                            title={isCollapsed ? item.label : undefined}
                           >
                             <Icon className="h-4.5 w-4.5 flex-shrink-0 opacity-60" />
-                            {!collapsed && (
+                            {!isCollapsed && (
                               <>
                                 <span className="truncate">{item.label}</span>
                                 {item.badge ? (
@@ -146,15 +134,15 @@ export function Sidebar({
                             href={item.href}
                             className={cn(
                               "group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-all duration-200",
-                              collapsed && "md:justify-center",
+                              isCollapsed && "md:justify-center",
                               active
                                 ? "bg-sidebar-primary text-sidebar-primary-foreground shadow-sm"
                                 : "text-sidebar-foreground/88 hover:bg-sidebar-accent/25 hover:text-sidebar-foreground"
                             )}
-                            title={collapsed ? item.label : undefined}
+                            title={isCollapsed ? item.label : undefined}
                           >
                             <Icon className={cn("h-4.5 w-4.5 flex-shrink-0", active ? "opacity-100" : "opacity-80 group-hover:opacity-100")} />
-                            {!collapsed && (
+                            {!isCollapsed && (
                               <>
                                 <span className="truncate">{item.label}</span>
                                 {item.badge ? (
@@ -180,21 +168,21 @@ export function Sidebar({
             className={cn(
               "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-all duration-200",
               "hover:bg-sidebar-accent/25",
-              collapsed && "md:justify-center",
-              !collapsed && "w-full"
+              isCollapsed && "md:justify-center",
+              !isCollapsed && "w-full"
             )}
-            title={collapsed ? "Logout" : undefined}
+            title={isCollapsed ? "Logout" : undefined}
             onClick={handleLogout}
             disabled={isLoggingOut}
           >
             <LogOut className="h-4.5 w-4.5 flex-shrink-0" />
-            {!collapsed && <span>{isLoggingOut ? 'Signing out...' : 'Logout'}</span>}
+            {!isCollapsed && <span>{isLoggingOut ? 'Signing out...' : 'Logout'}</span>}
           </button>
 
-          {!collapsed && logoutSuccess ? (
+          {!isCollapsed && logoutSuccess ? (
             <p className="px-3 text-xs text-emerald-500 animate-in fade-in duration-300">Signed out. Redirecting...</p>
           ) : null}
-          {!collapsed && logoutError ? (
+          {!isCollapsed && logoutError ? (
             <p className="px-3 text-xs text-amber-500 animate-in fade-in duration-300">{logoutError}</p>
           ) : null}
         </div>

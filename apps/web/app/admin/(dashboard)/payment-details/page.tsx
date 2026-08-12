@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { AdminLayout } from "@/components/layout/admin-layout"
+import { AdminPage } from "@/components/layout/admin-page"
 import { Button } from "@/components/ui/button-custom"
 import { Input } from "@/components/ui/input-custom"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card-custom"
@@ -93,7 +93,7 @@ export default function PaymentDetailsPage() {
   }
 
   return (
-    <AdminLayout
+    <AdminPage
       title="Parish Payment Details"
       subtitle="Manage the bank account details shown to parishioners for donations and bookings"
     >
@@ -154,6 +154,6 @@ export default function PaymentDetailsPage() {
           </CardContent>
         </Card>
       </div>
-    </AdminLayout>
+    </AdminPage>
   )
 }

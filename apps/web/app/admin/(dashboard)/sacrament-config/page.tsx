@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { AdminLayout } from "@/components/layout/admin-layout"
+import { AdminPage } from "@/components/layout/admin-page"
 import { Button } from "@/components/ui/button-custom"
 import { Card, CardContent } from "@/components/ui/card-custom"
 import { AdminPageSkeleton } from "@/components/admin/admin-page-skeleton"
@@ -186,7 +186,7 @@ export default function SacramentConfigPage() {
   const inputCls = "w-full rounded-md border border-input bg-background px-2 py-1 text-sm"
 
   return (
-    <AdminLayout title="Sacrament Config" subtitle="Configure form fields and payment for each request — no code changes needed">
+    <AdminPage title="Sacrament Config" subtitle="Configure form fields and payment for each request — no code changes needed">
       {message ? (
         <div className={`mb-6 rounded-md px-4 py-3 text-sm ${message.type === "error" ? "bg-destructive/10 text-destructive" : "bg-success/10 text-success"}`}>
           {message.text}
@@ -295,6 +295,6 @@ export default function SacramentConfigPage() {
           </Card>
         )
       })}
-    </AdminLayout>
+    </AdminPage>
   )
 }

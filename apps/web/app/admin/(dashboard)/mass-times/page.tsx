@@ -1,13 +1,16 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { AdminLayout } from "@/components/layout/admin-layout"
+import { useState, useEffect, useCallback } from "react"
+import { Pencil, Plus, Trash2 } from "lucide-react"
+import { AdminPage } from "@/components/layout/admin-page"
 import { Button } from "@/components/ui/button-custom"
 import { Input } from "@/components/ui/input-custom"
 import { Card, CardContent } from "@/components/ui/card-custom"
 import { Modal, ModalHeader, ModalTitle, ModalBody, ModalFooter } from "@/components/ui/modal-custom"
 import { AdminPageSkeleton } from "@/components/admin/admin-page-skeleton"
+import { ConfirmDialog } from "@/components/ui/confirm-dialog"
 import { createClient } from "@/lib/supabase"
+import { notifyError, notifySuccess } from "@/lib/toast"
 
 type MassTime = {
   id: string
@@ -22,8 +25,13 @@ const DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", 
 export default function MassTimesPage() {
   const [massTimes, setMassTimes] = useState<MassTime[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  const [loadError, setLoadError] = useState<string | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [editingId, setEditingId] = useState<string | null>(null)
+  const [timeError, setTimeError] = useState<string | null>(null)
+  const [isSaving, setIsSaving] = useState(false)
+  const [pendingDelete, setPendingDelete] = useState<MassTime | null>(null)
+  const [isDeleting, setIsDeleting] = useState(false)
   const [formData, setFormData] = useState({
     day: "Sunday",
     time: "08:00",
@@ -33,20 +41,24 @@ export default function MassTimesPage() {
 
   const supabase = createClient()
 
-  useEffect(() => {
-    fetchMassTimes()
-  }, [])
-
-  const fetchMassTimes = async () => {
+  const fetchMassTimes = useCallback(async () => {
     setIsLoading(true)
-    const { data, error } = await supabase
-      .from('mass_times')
-      .select('*')
-    if (!error && data) {
-      setMassTimes(data as MassTime[])
+    const { data, error } = await supabase.from('mass_times').select('*')
+
+    if (error) {
+      setLoadError("We couldn't load the Mass schedule.")
+      setMassTimes([])
+    } else {
+      setLoadError(null)
+      setMassTimes((data ?? []) as MassTime[])
     }
     setIsLoading(false)
-  }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  useEffect(() => {
+    fetchMassTimes()
+  }, [fetchMassTimes])
 
   const groupedByDay = DAYS.map((day) => ({
     day,
@@ -56,6 +68,7 @@ export default function MassTimesPage() {
   const handleCreateClick = () => {
     setEditingId(null)
     setFormData({ day: "Sunday", time: "08:00", location: "Main Church", type: "Low Mass" })
+    setTimeError(null)
     setIsModalOpen(true)
   }
 
@@ -67,52 +80,69 @@ export default function MassTimesPage() {
       location: massTime.location || "",
       type: massTime.type || "",
     })
+    setTimeError(null)
     setIsModalOpen(true)
   }
 
   const handleSave = async () => {
     if (!formData.day || !formData.time) {
-      alert("Please fill in day and time")
+      setTimeError("Choose a day and a time.")
+      return
+    }
+    setTimeError(null)
+    setIsSaving(true)
+
+    const payload = {
+      day_of_week: formData.day,
+      time: formData.time,
+      location: formData.location || null,
+      type: formData.type || null,
+    }
+
+    // Previously unchecked: a rejected write closed the modal and reported success.
+    const { error } = editingId
+      ? await supabase.from('mass_times').update(payload).eq('id', editingId)
+      : await supabase.from('mass_times').insert(payload)
+
+    setIsSaving(false)
+
+    if (error) {
+      notifyError(
+        editingId ? "We couldn't update that Mass time." : "We couldn't add that Mass time.",
+        error
+      )
       return
     }
 
-    if (editingId) {
-      await supabase
-        .from('mass_times')
-        .update({
-          day_of_week: formData.day,
-          time: formData.time,
-          location: formData.location || null,
-          type: formData.type || null,
-        })
-        .eq('id', editingId)
-    } else {
-      await supabase
-        .from('mass_times')
-        .insert({
-          day_of_week: formData.day,
-          time: formData.time,
-          location: formData.location || null,
-          type: formData.type || null,
-        })
-    }
-
-    await fetchMassTimes()
+    notifySuccess(
+      editingId ? "Mass time updated" : "Mass time added",
+      `${formData.day}, ${formatTime(formData.time)}`
+    )
     setIsModalOpen(false)
+    await fetchMassTimes()
   }
 
-  const handleDelete = async (id: string) => {
-    if (confirm("Are you sure you want to delete this mass time?")) {
-      await supabase.from('mass_times').delete().eq('id', id)
-      await fetchMassTimes()
+  const handleDelete = async () => {
+    if (!pendingDelete) return
+    setIsDeleting(true)
+
+    const { error } = await supabase.from('mass_times').delete().eq('id', pendingDelete.id)
+
+    setIsDeleting(false)
+
+    if (error) {
+      notifyError("We couldn't remove that Mass time.", error)
+      return
     }
+
+    notifySuccess("Mass time removed", `${pendingDelete.day_of_week}, ${formatTime(pendingDelete.time)}`)
+    setPendingDelete(null)
+    await fetchMassTimes()
   }
 
   const navbarActions = (
-    <Button onClick={handleCreateClick} className="bg-primary">
-      <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-      </svg>
+    <Button onClick={handleCreateClick}>
+      <Plus className="mr-2 h-4 w-4" aria-hidden="true" />
       Add Mass Time
     </Button>
   )
@@ -126,14 +156,27 @@ export default function MassTimesPage() {
   }
 
   return (
-    <AdminLayout
+    <AdminPage
       title="Mass Times"
       subtitle="Manage weekly mass schedule"
       navbarActions={navbarActions}
     >
       <div className="space-y-6">
         {isLoading ? <AdminPageSkeleton rows={4} /> : null}
-        {!isLoading ? groupedByDay.map(({ day, times }) => (
+
+        {!isLoading && loadError ? (
+          <Card className="border-error/30 bg-error/5">
+            <CardContent className="flex flex-col items-center gap-3 py-10 text-center">
+              <p className="text-sm font-medium text-error">{loadError}</p>
+              <p className="text-xs text-muted-foreground">Check your connection and try again.</p>
+              <Button variant="outline" size="sm" onClick={fetchMassTimes}>
+                Retry
+              </Button>
+            </CardContent>
+          </Card>
+        ) : null}
+
+        {!isLoading && !loadError ? groupedByDay.map(({ day, times }) => (
           <div key={day}>
             <h3 className="text-lg font-semibold text-foreground mb-4">{day}</h3>
 
@@ -150,39 +193,22 @@ export default function MassTimesPage() {
                           <p className="text-sm font-medium text-foreground mt-1">{massTime.location}</p>
                           {massTime.type && <p className="text-sm text-muted-foreground">{massTime.type}</p>}
                         </div>
-                        <div className="flex gap-2">
+                        <div className="flex gap-1">
                           <Button
                             variant="ghost"
                             size="icon-sm"
                             onClick={() => handleEditClick(massTime)}
+                            aria-label={`Edit ${day} ${formatTime(massTime.time)} Mass`}
                           >
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                              />
-                            </svg>
+                            <Pencil className="h-4 w-4" aria-hidden="true" />
                           </Button>
                           <Button
                             variant="ghost"
                             size="icon-sm"
-                            onClick={() => handleDelete(massTime.id)}
+                            onClick={() => setPendingDelete(massTime)}
+                            aria-label={`Remove ${day} ${formatTime(massTime.time)} Mass`}
                           >
-                            <svg
-                              className="w-4 h-4 text-destructive"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                              />
-                            </svg>
+                            <Trash2 className="h-4 w-4 text-destructive" aria-hidden="true" />
                           </Button>
                         </div>
                       </div>
@@ -227,6 +253,8 @@ export default function MassTimesPage() {
             type="time"
             value={formData.time}
             onChange={(e) => setFormData({ ...formData, time: e.target.value })}
+            isInvalid={Boolean(timeError)}
+            helperText={timeError ?? undefined}
           />
 
           <Input
@@ -244,14 +272,35 @@ export default function MassTimesPage() {
           />
         </ModalBody>
         <ModalFooter>
-          <Button variant="outline" onClick={() => setIsModalOpen(false)}>
+          <Button variant="outline" onClick={() => setIsModalOpen(false)} disabled={isSaving}>
             Cancel
           </Button>
-          <Button onClick={handleSave}>
-            {editingId ? "Update" : "Add"}
+          <Button onClick={handleSave} isLoading={isSaving}>
+            {editingId ? "Save changes" : "Add Mass time"}
           </Button>
         </ModalFooter>
       </Modal>
-    </AdminLayout>
+
+      <ConfirmDialog
+        open={Boolean(pendingDelete)}
+        onOpenChange={(open) => !open && setPendingDelete(null)}
+        title="Remove this Mass time?"
+        description={
+          pendingDelete ? (
+            <>
+              The{" "}
+              <strong className="text-foreground">
+                {pendingDelete.day_of_week} {formatTime(pendingDelete.time)}
+              </strong>{" "}
+              Mass will disappear from the parish app&apos;s schedule immediately. This cannot be
+              undone.
+            </>
+          ) : null
+        }
+        confirmLabel="Remove Mass time"
+        isPending={isDeleting}
+        onConfirm={handleDelete}
+      />
+    </AdminPage>
   )
 }

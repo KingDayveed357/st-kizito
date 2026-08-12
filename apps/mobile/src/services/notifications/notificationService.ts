@@ -2,6 +2,10 @@ import * as Notifications from 'expo-notifications';
 import { Platform } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { STORAGE_KEYS } from '../../utils/constants';
+// Imported for reconciliation only. `devotionReminders` imports back from this module for the
+// shared channel/permission helpers; those are function references resolved at call time, so the
+// cycle is inert at module-eval.
+import { reconcileDevotionReminders } from './devotionReminders';
 
 export type PrayerReminderKey = 'morning' | 'afternoon' | 'evening';
 
@@ -31,9 +35,9 @@ export const defaultPrayerReminders: PrayerReminderSettings = {
 // twice will REPLACE the previous notification, not duplicate it.
 const getDeterministicId = (key: PrayerReminderKey) => `prayer-reminder-${key}`;
 
-const VALID_IDENTIFIERS = new Set(
-    (['morning', 'afternoon', 'evening'] as PrayerReminderKey[]).map(getDeterministicId)
-);
+const ALL_PRAYER_KEYS: PrayerReminderKey[] = ['morning', 'afternoon', 'evening'];
+
+const VALID_IDENTIFIERS = new Set(ALL_PRAYER_KEYS.map(getDeterministicId));
 
 let isHandlerConfigured = false;
 
@@ -134,17 +138,30 @@ export const reconcileNotifications = async (): Promise<void> => {
             ? JSON.parse(raw)
             : defaultPrayerReminders;
 
-        // 2. Cancel ALL scheduled notifications to start clean
-        await Notifications.cancelAllScheduledNotificationsAsync();
+        // 2. Clear only THIS feature's notifications.
+        //
+        // This used to call `cancelAllScheduledNotificationsAsync()`, which cancels every
+        // notification the app has scheduled — including the one-off liturgy-event reminders set
+        // from the Parish tab, which live in a separate store and are not re-scheduled here. A
+        // parishioner who set a reminder for a feast day lost it at the next app launch, while the
+        // UI continued to show the reminder as active because its persisted map was untouched.
+        //
+        // Cancelling by deterministic identifier keeps reconciliation scoped to what it owns.
+        for (const key of ALL_PRAYER_KEYS) {
+            await cancelReminder(getDeterministicId(key));
+        }
 
         // 3. Re-schedule only the enabled ones with deterministic IDs
-        const keys: PrayerReminderKey[] = ['morning', 'afternoon', 'evening'];
-        for (const key of keys) {
+        for (const key of ALL_PRAYER_KEYS) {
             const r = reminders[key];
             if (r?.enabled) {
                 await scheduleDailyPrayerReminder(key, r.hour, r.minute);
             }
         }
+
+        // 4. The fixed-hour devotions (Angelus, Divine Mercy, Rosary) own their own identifiers and
+        // storage, and reconcile themselves.
+        await reconcileDevotionReminders();
     } catch {
         // Reconciliation is best-effort; don't crash the app boot
     }

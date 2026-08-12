@@ -16,6 +16,11 @@ export interface PsalmVerse {
 	text: string;
 }
 
+/** One true stanza of a responsorial psalm. Refrain repetitions are boundaries, never stanzas. */
+export interface PsalmStanzaBlock {
+	lines: string[];
+}
+
 export interface LiturgicalBlock {
 	id: string;
 	type: LiturgicalBlockType;
@@ -23,6 +28,17 @@ export interface LiturgicalBlock {
 	reference?: string | null;
 	text?: string | null;
 	response?: string | null;
+	/**
+	 * Structured stanzas — the preferred shape for rendering a responsorial psalm. Built in the data
+	 * layer by `parsePsalmText`, so the renderer never has to infer structure from raw text (which
+	 * produced 8–9 fragments for a 3–4 stanza psalm). `verses` is retained for the Divine Office path
+	 * and any data that still supplies a flat list.
+	 */
+	stanzas?: PsalmStanzaBlock[];
+	/** Verse citation carried by the refrain, e.g. "2a". */
+	responseCitation?: string | null;
+	/** Alternative refrain offered by the source after an "or:" line. */
+	alternateResponse?: string | null;
 	verses?: PsalmVerse[];
 	context?: string | null;
 	optional?: boolean;
@@ -62,10 +78,19 @@ export interface DailyInspirationCard {
 		reflection: string;
 		theme: 'peace' | 'strength' | 'faith' | 'hope' | 'love';
 	}>;
-	saintQuote: {
-		quote: string;
-		saint: string;
-		initials: string;
+	/**
+	 * The day's inspiration, from the 366-entry bank (src/utils/dailyInspiration.ts).
+	 *
+	 * Replaces `saintQuote`, which rotated six quotations on a six-day cycle. It is Scripture with a
+	 * verified citation rather than an attributed quotation — see
+	 * scripts/generate-inspirations.mjs for why.
+	 */
+	dailyVerse: {
+		text: string;
+		reference: string;
+		translation: string;
+		/** Stable across devices and years, so a bookmark keeps pointing at the same words. */
+		id: string;
 	};
 	sourceReadings: LiturgicalBlock[];
 }

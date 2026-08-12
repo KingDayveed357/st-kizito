@@ -1,13 +1,18 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { AdminLayout } from "@/components/layout/admin-layout"
+import { useState, useEffect, useCallback } from "react"
+import { CalendarDays, MapPin, Pencil, Plus, Trash2 } from "lucide-react"
+import { AdminPage } from "@/components/layout/admin-page"
 import { Button } from "@/components/ui/button-custom"
 import { Input } from "@/components/ui/input-custom"
 import { Card, CardContent } from "@/components/ui/card-custom"
 import { Modal, ModalHeader, ModalTitle, ModalBody, ModalFooter } from "@/components/ui/modal-custom"
 import { AdminPageSkeleton } from "@/components/admin/admin-page-skeleton"
+import { EmptyState } from "@/components/ui/empty-state"
+import { ConfirmDialog } from "@/components/ui/confirm-dialog"
 import { createClient } from "@/lib/supabase"
+import { formatDateWithWeekday } from "@/lib/format-time"
+import { notifyError, notifySuccess } from "@/lib/toast"
 
 type Event = {
   id: string
@@ -19,203 +24,267 @@ type Event = {
   created_at: string
 }
 
+type FieldErrors = Partial<Record<"title" | "location" | "startDate" | "endDate", string>>
+
+const EMPTY_FORM = { title: "", description: "", startDate: "", endDate: "", location: "" }
+
 export default function EventsPage() {
   const [events, setEvents] = useState<Event[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  const [loadError, setLoadError] = useState<string | null>(null)
+
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [editingId, setEditingId] = useState<string | null>(null)
-  const [formData, setFormData] = useState({
-    title: "",
-    description: "",
-    startDate: "",
-    endDate: "",
-    location: "",
-  })
+  const [formData, setFormData] = useState(EMPTY_FORM)
+  const [fieldErrors, setFieldErrors] = useState<FieldErrors>({})
+  const [isSaving, setIsSaving] = useState(false)
+
+  const [pendingDelete, setPendingDelete] = useState<Event | null>(null)
+  const [isDeleting, setIsDeleting] = useState(false)
 
   const supabase = createClient()
 
-  useEffect(() => {
-    fetchEvents()
-  }, [])
-
-  const fetchEvents = async () => {
+  const fetchEvents = useCallback(async () => {
     setIsLoading(true)
     const { data, error } = await supabase
       .from('events')
       .select('*')
       .order('start_date', { ascending: true })
-    if (!error && data) {
-      setEvents(data as Event[])
+
+    // A failed read previously left the page showing "No events scheduled", which is indistinguishable
+    // from a parish that genuinely has none. Surface the failure instead.
+    if (error) {
+      setLoadError("We couldn't load the parish events.")
+      setEvents([])
+    } else {
+      setLoadError(null)
+      setEvents((data ?? []) as Event[])
     }
     setIsLoading(false)
-  }
+    // `supabase` is a fresh client each render; including it would loop. The client is stateless here.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
-  const handleCreateClick = () => {
+  useEffect(() => {
+    fetchEvents()
+  }, [fetchEvents])
+
+  const openCreate = () => {
     setEditingId(null)
-    setFormData({ title: "", description: "", startDate: "", endDate: "", location: "" })
+    setFormData(EMPTY_FORM)
+    setFieldErrors({})
     setIsModalOpen(true)
   }
 
-  const handleEditClick = (event: Event) => {
+  const openEdit = (event: Event) => {
     setEditingId(event.id)
     setFormData({
       title: event.title,
-      description: event.description,
+      description: event.description ?? "",
       startDate: event.start_date,
-      endDate: event.end_date || "",
+      endDate: event.end_date ?? "",
       location: event.location,
     })
+    setFieldErrors({})
     setIsModalOpen(true)
   }
 
+  /** Inline field errors, replacing the browser `alert()` that named no field. */
+  const validate = (): FieldErrors => {
+    const errors: FieldErrors = {}
+    if (!formData.title.trim()) errors.title = "Give the event a name parishioners will recognise."
+    if (!formData.location.trim()) errors.location = "Tell parishioners where to go."
+    if (!formData.startDate) errors.startDate = "Choose the date the event starts."
+    if (formData.endDate && formData.endDate < formData.startDate) {
+      errors.endDate = "The end date cannot be before the start date."
+    }
+    return errors
+  }
+
   const handleSave = async () => {
-    if (!formData.title || !formData.location || !formData.startDate) {
-      alert("Please fill in required fields")
+    const errors = validate()
+    setFieldErrors(errors)
+    if (Object.keys(errors).length > 0) return
+
+    setIsSaving(true)
+
+    const payload = {
+      title: formData.title.trim(),
+      description: formData.description.trim(),
+      start_date: formData.startDate,
+      end_date: formData.endDate || null,
+      location: formData.location.trim(),
+    }
+
+    // These writes previously ignored `error` entirely: an RLS rejection closed the modal, refetched
+    // the unchanged list, and left the administrator believing the event had saved.
+    const { error } = editingId
+      ? await supabase.from('events').update(payload).eq('id', editingId)
+      : await supabase.from('events').insert(payload)
+
+    setIsSaving(false)
+
+    if (error) {
+      notifyError(
+        editingId ? "We couldn't update that event." : "We couldn't create that event.",
+        error
+      )
       return
     }
 
-    if (editingId) {
-      await supabase
-        .from('events')
-        .update({
-          title: formData.title,
-          description: formData.description,
-          start_date: formData.startDate,
-          end_date: formData.endDate || null,
-          location: formData.location,
-        })
-        .eq('id', editingId)
-    } else {
-      await supabase
-        .from('events')
-        .insert({
-          title: formData.title,
-          description: formData.description,
-          start_date: formData.startDate,
-          end_date: formData.endDate || null,
-          location: formData.location,
-        })
-    }
-
-    await fetchEvents()
+    notifySuccess(editingId ? "Event updated" : "Event created", payload.title)
     setIsModalOpen(false)
+    await fetchEvents()
   }
 
-  const handleDelete = async (id: string) => {
-    if (confirm("Are you sure you want to delete this event?")) {
-      await supabase.from('events').delete().eq('id', id)
-      await fetchEvents()
+  const handleDelete = async () => {
+    if (!pendingDelete) return
+    setIsDeleting(true)
+
+    const { error } = await supabase.from('events').delete().eq('id', pendingDelete.id)
+
+    setIsDeleting(false)
+
+    if (error) {
+      notifyError("We couldn't delete that event.", error)
+      return
     }
+
+    notifySuccess("Event deleted", pendingDelete.title)
+    setPendingDelete(null)
+    await fetchEvents()
   }
 
   const navbarActions = (
-    <Button onClick={handleCreateClick} className="bg-primary">
-      <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-      </svg>
+    <Button onClick={openCreate}>
+      <Plus className="mr-2 h-4 w-4" aria-hidden="true" />
       New Event
     </Button>
   )
 
-  const formatDate = (date: string) => {
-    return new Date(date).toLocaleDateString("en-US", {
-      weekday: "short",
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-    })
-  }
-
   return (
-    <AdminLayout
+    <AdminPage
       title="Events"
       subtitle="Manage parish events and celebrations"
       navbarActions={navbarActions}
     >
       <div className="grid gap-4">
         {isLoading ? <AdminPageSkeleton rows={3} /> : null}
-        {!isLoading && events.length === 0 ? (
-          <Card>
-            <CardContent className="py-12 text-center">
-              <p className="text-muted-foreground">No events scheduled</p>
+
+        {!isLoading && loadError ? (
+          <Card className="border-error/30 bg-error/5">
+            <CardContent className="flex flex-col items-center gap-3 py-10 text-center">
+              <p className="text-sm font-medium text-error">{loadError}</p>
+              <p className="text-xs text-muted-foreground">
+                Check your connection and try again.
+              </p>
+              <Button variant="outline" size="sm" onClick={fetchEvents}>
+                Retry
+              </Button>
             </CardContent>
           </Card>
-        ) : !isLoading ? (
-          events.map((event) => {
-            return (
+        ) : null}
+
+        {!isLoading && !loadError && events.length === 0 ? (
+          <EmptyState
+            icon={<CalendarDays className="h-6 w-6" />}
+            title="No events yet"
+            description="Create your first parish event so parishioners can discover what's happening in the community."
+            action={<Button onClick={openCreate}>Create event</Button>}
+          />
+        ) : null}
+
+        {!isLoading && !loadError
+          ? events.map((event) => (
               <Card key={event.id}>
                 <CardContent className="pt-6">
-                  <div className="flex items-start justify-between gap-4 mb-4">
-                    <div className="flex-1">
-                      <h3 className="text-lg font-semibold text-foreground mb-2">{event.title}</h3>
-                      <p className="text-sm text-muted-foreground mb-3">{event.description}</p>
-                      <div className="grid grid-cols-2 gap-4 text-sm mb-3">
-                        <div>
-                          <span className="text-muted-foreground">📅 Date</span>
-                          <p className="font-medium text-foreground">{formatDate(event.start_date)}</p>
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="min-w-0 flex-1">
+                      <h3 className="mb-2 text-lg font-semibold text-foreground">{event.title}</h3>
+                      {event.description ? (
+                        <p className="mb-3 text-sm text-muted-foreground">{event.description}</p>
+                      ) : null}
+                      <div className="grid grid-cols-1 gap-4 text-sm sm:grid-cols-2">
+                        <div className="flex items-start gap-2">
+                          <CalendarDays
+                            className="mt-0.5 h-4 w-4 flex-shrink-0 text-muted-foreground"
+                            aria-hidden="true"
+                          />
+                          <div>
+                            <span className="text-muted-foreground">Date</span>
+                            <p className="font-medium text-foreground">
+                              {formatDateWithWeekday(event.start_date)}
+                            </p>
+                          </div>
                         </div>
-                        <div>
-                          <span className="text-muted-foreground">📍 Location</span>
-                          <p className="font-medium text-foreground">{event.location}</p>
+                        <div className="flex items-start gap-2">
+                          <MapPin
+                            className="mt-0.5 h-4 w-4 flex-shrink-0 text-muted-foreground"
+                            aria-hidden="true"
+                          />
+                          <div>
+                            <span className="text-muted-foreground">Location</span>
+                            <p className="font-medium text-foreground">{event.location}</p>
+                          </div>
                         </div>
                       </div>
                     </div>
-                    <div className="flex gap-2 flex-shrink-0">
-                      <Button variant="ghost" size="sm" onClick={() => handleEditClick(event)}>
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                          />
-                        </svg>
+
+                    <div className="flex flex-shrink-0 gap-1">
+                      <Button
+                        variant="ghost"
+                        size="icon-sm"
+                        onClick={() => openEdit(event)}
+                        aria-label={`Edit ${event.title}`}
+                      >
+                        <Pencil className="h-4 w-4" aria-hidden="true" />
                       </Button>
                       <Button
                         variant="ghost"
-                        size="sm"
-                        onClick={() => handleDelete(event.id)}
+                        size="icon-sm"
+                        onClick={() => setPendingDelete(event)}
+                        aria-label={`Delete ${event.title}`}
                       >
-                        <svg className="w-4 h-4 text-destructive" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                          />
-                        </svg>
+                        <Trash2 className="h-4 w-4 text-destructive" aria-hidden="true" />
                       </Button>
                     </div>
                   </div>
                 </CardContent>
               </Card>
-            )
-          })
-        ) : null}
+            ))
+          : null}
       </div>
 
-      {/* Modal for Create/Edit */}
       <Modal open={isModalOpen} onOpenChange={setIsModalOpen}>
         <ModalHeader>
-          <ModalTitle>{editingId ? "Edit Event" : "Create New Event"}</ModalTitle>
+          <ModalTitle>{editingId ? "Edit event" : "Create new event"}</ModalTitle>
           <button
             onClick={() => setIsModalOpen(false)}
             className="text-muted-foreground hover:text-foreground"
+            aria-label="Close"
           >
             ✕
           </button>
         </ModalHeader>
         <ModalBody className="space-y-4">
           <Input
-            label="Event Title"
-            placeholder="Event title"
+            label="Event title"
+            placeholder="Harvest & Bazaar"
             value={formData.title}
             onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+            isInvalid={Boolean(fieldErrors.title)}
+            helperText={fieldErrors.title}
           />
           <div>
-            <label className="block text-sm font-medium text-foreground mb-2">Description</label>
+            <label
+              htmlFor="event-description"
+              className="mb-2 block text-sm font-medium text-foreground"
+            >
+              Description
+            </label>
             <textarea
-              placeholder="Event description"
+              id="event-description"
+              placeholder="What happens, and who it's for."
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               rows={3}
@@ -224,34 +293,55 @@ export default function EventsPage() {
           </div>
           <Input
             label="Location"
-            placeholder="Event location"
+            placeholder="Parish grounds"
             value={formData.location}
             onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+            isInvalid={Boolean(fieldErrors.location)}
+            helperText={fieldErrors.location}
           />
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <Input
-              label="Start Date"
+              label="Start date"
               type="date"
               value={formData.startDate}
               onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
+              isInvalid={Boolean(fieldErrors.startDate)}
+              helperText={fieldErrors.startDate}
             />
             <Input
-              label="End Date (Optional)"
+              label="End date (optional)"
               type="date"
               value={formData.endDate}
               onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
+              isInvalid={Boolean(fieldErrors.endDate)}
+              helperText={fieldErrors.endDate}
             />
           </div>
         </ModalBody>
         <ModalFooter>
-          <Button variant="outline" onClick={() => setIsModalOpen(false)}>
+          <Button variant="outline" onClick={() => setIsModalOpen(false)} disabled={isSaving}>
             Cancel
           </Button>
-          <Button onClick={handleSave}>
-            {editingId ? "Update" : "Create"}
+          <Button onClick={handleSave} isLoading={isSaving}>
+            {editingId ? "Save changes" : "Create event"}
           </Button>
         </ModalFooter>
       </Modal>
-    </AdminLayout>
+
+      <ConfirmDialog
+        open={Boolean(pendingDelete)}
+        onOpenChange={(open) => !open && setPendingDelete(null)}
+        title="Delete this event?"
+        description={
+          <>
+            <strong className="text-foreground">{pendingDelete?.title}</strong> will be removed from
+            the parish app immediately. This cannot be undone.
+          </>
+        }
+        confirmLabel="Delete event"
+        isPending={isDeleting}
+        onConfirm={handleDelete}
+      />
+    </AdminPage>
   )
 }

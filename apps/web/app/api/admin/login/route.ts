@@ -116,6 +116,50 @@ export async function POST(request: NextRequest) {
     )
   }
 
+  // Valid credentials are not the same as authorization. Confirm the account is on the
+  // `admin_users` roster before handing back a usable session; otherwise sign it straight back out
+  // so no half-authenticated cookie survives. The middleware enforces this on every request too —
+  // this check exists so the person gets an accurate message instead of a silent bounce.
+  const { data: isAdmin, error: roleError } = await supabase.rpc('is_admin')
+
+  // A missing `is_admin` function is a DEPLOYMENT problem, not a rejected account, and the two must
+  // not produce the same message. Reporting "not authorized" when the security migration simply has
+  // not been applied sends an administrator hunting for a permissions issue that does not exist.
+  // PostgREST answers an unknown function with PGRST202 / a 404.
+  if (roleError) {
+    await supabase.auth.signOut()
+    const functionMissing =
+      roleError.code === 'PGRST202' || /function .*is_admin.* does not exist/i.test(roleError.message ?? '')
+
+    console.error('[admin-login] is_admin() check failed', roleError)
+
+    return NextResponse.json(
+      {
+        error: functionMissing
+          ? 'The portal is not finished setting up: the administrator roster has not been installed on the database yet. Run apps/web/db/2026_08_security_hardening.sql, then seed the first owner.'
+          : 'We could not verify your access just now. Please try again in a moment.',
+      },
+      // 503, not 403: nothing is wrong with the credentials, and retrying after the migration
+      // lands will succeed.
+      { status: 503 }
+    )
+  }
+
+  if (isAdmin !== true) {
+    await supabase.auth.signOut()
+    // Counts against the rate limit: probing which addresses are administrators is an attack.
+    currentState.attempts += 1
+    if (currentState.attempts >= MAX_ATTEMPTS) {
+      currentState.blockedUntil = now + BLOCK_MS
+    }
+    loginAttempts.set(rateLimitKey, currentState)
+
+    return NextResponse.json(
+      { error: 'This account is not authorized for the administrative portal.' },
+      { status: 403 }
+    )
+  }
+
   loginAttempts.delete(rateLimitKey)
 
   const safeNext = next && next.startsWith('/admin') ? next : '/admin'

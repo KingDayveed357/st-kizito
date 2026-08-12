@@ -9,6 +9,7 @@ import { Header } from '../../src/components/ui/Header';
 import { useAppStore } from '../../src/store/useAppStore';
 import { getCalendar, getDailyInspiration, getTodayIso } from '../../src/services/liturgicalData';
 import { useFavourites } from '../../src/hooks/useFavourites';
+import { EmptyState } from '../../src/components/ui/EmptyState';
 
 const { width } = Dimensions.get('window');
 
@@ -82,7 +83,34 @@ export default function InspirationScreen() {
         Share.share({ message: `"${text}" - ${ref}\n\nShared from St. Kizito` });
     };
 
-    if (!inspiration) return null;
+    /*
+     * `getDailyInspiration` returns null when the bundled liturgical data has no readings for the
+     * selected date — it synthesises the reflection from that day's Gospel and First Reading.
+     *
+     * This used to `return null`, which renders literally nothing: no header, no back button, no
+     * explanation. A parishioner who navigated here on an uncovered date was left on a blank white
+     * screen with only the system back gesture to escape. The screen now keeps its chrome and says
+     * what happened, with a way to reach a date that does have content.
+     */
+    if (!inspiration) {
+        return (
+            <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
+                <Header showBack title="Daily Inspiration" />
+                <View style={{ flex: 1, justifyContent: 'center' }}>
+                    <EmptyState
+                        icon={<Ionicons name="calendar-outline" size={40} color={colors.textMuted} />}
+                        title="No reflection for this day"
+                        subtitle="The daily reflection is drawn from the readings of the day, and none are available for the date you have selected. Choose another date to continue."
+                        actionLabel="Open the calendar"
+                        onAction={() => {
+                            setSource('inspirations');
+                            router.push('/calendar');
+                        }}
+                    />
+                </View>
+            </SafeAreaView>
+        );
+    }
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
@@ -166,21 +194,21 @@ export default function InspirationScreen() {
                     );
                 })}
 
-                {/* Saint Quote */}
+                {/* Verse of the day — one of 366, fixed to this date. */}
                 <View style={[styles.saintCard, { borderLeftColor: allColors.liturgical.ordinaryTime }]}>
                     <Text style={[styles.saintQuote, { color: colors.textPrimary }, scaled(16, 26)]} className="font-serif">
-                        "{inspiration.saintQuote.quote}"
+                        &ldquo;{inspiration.dailyVerse.text}&rdquo;
                     </Text>
                     <View style={styles.saintFooter}>
-                        <View style={[styles.saintInitials, { backgroundColor: `${allColors.liturgical.ordinaryTime}20` }]}>
-                            <Text style={{ color: allColors.liturgical.ordinaryTime, fontWeight: 'bold', fontSize: 10 }}>
-                                {inspiration.saintQuote.initials}
-                            </Text>
-                        </View>
                         <Text style={[styles.saintName, { color: allColors.liturgical.ordinaryTime }]}>
-                            {inspiration.saintQuote.saint}
+                            {inspiration.dailyVerse.reference}
                         </Text>
                     </View>
+                    {inspiration.dailyVerse.translation ? (
+                        <Text style={{ color: colors.textMuted, fontSize: 11, marginTop: 8 }}>
+                            {inspiration.dailyVerse.translation}
+                        </Text>
+                    ) : null}
                 </View>
             </ScrollView>
         </SafeAreaView>

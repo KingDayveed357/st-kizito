@@ -2,7 +2,7 @@
 
 import { startTransition, useState } from "react"
 import { useRouter } from "next/navigation"
-import { AdminLayout } from "@/components/layout/admin-layout"
+import { AdminPage } from "@/components/layout/admin-page"
 import { ComingSoonPanel } from "@/components/admin/coming-soon-panel"
 import { Button } from "@/components/ui/button-custom"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card-custom"
@@ -141,7 +141,7 @@ export default function SettingsPage() {
   }
 
   return (
-    <AdminLayout title="Settings" subtitle="Security controls and administrative preferences">
+    <AdminPage title="Settings" subtitle="Security controls and administrative preferences">
       <div className="max-w-3xl space-y-6">
         <Card>
           <CardHeader>
@@ -253,6 +253,6 @@ export default function SettingsPage() {
           </CardContent>
         </Card>
       </div>
-    </AdminLayout>
+    </AdminPage>
   )
 }

@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { getReadings } from '../services/liturgicalData';
 import { LiturgicalCelebration, resolveCelebration } from '../services/calendarEngine';
 
@@ -30,6 +30,16 @@ export const useCelebration = (date: string) => {
 
     const [activeVariantId, setActiveVariantId] = useState<string | null>(null);
     const [activeAlternativeId, setActiveAlternativeId] = useState<string | null>(null);
+
+    // When the date changes (e.g. Expo Router reuses this component instance on the `/readings/[date]`
+    // stack screen with a new date param) stale variant/alternative selections from the previous
+    // liturgy must be cleared. Leaving them set caused parish-liturgy readings to bleed across
+    // navigations (Bug #3: "opening readings from an upcoming liturgy can change the selected
+    // liturgy/readings unexpectedly").
+    useEffect(() => {
+        setActiveVariantId(null);
+        setActiveAlternativeId(null);
+    }, [date]);
 
     const activeCelebration = useMemo(() => {
         if (activeAlternativeId) {

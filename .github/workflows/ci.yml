@@ -1,0 +1,55 @@
+name: CI
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+
+# Cancel superseded runs on the same ref to save minutes.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    name: Typecheck · Test · Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      # Install ALL workspaces from the repo ROOT. Installing from apps/* crashes npm 11
+      # (arborist null-location bug) — see CLAUDE.md.
+      - name: Install dependencies
+        run: npm ci
+
+      # ── Hard gates (must pass to merge) ─────────────────────────────
+      - name: Typecheck (mobile)
+        run: npm run typecheck:mobile
+
+      - name: Test (mobile)
+        run: npm run test:mobile
+
+      - name: Typecheck (web)
+        run: npm run typecheck:web
+
+      - name: Build (web)
+        run: npm run web:build
+        env:
+          # Placeholders so the build never fails on missing runtime env (values are inlined for
+          # client code but not needed to compile/prerender). Real values live in Vercel.
+          NEXT_PUBLIC_SUPABASE_URL: https://placeholder.supabase.co
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: placeholder-anon-key
+
+      # ── Advisory (non-blocking) — surfaces debt without blocking deploys ──
+      - name: Lint (web) — advisory
+        run: npm run lint:web
+        continue-on-error: true
+
+      - name: Format check — advisory
+        run: npm run format:check
+        continue-on-error: true

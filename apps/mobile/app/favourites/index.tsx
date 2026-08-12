@@ -3,6 +3,7 @@ import { FlatList, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Header } from '../../src/components/ui/Header';
+import { TextSizeControl } from '../../src/components/ui/TextSizeControl';
 import { useTheme } from '../../src/hooks/useTheme';
 import { EmptyState } from '../../src/components/ui/EmptyState';
 import { FavouriteCategory } from '../../src/store/useFavouritesStore';
@@ -43,7 +44,12 @@ export default function FavouritesScreen() {
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
-            <Header showBack title="Favourites" />
+            {/*
+              * Saved readings/inspirations are long-form text that already scales with `textScale`,
+              * but this screen offered no way to change it — the control existed only on Readings and
+              * the Office prayer screen. Same shared component, so behaviour stays consistent.
+              */}
+            <Header showBack title="Favourites" rightElement={<TextSizeControl />} />
 
             <FlatList
                 data={filteredItems}

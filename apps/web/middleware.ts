@@ -65,17 +65,43 @@ export async function middleware(request: NextRequest) {
     return supabaseResponse
   }
 
+  const isAdminRoute = pathname.startsWith('/admin')
+  if (!isAdminRoute) {
+    return supabaseResponse
+  }
+
+  // Being signed in is NOT the same as being an administrator. `is_admin()` checks membership in
+  // the `admin_users` roster (see apps/web/db/2026_08_security_hardening.sql); the same function
+  // backs every RLS policy, so the portal and the database agree on who is an admin. Without this
+  // check any Supabase Auth user could load the dashboard shell — RLS would block their queries,
+  // but they would still see the admin UI.
+  let isAdmin = false
+  if (user) {
+    const { data, error } = await supabase.rpc('is_admin')
+    isAdmin = !error && data === true
+  }
+
   if (pathname === '/admin/login') {
-    if (user) {
+    // Only bounce authenticated *admins* away from the login page; a signed-in non-admin would
+    // otherwise ping-pong between /admin/login and /admin forever.
+    if (user && isAdmin) {
       return NextResponse.redirect(new URL('/admin', request.url))
     }
     return supabaseResponse
   }
 
-  // Protect /admin routes
-  if (pathname.startsWith('/admin') && !user) {
+  if (!user) {
     const loginUrl = new URL('/admin/login', request.url)
     loginUrl.searchParams.set('next', pathname)
+    return NextResponse.redirect(loginUrl)
+  }
+
+  if (!isAdmin) {
+    // Signed in, but not on the roster. Clear the session so the browser does not sit on a
+    // half-authenticated state, and say why.
+    await supabase.auth.signOut()
+    const loginUrl = new URL('/admin/login', request.url)
+    loginUrl.searchParams.set('error', 'not_authorized')
     return NextResponse.redirect(loginUrl)
   }
 

@@ -1,4 +1,5 @@
 import { supabase } from './supabase'
+import { BookingInsert, BookingRow, ParishPaymentDetailsRow } from '../../types/api.types'
 import { BookingStatus } from '../../types/booking.types'
 
 const isDonationOptionalFieldError = (error: unknown) => {
@@ -76,7 +77,7 @@ export const parishService = {
       .order('created_at', { ascending: false })
   },
 
-  submitBooking: async (data: any) => {
+  submitBooking: async (data: BookingInsert) => {
     const firstAttempt = await supabase
       .from('bookings')
       .insert(data)
@@ -172,15 +173,40 @@ export const parishService = {
       .insert(fallbackPayload)
   },
 
+  /**
+   * Status polling for sacrament requests.
+   *
+   * This used to `select` from `sacrament_requests` directly, which only worked because the table
+   * carried an anon policy of `USING (true)` — meaning the anon key (which ships inside the APK)
+   * could read every parishioner's name, phone number and form payload. That policy is gone; reads
+   * now go through a SECURITY DEFINER RPC that returns status fields only, keyed on the
+   * unguessable `client_request_id` the device already holds.
+   */
   fetchSacramentStatuses: async (requestIds: string[]) => {
     const ids = requestIds.map(normalizeRequestId).filter((v) => v.length > 0)
     if (!ids.length) {
       return { data: [] as any[], error: null as unknown }
     }
-    return supabase
-      .from('sacrament_requests')
-      .select('client_request_id, status, admin_note, updated_at, created_at')
-      .in('client_request_id', ids)
+    // The RPC caps the id array at 100 server-side; chunk so a long history still resolves.
+    const chunks: string[][] = []
+    for (let i = 0; i < ids.length; i += 100) chunks.push(ids.slice(i, i + 100))
+
+    const results = await Promise.all(
+      chunks.map((chunk) =>
+        supabase.rpc('public_fetch_sacrament_statuses', { request_ids: chunk })
+      )
+    )
+
+    const rows = results.flatMap((r) => (Array.isArray(r.data) ? r.data : []))
+    const firstError = results.find((r) => r.error)?.error ?? null
+
+    // A partial failure still returns what resolved; the caller keeps its cached statuses for the
+    // rest rather than showing every request as unknown.
+    return { data: rows, error: rows.length > 0 ? null : firstError }
+  },
+
+  fetchParishSettings: async () => {
+    return supabase.from('parish_settings').select('key, value')
   },
 
   fetchRequestStatuses: async (requestIds: string[]) => {
@@ -196,68 +222,32 @@ export const parishService = {
       return { data: [] as RemoteRequestStatusRow[], error: null as unknown }
     }
 
-    // Try RPC first
+    // The `public_fetch_request_statuses` RPC is the ONLY path that can return these rows.
+    // A previous version also queried `bookings` and `donations` directly as a "safety net" — but
+    // anon holds INSERT-only policies on both tables, so those selects always came back empty and
+    // simply cost two extra round-trips per poll. They have been removed.
     const rpcAttempt = await supabase.rpc('public_fetch_request_statuses', {
       request_ids: normalizedRequestIds,
     })
 
-    const rpcRows = (!rpcAttempt.error && Array.isArray(rpcAttempt.data))
+    const rows: RemoteRequestStatusRow[] = (!rpcAttempt.error && Array.isArray(rpcAttempt.data))
       ? (rpcAttempt.data as any[]).map((row) => ({
           client_request_id: normalizeRequestId(row?.client_request_id),
           status: normalizeStatus(row?.status),
-          source: row?.source === 'donation' ? 'donation' : 'booking',
+          source: row?.source === 'donation' ? 'donation' as const : 'booking' as const,
           updated_at: row?.updated_at ?? null,
         })).filter((row) => row.client_request_id.length > 0)
       : []
 
-    // Even if RPC succeeds, we check directly if anything is missing
-    // This handles cases where RPC might be outdated or only looking at one table
-    const [bookingsResult, donationsResult] = await Promise.all([
-      supabase
-        .from('bookings')
-        .select('client_request_id, status, updated_at, created_at')
-        .in('client_request_id', normalizedRequestIds),
-      supabase
-        .from('donations')
-        .select('client_request_id, status, updated_at, created_at')
-        .in('client_request_id', normalizedRequestIds),
-    ])
-
-    const bookingsRows = Array.isArray(bookingsResult.data)
-      ? bookingsResult.data.map((row: any) => ({
-          client_request_id: normalizeRequestId(row.client_request_id),
-          status: normalizeStatus(row.status),
-          source: 'booking' as const,
-          updated_at: row.updated_at ?? row.created_at ?? null,
-        })).filter((row) => row.client_request_id.length > 0)
-      : []
-
-    const donationsRows = Array.isArray(donationsResult.data)
-      ? donationsResult.data.map((row: any) => ({
-          client_request_id: normalizeRequestId(row.client_request_id),
-          status: normalizeStatus(row.status),
-          source: 'donation' as const,
-          updated_at: row.updated_at ?? row.created_at ?? null,
-        })).filter((row) => row.client_request_id.length > 0)
-      : []
-
-    const resultByRequestId = new Map<string, RemoteRequestStatusRow>()
-    
-    // Add indirect query rows first
-    ;[...bookingsRows, ...donationsRows].forEach(row => {
-        resultByRequestId.set(row.client_request_id, row as RemoteRequestStatusRow)
-    })
-    
-    // Add/Overwrite with RPC rows
-    rpcRows.forEach(row => {
-        resultByRequestId.set(row.client_request_id, row as RemoteRequestStatusRow)
-    })
-
-    const finalRows = Array.from(resultByRequestId.values())
+    // De-duplicate defensively: a request id is unique per table, but a caller could pass the same
+    // id twice.
+    const byRequestId = new Map<string, RemoteRequestStatusRow>()
+    rows.forEach((row) => byRequestId.set(row.client_request_id, row))
+    const finalRows = Array.from(byRequestId.values())
 
     return {
       data: finalRows,
-      error: finalRows.length > 0 ? null : (bookingsResult.error ?? donationsResult.error ?? rpcAttempt.error),
+      error: finalRows.length > 0 ? null : (rpcAttempt.error ?? null),
     }
   },
 }

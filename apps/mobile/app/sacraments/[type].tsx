@@ -8,13 +8,15 @@ import { Button } from '../../src/components/ui/Button';
 import { KeyboardAwareForm } from '../../src/components/ui/KeyboardAwareForm';
 import { DatePickerField } from '../../src/components/ui/DatePickerField';
 import { StatusModal } from '../../src/components/ui/StatusModal';
-import { Toast } from '../../src/components/ui/Toast';
+import { useToast } from '../../src/components/ui/ToastProvider';
 import { useSacramentTypes } from '../../src/hooks/useSacramentTypes';
 import { useOfflineStatus } from '../../src/hooks/useOfflineStatus';
 import { submitSacramentRequest } from '../../src/services/offline/syncService';
 import { addSacramentRequest } from '../../src/services/requests/sacramentRequestStore';
 import { generateClientRequestId } from '../../src/utils/requestId';
 import type { SacramentField } from '../../src/types/sacrament.types';
+import { resolveDateBounds } from '../../src/utils/sacramentDateBounds';
+import { FormHelpLink } from '../../src/components/ui/FormHelpLink';
 
 const inputStyle = (colors: any, invalid?: boolean, multiline?: boolean) => ({
     minHeight: multiline ? 100 : 52,
@@ -54,7 +56,20 @@ export default function SacramentRequestScreen() {
     const [errors, setErrors] = useState<Record<string, boolean>>({});
     const [submitting, setSubmitting] = useState(false);
     const [showDone, setShowDone] = useState(false);
-    const [toast, setToast] = useState<string | null>(null);
+    const { showToast } = useToast();
+
+    /**
+     * Every required field answered, and nothing already in flight.
+     *
+     * The button previously accepted a tap on an empty form and replied with "Please complete the
+     * required fields" — making the user hunt for which one. Disabling it instead, with the count
+     * shown below, says what is outstanding before they reach for it.
+     */
+    const missingRequired = config
+        ? config.required_fields.filter((f) => f.required && !(values[f.key] ?? '').trim()).length +
+          (fullName.trim() ? 0 : 1)
+        : 0;
+    const canSubmit = !submitting && missingRequired === 0;
 
     if (!config) {
         return (
@@ -84,7 +99,7 @@ export default function SacramentRequestScreen() {
 
     const handleSubmit = async () => {
         if (!validate()) {
-            setToast('Please complete the required fields.');
+            showToast('Please complete the required fields.', 'error');
             return;
         }
         setSubmitting(true);
@@ -106,7 +121,7 @@ export default function SacramentRequestScreen() {
 
             const result: any = await submitSacramentRequest(payload, isOffline);
             if (result?.duplicateBlocked) {
-                setToast('Submission already in progress.');
+                showToast('Submission already in progress.', 'error');
                 return;
             }
             if (result?.error) {
@@ -129,7 +144,7 @@ export default function SacramentRequestScreen() {
 
             setShowDone(true);
         } catch (e) {
-            setToast(e instanceof Error ? e.message : 'Unable to submit now. Please try again.');
+            showToast(e instanceof Error ? e.message : 'Unable to submit now. Please try again.', 'error');
         } finally {
             setSubmitting(false);
         }
@@ -139,6 +154,20 @@ export default function SacramentRequestScreen() {
         const labelText = `${f.label}${f.required ? '' : ' (optional)'}`;
 
         if (f.type === 'date') {
+            /*
+             * Date bounds come from the field config, not from this screen.
+             *
+             * Previously `DatePickerField` was rendered with no `minimumDate`/`maximumDate` at all.
+             * That left the Baptismal Card's "Date of Baptism" unbounded — a future baptism date
+             * was accepted — while the Android dialog opened on the current month, where reaching a
+             * date decades earlier means finding the small year affordance in the header. The
+             * practical effect for a parishioner was a picker that appeared stuck on today.
+             *
+             * `datePreset: 'past'` now supplies max = today, `minDate` supplies the floor, and
+             * `preferYearFirst` swaps the Android calendar for year/month/day wheels so the year is
+             * the first thing you touch.
+             */
+            const bounds = resolveDateBounds(f);
             return (
                 <DatePickerField
                     key={f.key}
@@ -147,6 +176,9 @@ export default function SacramentRequestScreen() {
                     onChange={(iso) => setField(f.key, iso)}
                     error={errors[f.key]}
                     helperText={errors[f.key] ? 'This date is required.' : (f.helperText ?? undefined)}
+                    minimumDate={bounds.minimumDate}
+                    maximumDate={bounds.maximumDate}
+                    preferYearFirst={bounds.preferYearFirst}
                 />
             );
         }
@@ -192,6 +224,7 @@ export default function SacramentRequestScreen() {
             <View key={f.key}>
                 <Label text={labelText} colors={colors} />
                 <TextInput
+                    editable={!submitting}
                     value={values[f.key] ?? ''}
                     onChangeText={(v) => setField(f.key, v)}
                     placeholder={f.placeholder ?? ''}
@@ -259,6 +292,7 @@ export default function SacramentRequestScreen() {
 
                     <Label text="Full Name" colors={colors} />
                     <TextInput
+                        editable={!submitting}
                         value={fullName}
                         onChangeText={(v) => { setFullName(v); if (errors.full_name) setErrors((c) => ({ ...c, full_name: false })); }}
                         placeholder="Your full name"
@@ -268,6 +302,7 @@ export default function SacramentRequestScreen() {
 
                     <Label text="Phone (optional)" colors={colors} />
                     <TextInput
+                        editable={!submitting}
                         value={phone}
                         onChangeText={setPhone}
                         placeholder="e.g. 080..."
@@ -282,6 +317,7 @@ export default function SacramentRequestScreen() {
                         <>
                             <Label text="Supporting Information (optional)" colors={colors} />
                             <TextInput
+                                editable={!submitting}
                                 value={supportingInfo}
                                 onChangeText={setSupportingInfo}
                                 placeholder="Reference to any supporting document, or extra details"
@@ -299,9 +335,17 @@ export default function SacramentRequestScreen() {
                         </Text>
                     )}
 
-                    <Button onPress={handleSubmit} disabled={submitting}>
+                    <Button onPress={handleSubmit} disabled={!canSubmit}>
                         {submitting ? 'Submitting...' : 'Submit Request'}
                     </Button>
+                    {!submitting && missingRequired > 0 ? (
+                        <Text style={{ color: colors.textMuted, fontSize: 12, textAlign: 'center', marginTop: 8 }}>
+                            {missingRequired === 1
+                                ? '1 required field still to complete.'
+                                : `${missingRequired} required fields still to complete.`}
+                        </Text>
+                    ) : null}
+                    <FormHelpLink context={`your ${config.title.toLowerCase()} request`} />
             </KeyboardAwareForm>
 
             <StatusModal
@@ -312,7 +356,6 @@ export default function SacramentRequestScreen() {
                 onAction={() => { setShowDone(false); router.replace('/sacraments'); }}
                 actionLabel="View My Requests"
             />
-            {toast ? <Toast message={toast} type="error" /> : null}
         </SafeAreaView>
     );
 }

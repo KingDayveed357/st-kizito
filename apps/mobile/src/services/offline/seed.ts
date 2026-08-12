@@ -1,3 +1,4 @@
+import { devLog } from '../../utils/logger';
 import { getDb } from './database';
 import { useAppStore } from '../../store/useAppStore';
 import readingsData from '../../data/liturgical/readings-2025.json';
@@ -14,7 +15,7 @@ export const seedDatabaseIfNeeded = async () => {
         // e.g. readingsData.map(...)
 
         store.setHasSeeded(true);
-        console.log('[Seed] Database seeded successfully.');
+        devLog('Seed', 'Database seeded successfully.');
     } catch (error) {
         console.error('[Seed] Error seeding database:', error);
     }

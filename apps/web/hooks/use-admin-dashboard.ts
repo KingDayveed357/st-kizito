@@ -20,6 +20,7 @@ export function useDashboardMetrics() {
 
   const refresh = React.useCallback(async () => {
     setError(null)
+    setIsLoading(true)
     try {
       const supabase = createClient()
       const next = await fetchDashboardMetrics(supabase)

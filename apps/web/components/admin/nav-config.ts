@@ -1,4 +1,4 @@
-import { CalendarClock, CalendarDays, CreditCard, FileText, HandCoins, Home, Megaphone, MessageSquareQuote, Phone, ScrollText, Settings, SlidersHorizontal, Users } from 'lucide-react'
+import { CalendarClock, CalendarDays, CreditCard, FileText, HandCoins, Home, Images, Megaphone, MessageSquareQuote, Phone, ScrollText, Settings, SlidersHorizontal, Users } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
 export interface SidebarNavItem {
@@ -27,6 +27,7 @@ export const ADMIN_NAV_SECTIONS: SidebarNavSection[] = [
       { label: 'Announcements', href: '/admin/announcements', icon: Megaphone },
       { label: 'Events', href: '/admin/events', icon: CalendarDays },
       { label: 'Mass Times', href: '/admin/mass-times', icon: CalendarClock },
+      { label: 'Gallery', href: '/admin/gallery', icon: Images },
     ],
   },
   {
@@ -43,7 +44,9 @@ export const ADMIN_NAV_SECTIONS: SidebarNavSection[] = [
   {
     title: 'Administration',
     items: [
-      { label: 'Users & Admins', href: '/admin/users', icon: Users, badge: 'Soon', disabled: true },
+      // No longer "Soon": the page now manages the real `admin_users` roster that `is_admin()`
+      // checks, and it is the only way to grant portal access without writing SQL.
+      { label: 'Users & Admins', href: '/admin/users', icon: Users },
       { label: 'Sacrament Config', href: '/admin/sacrament-config', icon: SlidersHorizontal },
       { label: 'Settings', href: '/admin/settings', icon: Settings },
     ],

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Pressable, StyleSheet } from 'react-native';
+import { Pressable, StyleSheet, ViewStyle } from 'react-native';
 import Animated, {
     Extrapolation,
     interpolate,
@@ -51,7 +51,7 @@ export const ScrollToTopButton: React.FC<ScrollToTopButtonProps> = ({
         const p = interpolate(scrollY.value, [threshold - 60, threshold], [0, 1], Extrapolation.CLAMP);
         return {
             opacity: p,
-            transform: [{ translateY: (1 - p) * 14 }, { scale: 0.9 + p * 0.1 }],
+            transform: [{ translateY: (1 - p) * 14 }, { scale: 0.9 + p * 0.1 }] as ViewStyle['transform'],
         };
     });
 

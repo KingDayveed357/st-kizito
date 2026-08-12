@@ -1,14 +1,16 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { AdminLayout } from "@/components/layout/admin-layout"
+import { AdminPage } from "@/components/layout/admin-page"
 import { Button } from "@/components/ui/button-custom"
 import { Input } from "@/components/ui/input-custom"
 import { Card, CardContent } from "@/components/ui/card-custom"
 import { Modal, ModalBody, ModalFooter, ModalHeader, ModalTitle } from "@/components/ui/modal-custom"
 import { AdminPageSkeleton } from "@/components/admin/admin-page-skeleton"
+import { ConfirmDialog } from "@/components/ui/confirm-dialog"
 import { createClient } from "@/lib/supabase"
 import { getContactRoleMeta } from "@/lib/contact-role-meta"
+import { notifyError, notifySuccess } from "@/lib/toast"
 
 type ParishContact = {
   id: string
@@ -32,6 +34,8 @@ export default function ContactDetailsPage() {
   const [isSaving, setIsSaving] = useState(false)
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
   const [successMsg, setSuccessMsg] = useState<string | null>(null)
+  const [pendingDelete, setPendingDelete] = useState<ParishContact | null>(null)
+  const [isDeleting, setIsDeleting] = useState(false)
   const [formData, setFormData] = useState({
     role: "",
     name: "",
@@ -138,21 +142,32 @@ export default function ContactDetailsPage() {
 
       await fetchContacts()
       setIsModalOpen(false)
-    } catch (e: any) {
-      setErrorMsg(`Failed to save contact: ${e?.message ?? "Unknown error"}`)
+    } catch (e) {
+      // Log the cause; show a sentence an administrator can act on.
+      console.error("[admin] failed to save parish contact", e)
+      setErrorMsg("We couldn't save that contact. Nothing was changed — please try again.")
     } finally {
       setIsSaving(false)
     }
   }
 
-  const handleDelete = async (id: string) => {
-    if (!confirm("Delete this contact?")) return
+  const handleDelete = async () => {
+    if (!pendingDelete) return
     setErrorMsg(null)
-    const { error } = await supabase.from("parish_contacts").delete().eq("id", id)
+    setIsDeleting(true)
+
+    const { error } = await supabase.from("parish_contacts").delete().eq("id", pendingDelete.id)
+
+    setIsDeleting(false)
+
     if (error) {
-      setErrorMsg(`Failed to delete contact: ${error.message}`)
+      // The raw Postgres message is logged, not shown — it means nothing to a parish administrator.
+      notifyError("We couldn't remove that contact.", error)
       return
     }
+
+    notifySuccess("Contact removed", pendingDelete.name)
+    setPendingDelete(null)
     await fetchContacts()
   }
 
@@ -166,7 +181,7 @@ export default function ContactDetailsPage() {
   )
 
   return (
-    <AdminLayout
+    <AdminPage
       title="Contact Details"
       subtitle="Manage people parishioners can reach directly from the mobile app"
       navbarActions={navbarActions}
@@ -219,7 +234,12 @@ export default function ContactDetailsPage() {
                     <Button variant="ghost" size="sm" onClick={() => handleEditClick(contact)}>
                       Edit
                     </Button>
-                    <Button variant="ghost" size="sm" onClick={() => handleDelete(contact.id)}>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setPendingDelete(contact)}
+                      aria-label={`Remove ${contact.name}`}
+                    >
                       <span className="text-destructive">Delete</span>
                     </Button>
                   </div>
@@ -293,6 +313,23 @@ export default function ContactDetailsPage() {
           </Button>
         </ModalFooter>
       </Modal>
-    </AdminLayout>
+
+      <ConfirmDialog
+        open={Boolean(pendingDelete)}
+        onOpenChange={(open) => !open && setPendingDelete(null)}
+        title="Remove this contact?"
+        description={
+          pendingDelete ? (
+            <>
+              <strong className="text-foreground">{pendingDelete.name}</strong> ({pendingDelete.role})
+              will no longer be reachable from the parish app. This cannot be undone.
+            </>
+          ) : null
+        }
+        confirmLabel="Remove contact"
+        isPending={isDeleting}
+        onConfirm={handleDelete}
+      />
+    </AdminPage>
   )
 }

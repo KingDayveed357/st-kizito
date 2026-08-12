@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { parishService } from '../services/api/parishService';
 import { withDb, withDbWriteTransaction } from '../services/offline/database';
 import { reportNetworkSuccess } from './useOfflineStatus';
+import { buildExcerpt, normalizeTitle } from '../utils/parishContent';
 
 export const useAnnouncements = () => {
     const [data, setData] = useState<any[]>([]);
@@ -20,15 +21,33 @@ export const useAnnouncements = () => {
                 'Load announcements cache'
             );
             
-            const formatted = result.map((row: any) => ({
-                id: row.id,
-                title: row.title,
-                excerpt: row.content, // Using content directly or could substring
-                date: new Date(row.created_at).toLocaleDateString('en-US', { day: 'numeric', month: 'short' }).toUpperCase(),
-                pinned: false,
-                author: 'Parish Office',
-                authorInitials: 'PO',
-            }));
+            /*
+             * Raw row → display model.
+             *
+             * This used to hand the card `excerpt: row.content` (the ENTIRE body) and a
+             * pre-uppercased "JUL 27", then hardcode `pinned: false` and an author. The card had no
+             * way to lay anything out sensibly: it received one undifferentiated blob of shouted
+             * text and a string that was already a design decision.
+             *
+             * The mapping now keeps the raw values (`publishedAt`, `type`) so the card can decide
+             * how to present them, and normalises the admin's ALL-CAPS input once, here, rather
+             * than in every component that renders it.
+             */
+            const formatted = result.map((row: any) => {
+                const title = normalizeTitle(row.title);
+                return {
+                    id: row.id,
+                    title,
+                    // Drops the title where the admin repeated it as the body's first line.
+                    excerpt: buildExcerpt(row.content, row.title),
+                    // ISO, not a formatted string: the card formats for its own context.
+                    publishedAt: row.created_at ?? null,
+                    // `type` exists in the schema ('liturgical' | 'parish') and was simply discarded.
+                    type: row.type === 'liturgical' ? 'liturgical' : 'parish',
+                    author: 'Parish Office',
+                    authorInitials: 'PO',
+                };
+            });
             
             if (isMounted.current) setData(formatted);
         } catch (error) {

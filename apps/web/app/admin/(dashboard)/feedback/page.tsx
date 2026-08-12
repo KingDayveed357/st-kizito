@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useMemo } from "react"
 import { Search, Filter, Trash2, CheckCircle, MessageSquare, MoreHorizontal, ArrowUpDown, RefreshCw } from "lucide-react"
-import { AdminLayout } from "@/components/layout/admin-layout"
+import { AdminPage } from "@/components/layout/admin-page"
 import { Card, CardContent } from "@/components/ui/card-custom"
 import { Badge } from "@/components/ui/badge-custom"
 import { Button } from "@/components/ui/button-custom"
@@ -48,6 +48,7 @@ import {
 } from "@/components/ui/pagination"
 import { AdminPageSkeleton } from "@/components/admin/admin-page-skeleton"
 import { createClient } from "@/lib/supabase"
+import { formatDate, formatDateTime } from "@/lib/format-time"
 import { toast } from "sonner"
 
 type FeedbackSubmission = {
@@ -166,7 +167,7 @@ export default function AdminFeedbackPage() {
   }
 
   return (
-    <AdminLayout
+    <AdminPage
       title="Feedback Inbox"
       subtitle="Process user bug reports, feature requests, and inquiries"
     >
@@ -298,7 +299,7 @@ export default function AdminFeedbackPage() {
                           </Badge>
                         </TableCell>
                         <TableCell className="text-xs text-muted-foreground font-medium">
-                          {new Date(entry.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
+                          {formatDate(entry.created_at)}
                         </TableCell>
                         <TableCell className="text-right">
                           <DropdownMenu>
@@ -402,7 +403,7 @@ export default function AdminFeedbackPage() {
                 {selectedFeedback?.category}
               </Badge>
               <span className="text-xs font-medium text-muted-foreground uppercase tracking-widest">
-                {selectedFeedback && new Date(selectedFeedback.created_at).toLocaleDateString()}
+                {selectedFeedback && formatDateTime(selectedFeedback.created_at)}
               </span>
             </div>
             <DialogTitle className="text-2xl font-bold text-foreground">
@@ -455,6 +456,6 @@ export default function AdminFeedbackPage() {
           </div>
         </DialogContent>
       </Dialog>
-    </AdminLayout>
+    </AdminPage>
   )
 }

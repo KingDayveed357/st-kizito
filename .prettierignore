@@ -1,0 +1,19 @@
+# Dependencies & build output
+node_modules
+**/node_modules
+**/.next
+**/.expo
+**/dist
+**/web-build
+**/android
+**/ios
+
+# Generated / large data (NEVER format the liturgical corpus — 24 MB+ JSON)
+apps/mobile/data
+**/*.tsbuildinfo
+package-lock.json
+**/package-lock.json
+skills-lock.json
+
+# Design references (author-owned HTML)
+design

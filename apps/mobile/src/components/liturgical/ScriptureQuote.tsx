@@ -6,9 +6,11 @@ import { useTheme } from '../../hooks/useTheme';
 interface ScriptureQuoteProps {
     text: string;
     reference: string;
+    /** Truncate to this many lines with an ellipsis. Omit to show the full quote. */
+    numberOfLines?: number;
 }
 
-export const ScriptureQuote: React.FC<ScriptureQuoteProps> = ({ text, reference }) => {
+export const ScriptureQuote: React.FC<ScriptureQuoteProps> = ({ text, reference, numberOfLines }) => {
     const { colors, allColors } = useTheme();
 
     return (
@@ -19,7 +21,12 @@ export const ScriptureQuote: React.FC<ScriptureQuoteProps> = ({ text, reference 
             <Text style={{ color: allColors.liturgical.christmasEaster }} className="font-serif font-bold text-4xl leading-none italic mb-[-10px]">
                 "
             </Text>
-            <Text style={{ color: colors.textPrimary }} className="font-serif italic text-xl leading-relaxed mb-4 z-10">
+            <Text
+                numberOfLines={numberOfLines}
+                ellipsizeMode="tail"
+                style={{ color: colors.textPrimary }}
+                className="font-serif italic text-xl leading-relaxed mb-4 z-10"
+            >
                 {text}
             </Text>
             <Text style={{ color: colors.textSecondary }} className="font-sans font-bold text-[11px] tracking-widest uppercase">

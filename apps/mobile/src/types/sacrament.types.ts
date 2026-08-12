@@ -1,5 +1,17 @@
 export type SacramentFieldType = 'text' | 'longtext' | 'date' | 'phone' | 'email' | 'select';
 
+/**
+ * Bounds for a `date` field.
+ *
+ * `past`   — the event has already happened (a baptism, a marriage). Max = today.
+ * `future` — the event is being scheduled. Min = today.
+ * `any`    — unbounded; the default when a field says nothing.
+ *
+ * A preset is preferred over hardcoded `minDate`/`maxDate` because "today" has to be evaluated when
+ * the form opens, not when the config was written.
+ */
+export type SacramentDatePreset = 'past' | 'future' | 'any';
+
 export interface SacramentField {
     key: string;
     label: string;
@@ -8,6 +20,11 @@ export interface SacramentField {
     helperText?: string | null;
     placeholder?: string | null;
     options?: string[]; // for 'select'
+    /** `date` fields only. See SacramentDatePreset. */
+    datePreset?: SacramentDatePreset;
+    /** `date` fields only. Absolute ISO bound, applied on top of the preset. */
+    minDate?: string | null;
+    maxDate?: string | null;
 }
 
 export interface SacramentType {
@@ -67,7 +84,18 @@ export const DEFAULT_SACRAMENT_TYPES: SacramentType[] = [
         active: true,
         sort_order: 10,
         required_fields: [
-            { key: 'baptism_date', label: 'Date of Baptism', type: 'date', required: true },
+            {
+                key: 'baptism_date',
+                label: 'Date of Baptism',
+                type: 'date',
+                required: true,
+                // A baptism being certified has already taken place, so the range ends today. The
+                // 1900 floor is a sanity bound, not a policy — parish records go back further than
+                // any living parishioner.
+                datePreset: 'past',
+                minDate: '1900-01-01',
+                helperText: 'The date you were baptised.',
+            },
             { key: 'place_of_baptism', label: 'Place / Church of Baptism', type: 'text', required: true },
             { key: 'father_name', label: "Father's Full Name", type: 'text', required: true },
             { key: 'mother_name', label: "Mother's Maiden Name", type: 'text', required: true },

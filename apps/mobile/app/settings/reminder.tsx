@@ -43,6 +43,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Header } from '../../src/components/ui/Header';
+import { DevotionReminders } from '../../src/components/more/DevotionReminders';
 import { useTheme } from '../../src/hooks/useTheme';
 import { formatReminderTime, useNotifications } from '../../src/hooks/useNotifications';
 import { PrayerReminderKey } from '../../src/services/notifications/notificationService';
@@ -654,6 +655,8 @@ export default function ReminderSettingsScreen() {
                         onOpenCustomTime={openCustomTime}
                     />
                 ))}
+
+                <DevotionReminders />
             </ScrollView>
 
             <TimePickerModal

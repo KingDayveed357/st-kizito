@@ -38,7 +38,23 @@
   --on-warning: #ffffff;
   --outline: #79747e;
   --outline-variant: #cac4d0;
-  
+
+  /* Semantic status pairs.
+     Five meanings, not one token per status string — `published`, `approved`, `verified` and
+     `active` all say "this is good", so they share a pair. StatusBadge maps the strings.
+     These exist so pages stop inventing status colour with raw Tailwind (bg-green-600/10,
+     text-amber-500), which is what five different pages were doing. */
+  --status-positive-fg: #2e6b41;
+  --status-positive-bg: #e8f0ea;
+  --status-attention-fg: #8a5a0b;
+  --status-attention-bg: #faefdc;
+  --status-critical-fg: #a32820;
+  --status-critical-bg: #f8e7e5;
+  --status-neutral-fg: #56534a;
+  --status-neutral-bg: #ede8de;
+  --status-info-fg: #2a5c8a;
+  --status-info-bg: #e4eef7;
+
   /* Semantic assignments for compatibility */
   --background: var(--surface);
   --foreground: #1c1c18;
@@ -109,7 +125,19 @@
   --on-warning: #331900;
   --outline: #928f99;
   --outline-variant: #49454e;
-  
+
+  /* Status pairs, re-tuned for the dark ground rather than inverted. */
+  --status-positive-fg: #7fc08f;
+  --status-positive-bg: #1b2a21;
+  --status-attention-fg: #e0a85a;
+  --status-attention-bg: #2b2114;
+  --status-critical-fg: #e89a92;
+  --status-critical-bg: #2c1917;
+  --status-neutral-fg: #b3ac9e;
+  --status-neutral-bg: #2b313a;
+  --status-info-fg: #8fb8dc;
+  --status-info-bg: #16232e;
+
   --background: var(--surface);
   --foreground: #e6e0e9;
   --card: var(--surface-container-lowest);
@@ -166,6 +194,16 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+  --color-status-positive-fg: var(--status-positive-fg);
+  --color-status-positive-bg: var(--status-positive-bg);
+  --color-status-attention-fg: var(--status-attention-fg);
+  --color-status-attention-bg: var(--status-attention-bg);
+  --color-status-critical-fg: var(--status-critical-fg);
+  --color-status-critical-bg: var(--status-critical-bg);
+  --color-status-neutral-fg: var(--status-neutral-fg);
+  --color-status-neutral-bg: var(--status-neutral-bg);
+  --color-status-info-fg: var(--status-info-fg);
+  --color-status-info-bg: var(--status-info-bg);
   --color-chart-1: var(--chart-1);
   --color-chart-2: var(--chart-2);
   --color-chart-3: var(--chart-3);

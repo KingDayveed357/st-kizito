@@ -1,5 +1,30 @@
 import type { SupabaseClient } from '@supabase/supabase-js'
 
+/**
+ * A slow, paused (free-tier auto-pause), or misconfigured Supabase must never freeze the admin UI on
+ * skeletons forever (DASH-1). Every dashboard read is bounded by this timeout via an AbortController,
+ * so the loading state always resolves to either data or an error+retry.
+ */
+const DASHBOARD_TIMEOUT_MS = 10_000
+
+/**
+ * Runs `run(signal)` with an AbortSignal that fires after `ms`, then cancels the timer. The Supabase
+ * queries are wired to this signal (`.abortSignal(...)`) so a hung request rejects instead of pending
+ * forever, and the caller's loading state always resolves.
+ */
+async function withAbortTimeout<T>(
+  run: (signal: AbortSignal) => Promise<T>,
+  ms = DASHBOARD_TIMEOUT_MS,
+): Promise<T> {
+  const controller = new AbortController()
+  const timer = setTimeout(() => controller.abort(), ms)
+  try {
+    return await run(controller.signal)
+  } finally {
+    clearTimeout(timer)
+  }
+}
+
 export interface DashboardMetrics {
   totalAnnouncements: number
   upcomingEvents: number
@@ -32,13 +57,21 @@ const toIsoDate = (value: unknown) => {
 export async function fetchDashboardMetrics(supabase: SupabaseClient): Promise<DashboardMetrics> {
   const today = new Date().toISOString()
 
-  const [announcements, upcomingEvents, pendingBookings, approvedBookings, donations] = await Promise.all([
-    supabase.from('announcements').select('*', { count: 'exact', head: true }),
-    supabase.from('events').select('*', { count: 'exact', head: true }).gte('start_date', today),
-    supabase.from('bookings').select('*', { count: 'exact', head: true }).eq('status', 'pending'),
-    supabase.from('bookings').select('*', { count: 'exact', head: true }).eq('status', 'approved'),
-    supabase.from('donations').select('amount,status'),
-  ])
+  const [announcements, upcomingEvents, pendingBookings, approvedBookings, donations] = await withAbortTimeout(
+    (signal) =>
+      Promise.all([
+        supabase.from('announcements').select('*', { count: 'exact', head: true }).abortSignal(signal),
+        supabase.from('events').select('*', { count: 'exact', head: true }).gte('start_date', today).abortSignal(signal),
+        supabase.from('bookings').select('*', { count: 'exact', head: true }).eq('status', 'pending').abortSignal(signal),
+        supabase.from('bookings').select('*', { count: 'exact', head: true }).eq('status', 'approved').abortSignal(signal),
+        supabase.from('donations').select('amount,status').abortSignal(signal),
+      ]),
+  )
+
+  // Surface a real failure instead of silently reporting zeros (DASH-2). These tables share one auth
+  // context, so an error on any of them signals a connectivity/auth/config problem worth showing.
+  const firstError = [announcements, upcomingEvents, pendingBookings, approvedBookings, donations].find((r) => r.error)?.error
+  if (firstError) throw new Error(firstError.message || 'Failed to load dashboard metrics.')
 
   const donationRows = (donations.data ?? []) as Array<{ amount: number | null; status: string | null }>
   const totalDonations = donationRows.reduce((sum, row) => sum + Number(row.amount ?? 0), 0)
@@ -61,36 +94,47 @@ export async function fetchDashboardActivity(
 ): Promise<{ items: ActivityItem[]; hasMore: boolean }> {
   const baseLimit = Math.max(pageSize * 2, 20)
 
-  const [announcements, events, bookings, donations] = await Promise.all([
-    supabase
-      .from('announcements')
-      .select('id,title,created_at,author')
-      .order('created_at', { ascending: false })
-      .limit(baseLimit),
-    supabase
-      .from('events')
-      .select('id,title,created_at,start_date')
-      .order('created_at', { ascending: false })
-      .limit(baseLimit),
-    supabase
-      .from('bookings')
-      .select('id,name,type,status,intention,created_at')
-      .order('created_at', { ascending: false })
-      .limit(baseLimit),
-    supabase
-      .from('donations')
-      .select('id,donor_name,amount,status,created_at')
-      .order('created_at', { ascending: false })
-      .limit(baseLimit),
-  ])
+  const [announcements, events, bookings, donations] = await withAbortTimeout((signal) =>
+    Promise.all([
+      supabase
+        .from('announcements')
+        // NB: `announcements` has no `author` column — selecting it errored and silently dropped all
+        // announcements from the feed (DASH-2). The actor is the parish office by definition.
+        .select('id,title,created_at')
+        .order('created_at', { ascending: false })
+        .limit(baseLimit)
+        .abortSignal(signal),
+      supabase
+        .from('events')
+        .select('id,title,created_at,start_date')
+        .order('created_at', { ascending: false })
+        .limit(baseLimit)
+        .abortSignal(signal),
+      supabase
+        .from('bookings')
+        .select('id,name,type,status,intention,created_at')
+        .order('created_at', { ascending: false })
+        .limit(baseLimit)
+        .abortSignal(signal),
+      supabase
+        .from('donations')
+        .select('id,donor_name,amount,status,created_at')
+        .order('created_at', { ascending: false })
+        .limit(baseLimit)
+        .abortSignal(signal),
+    ]),
+  )
+
+  const firstError = [announcements, events, bookings, donations].find((r) => r.error)?.error
+  if (firstError) throw new Error(firstError.message || 'Failed to load recent activity.')
 
   const activity: ActivityItem[] = [
-    ...((announcements.data ?? []) as Array<{ id: string; title: string | null; created_at: string | null; author?: string | null }>).map((item) => ({
+    ...((announcements.data ?? []) as Array<{ id: string; title: string | null; created_at: string | null }>).map((item) => ({
       id: `ann-${item.id}`,
       type: 'announcement' as const,
       action: 'Published announcement',
       subject: item.title ?? 'Untitled announcement',
-      actor: item.author ?? 'Parish Office',
+      actor: 'Parish Office',
       timestamp: toIsoDate(item.created_at),
     })),
     ...((events.data ?? []) as Array<{ id: string; title: string | null; created_at: string | null; start_date: string | null }>).map((item) => ({

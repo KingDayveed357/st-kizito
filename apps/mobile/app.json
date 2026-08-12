@@ -6,7 +6,7 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
@@ -14,7 +14,10 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.dave.js.stkizito"
+      "bundleIdentifier": "com.dave.js.stkizito",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -23,7 +26,11 @@
       },
       "softwareKeyboardLayoutMode": "resize",
       "predictiveBackGestureEnabled": false,
-      "package": "com.dave.js.stkizito"
+      "package": "com.dave.js.stkizito",
+      "permissions": [
+        "android.permission.POST_NOTIFICATIONS",
+        "android.permission.RECEIVE_BOOT_COMPLETED"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png",
@@ -33,6 +40,12 @@
       "expo-router",
       "expo-sqlite",
       "expo-image",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "St. Kizito needs access to your photos so you can attach a payment receipt to your Mass booking."
+        }
+      ],
       [
         "expo-splash-screen",
         {
@@ -61,11 +74,11 @@
       }
     },
     "owner": "dave.js",
-    "runtimeVersion": {
-      "policy": "appVersion"
-    },
+    "runtimeVersion": "1.0.0",
     "updates": {
-      "url": "https://u.expo.dev/b843ec8a-4ccf-4218-bdfb-e9816aa38a5d"
+      "url": "https://u.expo.dev/b843ec8a-4ccf-4218-bdfb-e9816aa38a5d",
+      "fallbackToCacheTimeout": 0,
+      "checkAutomatically": "ON_LOAD"
     },
     "jsEngine": "hermes"
   }

@@ -4,9 +4,11 @@ import { RefreshControl, ScrollView, Text, View } from 'react-native';
 import { Header } from '../../src/components/ui/Header';
 import { useTheme } from '../../src/hooks/useTheme';
 import { EmptyState } from '../../src/components/ui/EmptyState';
-import { getRequestHistory, refreshRequestHistory, RequestHistoryItem } from '../../src/services/requests/requestStore';
+import { getRequestHistory, refreshRequestHistory, RequestHistoryItem, RequestType } from '../../src/services/requests/requestStore';
 import { useFocusEffect } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+
+import { SkeletonLoader } from '../../src/components/ui/SkeletonLoader';
 
 const formatDate = (value: string) => {
     const date = new Date(value);
@@ -39,11 +41,56 @@ const formatTypeLabel = (value: RequestHistoryItem['type']) => {
     return 'Donation';
 };
 
+const RequestCardSkeleton = ({ colors }: { colors: any }) => (
+    <View
+        style={{
+            borderRadius: 20,
+            backgroundColor: colors.surface,
+            borderWidth: 1,
+            borderColor: colors.border,
+            padding: 18,
+            marginBottom: 14,
+            shadowColor: '#000000',
+            shadowOffset: { width: 0, height: 4 },
+            shadowOpacity: 0.06,
+            shadowRadius: 10,
+            elevation: 2,
+        }}
+    >
+        <SkeletonLoader width={60} height={12} borderRadius={4} />
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 12, marginBottom: 16 }}>
+            <SkeletonLoader width={140} height={20} borderRadius={6} />
+            <SkeletonLoader width={70} height={24} borderRadius={12} />
+        </View>
+
+        <SkeletonLoader width="70%" height={14} borderRadius={4} />
+        <View style={{ height: 8 }} />
+        <SkeletonLoader width="50%" height={14} borderRadius={4} />
+        <View style={{ height: 8 }} />
+        <SkeletonLoader width="85%" height={14} borderRadius={4} />
+
+        {/* Divider */}
+        <View style={{ height: 1, backgroundColor: colors.border, marginTop: 16, marginBottom: 16 }} />
+
+        {/* Tracking ID Skeleton */}
+        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+            <View style={{ flex: 1 }}>
+                <SkeletonLoader width={80} height={10} borderRadius={3} />
+                <View style={{ height: 6 }} />
+                <SkeletonLoader width={160} height={16} borderRadius={4} />
+            </View>
+            <SkeletonLoader width={64} height={28} borderRadius={10} />
+        </View>
+    </View>
+);
+
 export default function MyRequestsScreen() {
     const { colors, allColors } = useTheme();
     const [items, setItems] = useState<RequestHistoryItem[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [isRefreshing, setIsRefreshing] = useState(false);
+    /** Tracks which tracking ID was most recently copied for the flash feedback. */
+    const [copiedId, setCopiedId] = useState<string | null>(null);
 
     const loadRequests = useCallback(async (syncRemote = false) => {
         const data = syncRemote ? await refreshRequestHistory() : await getRequestHistory();
@@ -73,6 +120,17 @@ export default function MyRequestsScreen() {
         }, [])
     );
 
+    const [filterType, setFilterType] = useState<RequestType | 'all'>('all');
+    const [filterStatus, setFilterStatus] = useState<RequestHistoryItem['status'] | 'all'>('all');
+
+    const filteredItems = useMemo(() => {
+        return items.filter(item => {
+            if (filterType !== 'all' && item.type !== filterType) return false;
+            if (filterStatus !== 'all' && item.status !== filterStatus) return false;
+            return true;
+        });
+    }, [items, filterType, filterStatus]);
+
     const onRefresh = useCallback(async () => {
         setIsRefreshing(true);
         try {
@@ -81,6 +139,18 @@ export default function MyRequestsScreen() {
             setIsRefreshing(false);
         }
     }, [loadRequests]);
+
+    const copyTrackingId = useCallback(async (id: string) => {
+        try {
+            // Lazy-load expo-clipboard so a build without it degrades gracefully.
+            const Clipboard = require('expo-clipboard');
+            await Clipboard.setStringAsync(id.toUpperCase());
+            setCopiedId(id);
+            setTimeout(() => setCopiedId((prev) => (prev === id ? null : prev)), 2000);
+        } catch {
+            // If clipboard is unavailable (e.g. old Expo Go), fail silently.
+        }
+    }, []);
 
     const statusTone = useMemo(() => {
         return {
@@ -121,13 +191,76 @@ export default function MyRequestsScreen() {
                     </Text>
                 </View>
 
-                {!isLoading && items.length === 0 ? (
-                    <EmptyState title="No requests yet" subtitle="Your submitted requests will appear here." />
-                ) : null}
+                {/* Filters */}
+                <View style={{ marginBottom: 16 }}>
+                    <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8, marginBottom: 12 }}>
+                        {(['all', 'mass booking', 'donation', 'thanksgiving'] as const).map(type => (
+                            <View 
+                                key={type}
+                                style={{
+                                    backgroundColor: filterType === type ? colors.accent : colors.surfaceElevated,
+                                    paddingHorizontal: 16,
+                                    paddingVertical: 8,
+                                    borderRadius: 999,
+                                    borderWidth: 1,
+                                    borderColor: filterType === type ? colors.accent : colors.border,
+                                }}
+                                // @ts-ignore
+                                onStartShouldSetResponder={() => true}
+                                onResponderRelease={() => setFilterType(type)}
+                            >
+                                <Text style={{ 
+                                    color: filterType === type ? '#FFFFFF' : colors.textPrimary,
+                                    fontSize: 13,
+                                    fontWeight: '600'
+                                }}>
+                                    {type === 'all' ? 'All Types' : formatTypeLabel(type)}
+                                </Text>
+                            </View>
+                        ))}
+                    </ScrollView>
 
-                {items.map((item) => {
-                    const tone = statusTone[item.status];
-                    return (
+                    <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8 }}>
+                        {(['all', 'pending', 'approved', 'rejected'] as const).map(status => (
+                            <View 
+                                key={status}
+                                style={{
+                                    backgroundColor: filterStatus === status ? colors.textPrimary : colors.surfaceElevated,
+                                    paddingHorizontal: 16,
+                                    paddingVertical: 8,
+                                    borderRadius: 999,
+                                    borderWidth: 1,
+                                    borderColor: filterStatus === status ? colors.textPrimary : colors.border,
+                                }}
+                                // @ts-ignore
+                                onStartShouldSetResponder={() => true}
+                                onResponderRelease={() => setFilterStatus(status)}
+                            >
+                                <Text style={{ 
+                                    color: filterStatus === status ? colors.background : colors.textPrimary,
+                                    fontSize: 13,
+                                    fontWeight: '600'
+                                }}>
+                                    {status === 'all' ? 'All Status' : statusLabel(status)}
+                                </Text>
+                            </View>
+                        ))}
+                    </ScrollView>
+                </View>
+
+                {isLoading ? (
+                    <>
+                        <RequestCardSkeleton colors={colors} />
+                        <RequestCardSkeleton colors={colors} />
+                        <RequestCardSkeleton colors={colors} />
+                    </>
+                ) : filteredItems.length === 0 ? (
+                    <EmptyState title="No requests found" subtitle="Try adjusting your filters or pull to refresh." />
+                ) : (
+                    filteredItems.map((item) => {
+                        const tone = statusTone[item.status];
+                        const isCopied = copiedId === item.clientRequestId;
+                        return (
                         <View
                             key={item.id}
                             style={{
@@ -195,10 +328,53 @@ export default function MyRequestsScreen() {
                                     Purpose: {item.details.purpose}
                                 </Text>
                             ) : null}
+
                             {item.clientRequestId ? (
-                                <Text style={{ color: colors.textMuted, fontSize: 11, marginTop: 2 }}>
-                                    Tracking ID: {item.clientRequestId.toUpperCase()}
-                                </Text>
+                                <>
+                                    {/* Divider */}
+                                    <View style={{ height: 1, backgroundColor: colors.border, marginTop: 10, marginBottom: 10 }} />
+                                    {/*
+                                     * Tracking ID — visible and copyable.
+                                     * Parishioners share this with the parish office to resolve queries
+                                     * or check on delayed approvals. The "Copied!" flash confirms the
+                                     * tap registered without needing an external toast.
+                                     */}
+                                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                                        <View style={{ flex: 1 }}>
+                                            <Text style={{ color: colors.textMuted, fontSize: 10, fontWeight: '700', letterSpacing: 1.4, textTransform: 'uppercase', marginBottom: 3 }}>
+                                                Tracking ID
+                                            </Text>
+                                            <Text style={{ color: colors.textPrimary, fontSize: 13, fontWeight: '600', fontFamily: 'monospace', letterSpacing: 0.5 }}>
+                                                {item.clientRequestId.toUpperCase()}
+                                            </Text>
+                                        </View>
+                                        <View
+                                            style={{
+                                                borderRadius: 10,
+                                                borderWidth: 1,
+                                                borderColor: isCopied ? `${allColors.success}55` : colors.border,
+                                                backgroundColor: isCopied ? `${allColors.success}12` : '#00000005',
+                                                paddingHorizontal: 10,
+                                                paddingVertical: 6,
+                                                flexDirection: 'row',
+                                                alignItems: 'center',
+                                                gap: 5,
+                                            }}
+                                            // @ts-ignore — pressable via onStartShouldSetResponder for React Native compatibility
+                                            onStartShouldSetResponder={() => true}
+                                            onResponderRelease={() => void copyTrackingId(item.clientRequestId!)}
+                                        >
+                                            <Ionicons
+                                                name={isCopied ? 'checkmark' : 'copy-outline'}
+                                                size={14}
+                                                color={isCopied ? allColors.success : colors.textSecondary}
+                                            />
+                                            <Text style={{ color: isCopied ? allColors.success : colors.textSecondary, fontSize: 11, fontWeight: '600' }}>
+                                                {isCopied ? 'Copied!' : 'Copy'}
+                                            </Text>
+                                        </View>
+                                    </View>
+                                </>
                             ) : null}
 
                             {isPendingLong(item) ? (
@@ -208,7 +384,7 @@ export default function MyRequestsScreen() {
                             ) : null}
                         </View>
                     );
-                })}
+                }))}
             </ScrollView>
         </SafeAreaView>
     );

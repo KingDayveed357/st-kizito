@@ -1,10 +1,11 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import * as Clipboard from 'expo-clipboard';
 import { Header } from '../../src/components/ui/Header';
+import { KeyboardAwareForm } from '../../src/components/ui/KeyboardAwareForm';
 import { useTheme } from '../../src/hooks/useTheme';
 import { usePaymentDetails } from '../../src/hooks/usePaymentDetails';
 import { useOfflineStatus } from '../../src/hooks/useOfflineStatus';
@@ -12,9 +13,12 @@ import { submitDonation } from '../../src/services/offline/syncService';
 import { addRequestHistoryItem } from '../../src/services/requests/requestStore';
 import { DonationDraft } from '../../src/types/booking.types';
 import { Button } from '../../src/components/ui/Button';
-import { Toast } from '../../src/components/ui/Toast';
+import { useToast } from '../../src/components/ui/ToastProvider';
 import { StatusModal } from '../../src/components/ui/StatusModal';
 import { generateClientRequestId } from '../../src/utils/requestId';
+import { uploadReceipt, type ReceiptAsset } from '../../src/services/api/receipts';
+import { ReceiptPicker } from '../../src/components/ui/ReceiptPicker';
+import { FormHelpLink } from '../../src/components/ui/FormHelpLink';
 
 const parseDraftParam = (rawDraft: string | string[] | undefined): DonationDraft | null => {
     const value = Array.isArray(rawDraft) ? rawDraft[0] : rawDraft;
@@ -48,26 +52,82 @@ export default function DonationPaymentScreen() {
 
     const [paymentName, setPaymentName] = useState('');
     const [paymentReference, setPaymentReference] = useState('');
+    // The whole asset is kept, not just the URI: the upload needs the base64 payload the picker
+    // produced. Re-reading the file later is what used to yield zero bytes on Android.
+    const [receipt, setReceipt] = useState<ReceiptAsset | null>(null);
+    const [receiptError, setReceiptError] = useState<string | null>(null);
+    /** Set only by an explicit "submit without the receipt" choice after an upload failure. */
+    const [skipReceipt, setSkipReceipt] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [completed, setCompleted] = useState(false);
     const [showStatusModal, setShowStatusModal] = useState(false);
-    const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null);
+    const { showToast } = useToast();
 
-    useEffect(() => {
-        if (!toast) return;
-        const timer = setTimeout(() => setToast(null), 1600);
-        return () => clearTimeout(timer);
-    }, [toast]);
+    /** See the note in the booking payment screen — one expression gates the button. */
+    const canSubmit =
+        !!draft &&
+        !!paymentName.trim() &&
+        !loadingPaymentDetails &&
+        hasVerifiableDetails &&
+        !isSubmitting &&
+        !completed;
+
 
     const copyField = async (label: string, value?: string | null) => {
         if (!value) {
-            setToast({ message: `${label} is unavailable.`, type: 'error' });
+            showToast(`${label} is unavailable.`, 'error');
             return;
         }
 
         await Clipboard.setStringAsync(value);
-        setToast({ message: `${label} copied`, type: 'success' });
+        showToast(`${label} copied`, 'success');
+    };
+
+    const pickReceipt = async () => {
+        // expo-image-picker is a NATIVE module: load it lazily so a build without it degrades
+        // gracefully instead of throwing at module-eval time (which would break this route entirely).
+        let ImagePicker: typeof import('expo-image-picker');
+        try {
+            ImagePicker = require('expo-image-picker');
+        } catch {
+            showToast('Attaching a receipt needs the latest app build — you can still submit with your transfer name/reference.', 'info');
+            return;
+        }
+
+        try {
+            const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
+            if (!permission.granted) {
+                showToast('Photo permission is needed to attach a receipt.', 'error');
+                return;
+            }
+            const result = await ImagePicker.launchImageLibraryAsync({
+                mediaTypes: ['images'],
+                quality: 0.6,
+                // Required: the upload path decodes this directly. Without it the file has to be
+                // re-read from the URI, which is where zero-byte receipts came from.
+                base64: true,
+            });
+            if (result.canceled || !result.assets?.[0]) return;
+
+            const asset = result.assets[0];
+            if (!asset.base64) {
+                setReceiptError('That image could not be read from your device. Please try another one.');
+                showToast('That receipt could not be read.', 'error');
+                return;
+            }
+
+            setReceipt({
+                uri: asset.uri,
+                base64: asset.base64,
+                mimeType: asset.mimeType ?? null,
+                fileName: asset.fileName ?? null,
+            });
+            setReceiptError(null);
+            showToast('Receipt attached.', 'success');
+        } catch {
+            showToast('Could not open the photo library.', 'error');
+        }
     };
 
     const handleSubmit = async () => {
@@ -86,6 +146,32 @@ export default function DonationPaymentScreen() {
         setIsSubmitting(true);
         try {
             const clientRequestId = generateClientRequestId('dn');
+
+            // Upload the receipt BEFORE the donation row is written.
+            //
+            // A failure here used to be swallowed with an info toast and the donation submitted
+            // anyway — so a donor who attached a receipt believed the parish had it, while the row
+            // carried no path at all. The upload now stops the submission and asks: retry, or
+            // continue deliberately without it. The row only ever stores a path storage
+            // acknowledged. Offline uploads are skipped entirely.
+            let receiptPath: string | null = null;
+            if (receipt && !isOffline && !skipReceipt) {
+                const upload = await uploadReceipt(receipt, 'donations', clientRequestId);
+                if (!upload.path) {
+                    setReceiptError(
+                        `${upload.error ?? 'The receipt could not be uploaded.'} ${
+                            upload.retryable
+                                ? 'Check your connection and try again.'
+                                : 'Please attach a different image.'
+                        }`,
+                    );
+                    setError('Your donation was not submitted, so nothing has been recorded twice.');
+                    setIsSubmitting(false);
+                    return;
+                }
+                receiptPath = upload.path;
+            }
+
             const payload = {
                 client_request_id: clientRequestId,
                 amount: draft.amount,
@@ -93,6 +179,7 @@ export default function DonationPaymentScreen() {
                 donor_name: draft.fullName,
                 payment_name: paymentName.trim(),
                 payment_reference: paymentReference.trim() || null,
+                payment_receipt_url: receiptPath,
                 purpose: draft.purpose ?? null,
                 message: draft.message ?? null,
                 status: 'pending' as const,
@@ -100,7 +187,7 @@ export default function DonationPaymentScreen() {
 
             const result = await submitDonation(payload, isOffline);
             if ((result as any)?.duplicateBlocked) {
-                setToast({ message: 'Submission already in progress.', type: 'info' });
+                showToast('Submission already in progress.', 'info');
                 return;
             }
 
@@ -120,6 +207,8 @@ export default function DonationPaymentScreen() {
                     submittedBy: draft.fullName,
                     paymentName: paymentName.trim(),
                     paymentReference: paymentReference.trim() || null,
+                    // Records what the parish actually received, not what the user selected.
+                    receiptAttached: !!receiptPath,
                     purpose: draft.purpose ?? null,
                     message: draft.message ?? null,
                 },
@@ -127,7 +216,7 @@ export default function DonationPaymentScreen() {
 
             setCompleted(true);
             setShowStatusModal(true);
-            setToast({ message: isOffline ? 'Saved offline and queued for sync.' : 'Submitted for parish verification.', type: 'success' });
+            showToast(isOffline ? 'Saved offline and queued for sync.' : 'Submitted for parish verification.', 'success');
         } catch (submissionError) {
             const message = submissionError instanceof Error ? submissionError.message : 'Unable to submit now. Please try again.';
             setError(message);
@@ -142,7 +231,9 @@ export default function DonationPaymentScreen() {
         <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
             <Header showBack title="Payment Instructions" />
 
-            <ScrollView contentContainerStyle={{ paddingHorizontal: 20, paddingTop: 14, paddingBottom: 52 }} showsVerticalScrollIndicator={false}>
+            {/* Transfer name/reference sit near the bottom of a long page — same keyboard handling
+              * as every other form (this screen previously used a bare ScrollView). */}
+            <KeyboardAwareForm contentContainerStyle={{ paddingHorizontal: 20, paddingTop: 14 }}>
                 <View style={{ alignItems: 'flex-end', marginBottom: 12 }}>
                     <View style={{ paddingVertical: 4, backgroundColor: `${accent}14`, borderRadius: 10, paddingHorizontal: 10 }}>
                         <Text style={{ color: accent, fontSize: 11, fontWeight: '700', letterSpacing: 1 }}>
@@ -276,6 +367,9 @@ export default function DonationPaymentScreen() {
                     <TextInput
                         value={paymentName}
                         onChangeText={setPaymentName}
+                        // Editing a field mid-submission would change what the user believes was
+                        // sent without changing what actually was.
+                        editable={!isSubmitting && !completed}
                         placeholder="e.g. Chidi Okafor"
                         placeholderTextColor={colors.textMuted}
                         style={{
@@ -296,6 +390,7 @@ export default function DonationPaymentScreen() {
                     <TextInput
                         value={paymentReference}
                         onChangeText={setPaymentReference}
+                        editable={!isSubmitting && !completed}
                         placeholder="e.g. Last 4 digits / transfer note"
                         placeholderTextColor={colors.textMuted}
                         style={{
@@ -306,21 +401,58 @@ export default function DonationPaymentScreen() {
                             backgroundColor: colors.surfaceElevated,
                             paddingHorizontal: 14,
                             color: colors.textPrimary,
-                            marginBottom: 4,
+                            marginBottom: 16,
                         }}
+                    />
+
+                    <ReceiptPicker
+                        receipt={receipt}
+                        onPick={pickReceipt}
+                        onRemove={() => {
+                            setReceipt(null);
+                            setReceiptError(null);
+                            setSkipReceipt(false);
+                        }}
+                        error={receiptError}
+                        onSkip={() => {
+                            setSkipReceipt(true);
+                            setReceiptError(null);
+                            setError(null);
+                            showToast('The receipt will not be sent.', 'info');
+                        }}
+                        skipped={skipReceipt}
+                        // Locked once submission starts: changing the attachment mid-flight would
+                        // mean the row and the uploaded object disagree about what was sent.
+                        disabled={isSubmitting || completed}
+                        isUploading={isSubmitting && !!receipt && !skipReceipt && !isOffline}
+                        isOffline={isOffline}
                     />
 
                     {error ? <Text style={{ color: '#B5303C', fontSize: 12, marginTop: 10 }}>{error}</Text> : null}
                 </View>
 
                 {!completed ? (
-                    <Button onPress={handleSubmit} disabled={isSubmitting || !draft || loadingPaymentDetails || !hasVerifiableDetails}>
-                        {isSubmitting ? 'Submitting...' : 'I Have Paid'}
-                    </Button>
+                    <>
+                        {/*
+                          Disabled until the form can actually succeed, rather than accepting the
+                          tap and answering with a validation error. `canSubmit` is the single
+                          expression that decides this, so the button's state and the guard inside
+                          `handleSubmit` cannot disagree.
+                        */}
+                        <Button onPress={handleSubmit} disabled={!canSubmit}>
+                            {isSubmitting ? 'Submitting...' : 'I Have Paid'}
+                        </Button>
+                        {!isSubmitting && !paymentName.trim() ? (
+                            <Text style={{ color: colors.textMuted, fontSize: 12, textAlign: 'center', marginTop: 8 }}>
+                                Enter the name used for your transfer to continue.
+                            </Text>
+                        ) : null}
+                        <FormHelpLink context="making a donation" />
+                    </>
                 ) : (
                     <Button onPress={() => router.replace('/requests')}>View My Requests</Button>
                 )}
-            </ScrollView>
+            </KeyboardAwareForm>
 
             <StatusModal
                 visible={showStatusModal}
@@ -334,7 +466,6 @@ export default function DonationPaymentScreen() {
                 actionLabel="View My Requests"
             />
 
-            {toast ? <Toast message={toast.message} type={toast.type} /> : null}
         </SafeAreaView>
     );
 }
