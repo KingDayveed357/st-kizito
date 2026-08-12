@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { parishService } from '../services/api/parishService';
 import { withDb, withDbWriteTransaction } from '../services/offline/database';
 import { reportNetworkSuccess } from './useOfflineStatus';
+import { buildExcerpt, normalizeTitle } from '../utils/parishContent';
 
 export const useEvents = () => {
     const [data, setData] = useState<any[]>([]);
@@ -20,18 +21,25 @@ export const useEvents = () => {
                 'Load events cache'
             );
             
-            const formatted = result.map((row: any) => {
-                const dateObj = new Date(row.start_date);
-                return {
-                    id: row.id,
-                    title: row.title,
-                    day: dateObj.getDate().toString(),
-                    month: dateObj.toLocaleDateString('en-US', { month: 'short' }).toUpperCase(),
-                    time: 'All Day', // Schema currently lacks time
-                    location: row.location,
-                    description: row.description || '',
-                };
-            });
+            /*
+             * Raw row → display model.
+             *
+             * Previously this pre-formatted a day/month pair, uppercased the month, and hardcoded
+             * `time: 'All Day'` — presented to the user as though it were real information when the
+             * schema simply has no time column. A card cannot distinguish "all day" from "we don't
+             * know" if the hook has already invented an answer.
+             *
+             * Dates now stay ISO so the card formats them in context, and a missing end date or
+             * location is `null` rather than a fabricated value.
+             */
+            const formatted = result.map((row: any) => ({
+                id: row.id,
+                title: normalizeTitle(row.title),
+                startDate: row.start_date ?? null,
+                endDate: row.end_date ?? null,
+                location: row.location ? normalizeTitle(row.location) : null,
+                description: buildExcerpt(row.description, row.title),
+            }));
             
             if (isMounted.current) setData(formatted);
         } catch (error) {

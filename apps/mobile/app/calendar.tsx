@@ -111,27 +111,32 @@ const YearNavCell = memo(({ year, direction, border, onPress }: YearNavCellProps
 interface DayCellProps {
     item: TimelineItem;
     calendar: CalendarData;
-    isSelected: boolean;
     colors: CellColors;
     onSelect: (date: string) => void;
 }
-const DayCell = memo(({ item, calendar, isSelected, colors, onSelect }: DayCellProps) => (
-    <TimelineRow
-        item={item}
-        calendar={calendar}
-        isSelected={isSelected}
-        onSelect={onSelect}
-        borderColor={colors.border}
-        textPrimary={colors.textPrimary}
-        textSecondary={colors.textSecondary}
-        accent={colors.accent}
-        accentSoft={colors.accentSoft}
-        surface={colors.surface}
-        surfaceElevated={colors.surfaceElevated}
-        ordinaryColor={colors.ordColor}
-        christmasColor={colors.chrColor}
-    />
-));
+// Selection is read from the store PER CELL (not passed down as a prop), so changing the selected
+// date re-renders only the two affected rows — the FlatList and `renderItem` never re-run on
+// selection. This is the core fix for the "VirtualizedList slow to update" warning on select.
+const DayCell = memo(({ item, calendar, colors, onSelect }: DayCellProps) => {
+    const isSelected = useAppStore((state) => state.selectedDate === item.date);
+    return (
+        <TimelineRow
+            item={item}
+            calendar={calendar}
+            isSelected={isSelected}
+            onSelect={onSelect}
+            borderColor={colors.border}
+            textPrimary={colors.textPrimary}
+            textSecondary={colors.textSecondary}
+            accent={colors.accent}
+            accentSoft={colors.accentSoft}
+            surface={colors.surface}
+            surfaceElevated={colors.surfaceElevated}
+            ordinaryColor={colors.ordColor}
+            christmasColor={colors.chrColor}
+        />
+    );
+});
 
 // ─── Main Screen ──────────────────────────────────────────────────────────────
 
@@ -253,11 +258,20 @@ export default function CalendarScreen() {
         [], // mount-time only
     );
     const didInitialScrollRef = useRef(false);
+    // Set when the user TAPS a day, so the scroll effect below leaves the list exactly where it is.
+    const skipAutoScrollRef = useRef(false);
 
     useEffect(() => {
         if (!didInitialScrollRef.current) {
             didInitialScrollRef.current = true;
             return; // initialScrollIndex already positioned the list
+        }
+        if (skipAutoScrollRef.current) {
+            // A tap on a visible day changed selectedDate. Scrolling here would yank that row to the
+            // top of the viewport ("jumps to the first date") AND remount a large batch of cells,
+            // which was the calendar's jank on select. Selection must not move the list.
+            skipAutoScrollRef.current = false;
+            return;
         }
         const offset = dateToOffsetMap.get(selectedDate);
         if (offset === undefined) return;
@@ -300,6 +314,8 @@ export default function CalendarScreen() {
     }, [setLiturgicalContext, source]);
 
     const handleDateSelect = useCallback((date: string) => {
+        // Flag this as a tap so the scroll effect keeps the list still (the day is already visible).
+        skipAutoScrollRef.current = true;
         setLiturgicalContext(date, source);
     }, [setLiturgicalContext, source]);
 
@@ -329,15 +345,14 @@ export default function CalendarScreen() {
             <DayCell
                 item={item.item}
                 calendar={item.calendar}
-                isSelected={selectedDate === item.item.date}
                 colors={cellColors}
                 onSelect={handleDateSelect}
             />
         );
-    }, [selectedDate, cellColors, handleYearNav, handleDateSelect]);
-    // Note: selectedDate and cellColors are the only things that need to be here.
-    // selectedDate changes on tap — that's intentional and unavoidable.
-    // cellColors only changes on theme switch.
+    }, [cellColors, handleYearNav, handleDateSelect]);
+    // `renderItem` intentionally does NOT depend on selectedDate — selection is handled per-cell via
+    // the store (see DayCell), so tapping a day never rebuilds renderItem or re-renders the list.
+    // cellColors only changes on theme switch; the handlers are stable.
 
     const getItemLayout = useCallback((_: unknown, index: number) => {
         const entry = listData[index];
@@ -368,6 +383,16 @@ export default function CalendarScreen() {
 
     const years = useMemo(() => Array.from({ length: MAX_YEAR - MIN_YEAR + 1 }).map((_, i) => MIN_YEAR + i), []);
 
+    // Open the picker seeded from the month the user is actually LOOKING AT (the header pill shows
+    // `visibleMonthIndex`/`visibleYear`, which the scroll-spy updates). Seeding from `selectedDate`
+    // instead made the picker open on a different month than the header once the user had scrolled
+    // without selecting a day — the "Month-Year picker inconsistency" (audit #4).
+    const openPicker = useCallback(() => {
+        setPickerYear(visibleYear);
+        setPickerMonth(visibleMonthIndex);
+        setPickerVisible(true);
+    }, [visibleYear, visibleMonthIndex]);
+
     const confirmPickerDate = useCallback(() => {
         const monthPart = String(pickerMonth + 1).padStart(2, '0');
         const newDate = `${pickerYear}-${monthPart}-01`;
@@ -396,7 +421,7 @@ export default function CalendarScreen() {
                 centerElement={
                     <View style={styles.headerCenterWrap}>
                         <TouchableOpacity
-                            onPress={() => setPickerVisible(true)}
+                            onPress={openPicker}
                             activeOpacity={0.85}
                             style={[
                                 styles.monthPickerPill,

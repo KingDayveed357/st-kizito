@@ -35,12 +35,21 @@ export interface PrayerBlock {
     reference?: string;
     lines?: { leader: boolean; text: string }[];
     items?: { text: string; response?: string }[];
+    /**
+     * Hymn recording credits ("Title: …; Author: …; Artist: …; Recording copyright …").
+     *
+     * Held apart from `verses` because it is not part of the prayer. The scraper originally left it
+     * inside the hymn text, so it rendered as a final stanza in serif italic — see
+     * scripts/clean-hymn-attribution.mjs. It is still displayed, as a small caption, because the
+     * source licences the recordings on condition the credit appears.
+     */
+    attribution?: string;
 }
 
 export interface DivineOfficeParts {
     invitatory?: { heading?: string; text: string };
     introduction?: string;
-    hymn?: { text: string };
+    hymn?: { text: string; attribution?: string };
     psalmody: { heading?: string; antiphon?: string; text: string; antiphon2?: string; psalmPrayer?: string }[];
     reading?: { reference?: string; text: string };
     responsory?: { text: string };

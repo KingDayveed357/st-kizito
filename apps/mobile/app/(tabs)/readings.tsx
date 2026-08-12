@@ -5,7 +5,6 @@ import {
     NativeSyntheticEvent,
     Pressable,
     ScrollView,
-    Share,
     StyleSheet,
     Text,
     TouchableOpacity,
@@ -21,6 +20,7 @@ import { CalendarIconButton } from '../../src/components/ui/CalendarIconButton';
 import { ReadingSection } from '../../src/components/liturgical/ReadingSection';
 import { EmptyState } from '../../src/components/ui/EmptyState';
 import { OfflineBanner } from '../../src/components/ui/OfflineBanner';
+import { useTabBarClearance } from '../../src/hooks/useTabBarClearance';
 import { useFavourites } from '../../src/hooks/useFavourites';
 import { useAppStore } from '../../src/store/useAppStore';
 import { getCalendar, getDatePresentation, getTodayIso } from '../../src/services/liturgicalData';
@@ -29,13 +29,20 @@ import { CelebrationSelector } from '../../src/components/liturgical/Celebration
 import { getLiturgicalClosing } from '../../src/utils/liturgicalClosings';
 import { selectPsalmBodyVerses } from '../../src/utils/psalm';
 import { useReadingChrome } from '../../src/hooks/useReadingChrome';
+import { ReadingsSkeleton } from '../../src/components/liturgical/LiturgicalSkeletons';
+import { ReadingsShareSheet } from '../../src/components/liturgical/ReadingsShareSheet';
+import { getShareableBlocks } from '../../src/utils/shareReadings';
 
 const HORIZONTAL_PADDING = 24;
 const SECTION_SCROLL_OFFSET = 148;
 
-export default function ReadingsScreen({ showBack = false }: { showBack?: boolean } = {}) {
+export default function ReadingsScreen(
+    { showBack = false, dateOverride }: { showBack?: boolean; dateOverride?: string } = {}
+) {
     const { colors, allColors, textScale, lineHeightScale } = useTheme();
     const insets = useSafeAreaInsets();
+    // Single source for how far the tab bar reaches up; see useBottomChromeOffset.
+    const tabBarClearance = useTabBarClearance();
 
     // Responsorial Psalm text scaling (audit #6/#11): the inline psalm previously used hardcoded
     // NativeWind sizes and so ignored the text-size control, unlike readings/gospel.
@@ -49,7 +56,13 @@ export default function ReadingsScreen({ showBack = false }: { showBack?: boolea
     const { selectedDate, setSource } = useAppStore();
     const readingChrome = useReadingChrome();
 
-    const effectiveDate = getCalendar(selectedDate) ? selectedDate : getTodayIso();
+    // `dateOverride` (from the dated `/readings/[date]` route — bookmarks, history, deep links) makes
+    // this screen a *controlled, read-only* view of one specific day. It must NOT read or write the
+    // global `selectedDate`, otherwise opening a bookmarked reading poisons the Readings and Divine
+    // Office tabs with that date (the P1 "shared state" bugs). Only the live tab (no override) tracks
+    // the global date, which the Calendar — the deliberate date-browsing surface — owns.
+    const baseDate = dateOverride ?? selectedDate;
+    const effectiveDate = getCalendar(baseDate) ? baseDate : getTodayIso();
     const presentation = getDatePresentation(effectiveDate);
     const { data: rawData, isLoading } = useReadings(effectiveDate);
 
@@ -75,6 +88,17 @@ export default function ReadingsScreen({ showBack = false }: { showBack?: boolea
     useEffect(() => () => {
         if (programmaticScrollTimer.current) clearTimeout(programmaticScrollTimer.current);
     }, []);
+
+    // Reset tab selection and section offsets when the date changes. This covers two cases:
+    //  1. The tab screen: user picks a new date from the calendar → effectiveDate changes.
+    //  2. The stack `/readings/[date]` screen: Expo Router may reuse this component instance
+    //     with a different `dateOverride`, so the old `activeTabId` could reference a block ID
+    //     that doesn't exist in the new date's readings, or (worse) accidentally match one that
+    //     does, silently leaving the wrong section highlighted (Bug #3 / Bug #2 tab artifact).
+    useEffect(() => {
+        setActiveTabId(null);
+        sectionOffsetsRef.current = {};
+    }, [effectiveDate]);
 
     const colorMap = {
         green: allColors.liturgical.ordinaryTime,
@@ -151,16 +175,26 @@ export default function ReadingsScreen({ showBack = false }: { showBack?: boolea
         }
     };
 
-    const handleShare = async () => {
-        if (!data) return;
-        const gospelBlock = blocksToRender.find(r => r.type === 'gospel');
-        if (!gospelBlock) return;
+    // Share sheet — local state only; never mutates date, liturgy, or bookmark state.
+    const [shareSheetVisible, setShareSheetVisible] = useState(false);
 
-        await Share.share({
-            title: 'Daily Readings',
-            message: `${data.feastName}\n${gospelBlock.reference}\n\n${gospelBlock.text}`,
-        });
-    };
+    // Whether there is any content worth sharing (disables the button if not).
+    const hasShareableContent = useMemo(
+        () => getShareableBlocks(blocksToRender).length > 0,
+        [blocksToRender],
+    );
+
+    // The share context is derived from data already loaded by useCelebration.
+    // Memoised so the sheet doesn't rebuild its options on every parent render.
+    const shareCelebrationTitle = useMemo(
+        () => activeCelebration?.title ?? data?.feastName ?? 'Daily Readings',
+        [activeCelebration, data],
+    );
+
+    const shareFormattedDate = useMemo(
+        () => presentation?.formattedDate ?? effectiveDate,
+        [presentation, effectiveDate],
+    );
 
     const handleSaveReading = () => {
         if (!data) return;
@@ -180,11 +214,37 @@ export default function ReadingsScreen({ showBack = false }: { showBack?: boolea
     };
 
     if (isLoading) {
-        return <View style={{ flex: 1, backgroundColor: colors.background }} />;
+        return <ReadingsSkeleton />;
     }
 
     if (!data) {
-        return <EmptyState title="No Readings Available" />;
+        return (
+            <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
+                {showBack && (
+                    <View style={[styles.headerRow, { paddingHorizontal: HORIZONTAL_PADDING }]}>
+                        <TouchableOpacity
+                            accessibilityRole="button"
+                            accessibilityLabel="Go back"
+                            onPress={() => router.back()}
+                            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+                            style={[styles.backButton, { backgroundColor: colors.surfaceElevated }]}
+                        >
+                            <Ionicons name="chevron-back" size={20} color={colors.textPrimary} />
+                        </TouchableOpacity>
+                    </View>
+                )}
+                <EmptyState
+                    icon={<Ionicons name="book-outline" size={44} color={colors.textMuted} />}
+                    title="No Readings Available"
+                    subtitle="We couldn't find the readings for this day. Try choosing another date from the calendar."
+                    actionLabel="Open Calendar"
+                    onAction={() => {
+                        setSource('readings');
+                        router.push('/calendar');
+                    }}
+                />
+            </SafeAreaView>
+        );
     }
 
     return (
@@ -206,11 +266,38 @@ export default function ReadingsScreen({ showBack = false }: { showBack?: boolea
                         </TouchableOpacity>
                     )}
                     <View style={styles.titleBlock}>
-                        <Text style={{ color: colors.textPrimary }} className="font-serif text-[22px] font-bold">
+                        {/*
+                          * The DAY'S CELEBRATION is the identity of the page and leads the
+                          * hierarchy; the date is supporting context. Previously the date was the
+                          * 22px headline and the celebration was an 11px uppercase meta line, so
+                          * "Saint Jean Vianney (the Curé of Ars), Priest" was the least prominent
+                          * text on the screen.
+                          *
+                          * The date had then over-corrected to 11px uppercase — legible for someone
+                          * with sharp eyes, not for the congregation this app is actually for. It
+                          * is now 15px sentence case: clearly readable, still subordinate to the
+                          * celebration below it.
+                          *
+                          * `flexShrink` on the container plus `numberOfLines={1}` is what keeps a
+                          * long date ("Wednesday, 24 September 2026") from pushing the text-size
+                          * control and calendar button off the right edge on a 320dp screen at
+                          * textScale 1.4 — it truncates instead of displacing the controls.
+                          */}
+                        <Text
+                            numberOfLines={1}
+                            style={{
+                                color: colors.textSecondary,
+                                fontSize: 15 * textScale,
+                                lineHeight: 20 * textScale * lineHeightScale,
+                            }}
+                            className="font-sans font-semibold"
+                        >
                             {presentation?.formattedDate ?? effectiveDate}
                         </Text>
                     </View>
-                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    {/* `flexShrink: 0` — the controls keep their full touch targets regardless of
+                        how long the date string is or how far the user has scaled text up. */}
+                    <View style={{ flexDirection: 'row', alignItems: 'center', flexShrink: 0 }}>
                         <TextSizeControl />
                         <CalendarIconButton
                             accessibilityLabel="Open calendar"
@@ -225,20 +312,26 @@ export default function ReadingsScreen({ showBack = false }: { showBack?: boolea
                 </View>
 
                 <View style={[styles.metaRow, { paddingHorizontal: HORIZONTAL_PADDING }]}>
+                    {/* Liturgical colour rail — ties the celebration to its season at a glance. */}
                     <View
                         style={{
                             backgroundColor: accentColor,
-                            width: 7,
-                            height: 7,
+                            width: 3,
                             borderRadius: 999,
-                            marginTop: 5,
+                            alignSelf: 'stretch',
+                            minHeight: 26,
                         }}
                     />
                     <Text
-                        style={{ color: colors.textSecondary, flex: 1 }}
-                        className="font-sans text-[11px] font-bold uppercase tracking-[1.8px]"
+                        style={{
+                            color: colors.textPrimary,
+                            flex: 1,
+                            fontSize: 20 * textScale,
+                            lineHeight: 27 * textScale * lineHeightScale,
+                        }}
+                        className="font-serif font-bold"
                     >
-                        {(activeCelebration?.title ?? data.feastName ?? 'Daily Readings').toUpperCase()}
+                        {activeCelebration?.title ?? data.feastName ?? 'Daily Readings'}
                     </Text>
                 </View>
             </View>
@@ -282,7 +375,10 @@ export default function ReadingsScreen({ showBack = false }: { showBack?: boolea
                 style={styles.scrollView}
                 contentContainerStyle={{
                     paddingTop: 24,
-                    paddingBottom: 140 + insets.bottom,
+                    // Was a bare `140 + insets.bottom`: a magic number that would silently drift
+                    // from `spacing.tabBarHeight`. The extra 75 is this screen's own floating
+                    // save/share cluster, which sits above the tab bar.
+                    paddingBottom: tabBarClearance + 75,
                 }}
                 onScroll={handleScroll}
                 onMomentumScrollEnd={() => { programmaticScrollRef.current = false; }}
@@ -342,6 +438,13 @@ export default function ReadingsScreen({ showBack = false }: { showBack?: boolea
                                         {block.reference}
                                     </Text>
 
+                                    {/*
+                                      * Structured rendering: the refrain is stated once, then each
+                                      * stanza is followed by the refrain — which is how the psalm is
+                                      * actually prayed. Previously the refrain repetitions arrived
+                                      * inside the verse list and were drawn as sibling blocks, so a
+                                      * 3-stanza psalm rendered as 8–9 fragments.
+                                      */}
                                     {block.response && (
                                         <View className="mt-7 items-center">
                                             <Text style={{ color: colors.accent, fontSize: psalmMarkerSize }} className="font-serif font-bold italic">
@@ -353,29 +456,64 @@ export default function ReadingsScreen({ showBack = false }: { showBack?: boolea
                                         </View>
                                     )}
 
-                                    {selectPsalmBodyVerses(block.verses).map((verse, index) => (
-                                        <View key={`${verse.text}-${index}`} style={styles.psalmVerseRow}>
-                                            <Text style={{ color: colors.accent, marginTop: 3, fontSize: psalmMarkerSize }} className="mr-3 font-serif font-bold italic">
-                                                {verse.type === 'response' ? 'R/' : 'V/'}
-                                            </Text>
-                                            <Text style={{ color: colors.textPrimary, flex: 1, fontSize: psalmVerseSize, lineHeight: psalmLineHeight }} className="font-serif">
-                                                {verse.text}
-                                            </Text>
-                                        </View>
-                                    ))}
+                                    {block.stanzas?.length
+                                        ? block.stanzas.map((stanza, stanzaIndex) => (
+                                              <View key={`stanza-${stanzaIndex}`}>
+                                                  <View style={styles.psalmStanza}>
+                                                      {/* Each poetic line is its own Text so the
+                                                        * source's line breaks are preserved and only
+                                                        * over-long lines wrap. */}
+                                                      {stanza.lines.map((line, lineIndex) => (
+                                                          <Text
+                                                              key={`line-${lineIndex}`}
+                                                              style={{
+                                                                  color: colors.textPrimary,
+                                                                  fontSize: psalmVerseSize,
+                                                                  lineHeight: psalmLineHeight,
+                                                              }}
+                                                              className="font-serif"
+                                                          >
+                                                              {line}
+                                                          </Text>
+                                                      ))}
+                                                  </View>
 
-                                    {block.response && (
-                                        <View className="mt-6 items-center">
-                                            <Text style={{ color: colors.accent, fontSize: psalmMarkerSize }} className="font-serif font-bold italic">
-                                                R/
-                                            </Text>
-                                            <Text style={{ color: colors.textPrimary, fontSize: psalmBodySize, lineHeight: psalmLineHeight }} className="mt-2 text-center font-serif font-bold">
-                                                {block.response}
-                                            </Text>
-                                        </View>
-                                    )}
+                                                  {block.response && (
+                                                      <View style={styles.psalmRefrainRepeat}>
+                                                          <Text
+                                                              style={{ color: colors.accent, fontSize: psalmVerseSize }}
+                                                              className="font-serif font-bold italic"
+                                                          >
+                                                              R/{' '}
+                                                          </Text>
+                                                          <Text
+                                                              style={{
+                                                                  color: colors.textSecondary,
+                                                                  fontSize: psalmVerseSize,
+                                                                  lineHeight: psalmLineHeight,
+                                                                  flex: 1,
+                                                              }}
+                                                              className="font-serif italic"
+                                                          >
+                                                              {block.response}
+                                                          </Text>
+                                                      </View>
+                                                  )}
+                                              </View>
+                                          ))
+                                        : /* Legacy fallback: flat verse list (Divine Office / older data). */
+                                          selectPsalmBodyVerses(block.verses).map((verse, index) => (
+                                              <View key={`${verse.text}-${index}`} style={styles.psalmVerseRow}>
+                                                  <Text style={{ color: colors.accent, marginTop: 3, fontSize: psalmMarkerSize }} className="mr-3 font-serif font-bold italic">
+                                                      {verse.type === 'response' ? 'R/' : 'V/'}
+                                                  </Text>
+                                                  <Text style={{ color: colors.textPrimary, flex: 1, fontSize: psalmVerseSize, lineHeight: psalmLineHeight }} className="font-serif">
+                                                      {verse.text}
+                                                  </Text>
+                                              </View>
+                                          ))}
 
-                                    {!block.verses?.length && block.text && (
+                                    {!block.stanzas?.length && !block.verses?.length && block.text && (
                                         <Text style={{ color: colors.textPrimary, fontSize: psalmVerseSize, lineHeight: psalmLineHeight }} className="mt-4 text-center font-serif">
                                             {block.text}
                                         </Text>
@@ -420,7 +558,7 @@ export default function ReadingsScreen({ showBack = false }: { showBack?: boolea
                 style={[
                     styles.floatingActions,
                     {
-                        bottom: 76 + insets.bottom,
+                        bottom: tabBarClearance + 11,
                         right: HORIZONTAL_PADDING,
                     },
                 ]}
@@ -446,22 +584,36 @@ export default function ReadingsScreen({ showBack = false }: { showBack?: boolea
                 </TouchableOpacity>
                 <TouchableOpacity
                     accessibilityRole="button"
-                    accessibilityLabel="Share reading"
+                    accessibilityLabel="Share today's readings"
+                    accessibilityHint="Opens share options for the liturgical readings"
+                    accessibilityState={{ disabled: !hasShareableContent }}
                     activeOpacity={0.85}
-                    onPress={handleShare}
+                    disabled={!hasShareableContent}
+                    onPress={() => setShareSheetVisible(true)}
                     style={[
                         styles.floatingButton,
                         {
                             backgroundColor: colors.surface,
-                            borderColor: colors.surfaceElevated,
+                            borderColor: hasShareableContent ? accentColor : colors.surfaceElevated,
+                            opacity: hasShareableContent ? 1 : 0.4,
                         },
                     ]}
                 >
-                    <Ionicons name="share-social" size={20} color={colors.accent} />
+                    <Ionicons name="share-social" size={20} color={accentColor} />
                 </TouchableOpacity>
             </View>
 
             <OfflineBanner />
+
+            {/* Share sheet — rendered outside the scroll, isolated from reading state */}
+            <ReadingsShareSheet
+                visible={shareSheetVisible}
+                onDismiss={() => setShareSheetVisible(false)}
+                blocksToRender={blocksToRender}
+                celebrationTitle={shareCelebrationTitle}
+                formattedDate={shareFormattedDate}
+                accentColor={accentColor}
+            />
         </SafeAreaView>
     );
 }
@@ -509,13 +661,25 @@ const styles = StyleSheet.create({
     },
     metaRow: {
         flexDirection: 'row',
-        gap: 8,
-        paddingTop: 10,
+        alignItems: 'center',
+        gap: 12,
+        paddingTop: 12,
     },
     psalmVerseRow: {
         flexDirection: 'row',
         alignItems: 'flex-start',
         marginTop: 24,
+    },
+    psalmStanza: {
+        marginTop: 26,
+    },
+    psalmRefrainRepeat: {
+        flexDirection: 'row',
+        alignItems: 'flex-start',
+        marginTop: 14,
+        paddingTop: 12,
+        borderTopWidth: StyleSheet.hairlineWidth,
+        borderTopColor: 'rgba(128,128,128,0.25)',
     },
     scrollView: {
         flex: 1,
@@ -536,7 +700,11 @@ const styles = StyleSheet.create({
     },
     titleBlock: {
         flex: 1,
-        paddingRight: 16,
+        // Explicit: `flex: 1` alone lets a long single-line date force the row wider than the
+        // screen rather than truncating, which is how the controls got pushed off-screen.
+        flexShrink: 1,
+        minWidth: 0,
+        paddingRight: 12,
     },
     backButton: {
         width: 40,

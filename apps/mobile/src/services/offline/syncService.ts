@@ -1,5 +1,7 @@
+import { devLog } from '../../utils/logger';
 import { withDb, withDbWriteTransaction } from './database';
 import { parishService } from '../api/parishService';
+import { BookingInsert } from '../../types/api.types';
 import { BookingStatus } from '../../types/booking.types';
 
 const submissionLocks = new Set<string>();
@@ -33,7 +35,7 @@ export const syncPendingSubmissions = async () => {
 
     for (const row of pendingBookings as any[]) {
         try {
-            const data = JSON.parse(row.data_json);
+            const data = JSON.parse(row.data_json) as any;
             const { error } = await parishService.submitBooking(data);
 
             if (!error) {
@@ -41,7 +43,7 @@ export const syncPendingSubmissions = async () => {
                     (db) => db.runAsync('DELETE FROM pending_bookings WHERE local_id = ?', row.local_id),
                     'Delete synced booking queue item'
                 );
-                console.log(`[Sync] Synced booking ${row.local_id}`);
+                devLog('Sync', `Synced booking ${row.local_id}`);
             } else {
                 console.warn(`[Sync] Booking ${row.local_id} failed:`, error.message);
             }
@@ -58,7 +60,7 @@ export const syncPendingSubmissions = async () => {
 
     for (const row of pendingDonations as any[]) {
         try {
-            const data = JSON.parse(row.data_json);
+            const data = JSON.parse(row.data_json) as any;
             const { error } = await parishService.submitDonation(data);
 
             if (!error) {
@@ -66,7 +68,7 @@ export const syncPendingSubmissions = async () => {
                     (db) => db.runAsync('DELETE FROM pending_donations WHERE local_id = ?', row.local_id),
                     'Delete synced donation queue item'
                 );
-                console.log(`[Sync] Synced donation ${row.local_id}`);
+                devLog('Sync', `Synced donation ${row.local_id}`);
             } else {
                 console.warn(`[Sync] Donation ${row.local_id} failed:`, error.message);
             }
@@ -83,7 +85,7 @@ export const syncPendingSubmissions = async () => {
 
     for (const row of pendingSacraments as any[]) {
         try {
-            const data = JSON.parse(row.data_json);
+            const data = JSON.parse(row.data_json) as any;
             const { error } = await parishService.submitSacramentRequest(data);
 
             if (!error) {
@@ -91,7 +93,7 @@ export const syncPendingSubmissions = async () => {
                     (db) => db.runAsync('DELETE FROM pending_sacrament_requests WHERE local_id = ?', row.local_id),
                     'Delete synced sacrament request queue item'
                 );
-                console.log(`[Sync] Synced sacrament request ${row.local_id}`);
+                devLog('Sync', `Synced sacrament request ${row.local_id}`);
             } else {
                 console.warn(`[Sync] Sacrament request ${row.local_id} failed:`, error.message);
             }
@@ -153,7 +155,7 @@ export const syncPaymentDetails = async (isOffline: boolean) => {
  * @param data Booking payload matching the bookings schema
  * @param isOffline Current network state from useOfflineStatus
  */
-export const submitBooking = async (data: object, isOffline: boolean) => {
+export const submitBooking = async (data: BookingInsert, isOffline: boolean) => {
     const payload = { ...data, status: 'pending' as BookingStatus };
     const lockKey = getSubmissionKey('booking', payload);
 

@@ -51,6 +51,11 @@ export const useCachedData = <T>(
     }, [key]);
 
     const refresh = useCallback(async () => {
+        // Guard the synchronous state write with the same mountedRef used for async writes below.
+        // Without this, strict-mode double-invoke and rapid navigation unmount the component
+        // before the async response arrives, but setIsRefreshing(true) has already fired —
+        // producing the "Can't perform a React state update on a component that hasn't mounted" warning.
+        if (!mountedRef.current) return null;
         setIsRefreshing(true);
         try {
             const remote = await fetchFunction();
@@ -86,8 +91,10 @@ export const useCachedData = <T>(
                 const shouldRefresh = !cached || Date.now() - cached.updatedAt > staleTime;
                 if (shouldRefresh) {
                     await refresh();
-                } else {
+                } else if (!cancelled) {
                     // Silent background refresh to keep data fresh without causing flicker.
+                    // The `cancelled` guard prevents a stale effect invocation (strict-mode
+                    // double-invoke or dep change) from firing refresh() after cleanup has run.
                     refresh();
                 }
             } finally {

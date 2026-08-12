@@ -125,7 +125,7 @@ values (
   true,
   10,
   '[
-    {"key":"baptism_date","label":"Date of Baptism","type":"date","required":true},
+    {"key":"baptism_date","label":"Date of Baptism","type":"date","required":true,"datePreset":"past","minDate":"1900-01-01","helperText":"The date you were baptised."},
     {"key":"place_of_baptism","label":"Place / Church of Baptism","type":"text","required":true},
     {"key":"father_name","label":"Father''s Full Name","type":"text","required":true},
     {"key":"mother_name","label":"Mother''s Maiden Name","type":"text","required":true},

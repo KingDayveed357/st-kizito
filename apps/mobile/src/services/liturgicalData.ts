@@ -15,6 +15,8 @@ import type {
 import { getCalendar } from './calendarService';
 export { getCalendar } from './calendarService';
 import { normalizeBlockType } from '../utils/readingBlocks';
+import { parsePsalmText } from '../utils/psalm';
+import { getInspirationForDate } from '../utils/dailyInspiration';
 
 let readingsDataMemo: Record<string, any> | null = null;
 let inspirationDataMemo: Record<string, any> | null = null;
@@ -69,7 +71,19 @@ const normalizeReferenceChunk = (reference: string) =>
         .replace(/\.$/, '')
         .replace(/\s+/g, ' ');
 
-const stripHeadersAndReferences = (text: string | null | undefined, reference?: string | null): string | null => {
+const stripHeadersAndReferences = (
+    text: string | null | undefined,
+    reference?: string | null,
+    options?: {
+        /**
+         * Keep a leading "R." / "R/" refrain marker. Responsorial psalms NEED it: the marker is what
+         * delimits the refrain from the stanzas. Stripping it demoted the opening refrain to stanza
+         * content, so stanza 1 began with the refrain text and the refrain was re-detected from the
+         * next repetition (losing its verse citation). Only proclaimed readings want it removed.
+         */
+        keepResponseMarker?: boolean;
+    },
+): string | null => {
     let cleanText = sanitizeText(text);
     if (!cleanText) return null;
 
@@ -85,7 +99,9 @@ const stripHeadersAndReferences = (text: string | null | undefined, reference?: 
     }
 
     // Also remove generic inline R/ and V/ UI artifacts that were at the very beginning
-    cleanText = cleanText.replace(/^(?:R\.|R\/|V\.|V\/)\s*(?:\([a-zA-Z0-9cd]+\)\s*)?/i, '');
+    if (!options?.keepResponseMarker) {
+        cleanText = cleanText.replace(/^(?:R\.|R\/|V\.|V\/)\s*(?:\([a-zA-Z0-9cd]+\)\s*)?/i, '');
+    }
 
     return cleanText.trim();
 };
@@ -167,44 +183,32 @@ const buildPsalmBlock = (date: string, reference?: string | null): LiturgicalBlo
     };
 };
 
-const parseUSCCBPsalmText = (rawText: string): { response: string | null, verses: PsalmVerse[] } => {
-    if (!rawText) return { response: null, verses: [] };
+/**
+ * Builds the psalm block fields from raw lectionary text using the structured parser.
+ *
+ * The refrain delimits stanzas in the source; the previous implementation pushed each repeated
+ * refrain into `verses` alongside the stanzas, so a 3-stanza psalm produced 7 entries and rendered
+ * as 8–9 fragments. `parsePsalmText` treats refrains as boundaries and returns real stanzas.
+ *
+ * `verses` is still populated (refrain first, then one entry per stanza) so any consumer that has
+ * not migrated to `stanzas` keeps working — but it no longer interleaves refrain repetitions.
+ */
+const buildPsalmFields = (rawText: string) => {
+    const parsed = parsePsalmText(rawText);
 
-    const lines = rawText.split('\n').map(l => l.trim()).filter(Boolean);
     const verses: PsalmVerse[] = [];
-    let response: string | null = null;
-    let currentStanza: string[] = [];
+    if (parsed.response) verses.push({ type: 'response', text: parsed.response });
+    for (const stanza of parsed.stanzas) {
+        verses.push({ type: 'verse', text: stanza.lines.join('\n') });
+    }
 
-    const flushStanza = () => {
-        if (currentStanza.length > 0) {
-            verses.push({ type: 'verse', text: currentStanza.join('\n') });
-            currentStanza = [];
-        }
+    return {
+        response: parsed.response,
+        responseCitation: parsed.responseCitation,
+        alternateResponse: parsed.alternateResponse,
+        stanzas: parsed.stanzas,
+        verses,
     };
-
-    for (const line of lines) {
-        const responseMatch = line.match(/^R\.?\s*(?:\([^)]*\)\s*)?(.+)/i);
-        if (responseMatch) {
-            flushStanza();
-            const cleanResponse = responseMatch[1].trim();
-            if (!response) response = cleanResponse;
-            verses.push({ type: 'response', text: cleanResponse });
-            continue;
-        }
-
-        if (line.toLowerCase() === 'or:') continue;
-
-        currentStanza.push(line);
-    }
-
-    flushStanza();
-
-    if (!response && verses.length > 1) {
-        response = verses[0].text;
-        verses[0].type = 'response';
-    }
-
-    return { response, verses };
 };
 
 const buildGospelAcclamationText = (calendar: any) => {
@@ -267,15 +271,13 @@ const buildMissalDay = (date: string): MissalDay | null => {
                 // Ensure globally unique keys based on date and mass title
                 const uniqueId = `item-${date}-${titleSafe}-${idx}`;
                 if (item.type === 'psalm') {
-                    const cleanPsalmText = stripHeadersAndReferences(item.text, item.reference) || '';
-                    const parsedPsalm = parseUSCCBPsalmText(cleanPsalmText);
+                    const cleanPsalmText = stripHeadersAndReferences(item.text, item.reference, { keepResponseMarker: true }) || '';
                     arr.push({
                         id: uniqueId,
                         type: 'psalm',
                         label: item.label || LITURGICAL_LABELS.responsorialPsalm,
                         reference: item.reference,
-                        response: parsedPsalm.response,
-                        verses: parsedPsalm.verses,
+                        ...buildPsalmFields(cleanPsalmText),
                         text: cleanPsalmText || null
                     });
                 } else {
@@ -295,15 +297,13 @@ const buildMissalDay = (date: string): MissalDay | null => {
 
             if (ur.firstReading) arr.push(buildReadingBlock(`first-reading-${date}-${titleSafe}`, 'first_reading', LITURGICAL_LABELS.firstReading, ur.firstReading.reference, ur.firstReading.text));
             if (ur.responsorialPsalm) {
-                const cleanPsalmText = stripHeadersAndReferences(ur.responsorialPsalm.text, ur.responsorialPsalm.reference) || '';
-                const parsedPsalm = parseUSCCBPsalmText(cleanPsalmText);
+                const cleanPsalmText = stripHeadersAndReferences(ur.responsorialPsalm.text, ur.responsorialPsalm.reference, { keepResponseMarker: true }) || '';
                 arr.push({
                     id: `psalm-${date}-${titleSafe}`,
                     type: 'psalm',
                     label: LITURGICAL_LABELS.responsorialPsalm,
                     reference: ur.responsorialPsalm.reference,
-                    response: parsedPsalm.response,
-                    verses: parsedPsalm.verses,
+                    ...buildPsalmFields(cleanPsalmText),
                     text: cleanPsalmText || null
                 });
             }
@@ -563,24 +563,28 @@ export const getDailyInspiration = (date: string): DailyInspirationCard | null =
         });
     }
 
-    // 3. SAINT QUOTE (Deterministic rotation from a small high-quality bank)
-    const saintBank = [
-        { quote: "Pray as though everything depended on God. Work as though everything depended on you.", saint: "St. Augustine", initials: "SA" },
-        { quote: "Let nothing disturb you; let nothing frighten you. All things are passing; God only is changeless.", saint: "St. Teresa of Avila", initials: "ST" },
-        { quote: "The world offers you comfort, but you were not made for comfort. You were made for greatness.", saint: "Pope Benedict XVI", initials: "PB" },
-        { quote: "Be who God meant you to be and you will set the world on fire.", saint: "St. Catherine of Siena", initials: "SC" },
-        { quote: "God loves each of us as if there were only one of us.", saint: "St. Augustine", initials: "SA" },
-        { quote: "Christ has no body now but yours. No hands, no feet on earth but yours.", saint: "St. Teresa of Avila", initials: "ST" }
-    ];
-
-    const saintQuote = saintBank[dateSeed % saintBank.length];
+    // 3. THE DAY'S VERSE
+    //
+    // Was a six-quotation bank indexed by `dateSeed % 6`, so the same words returned every six days
+    // and only six ever appeared all year. It now comes from a 366-entry bank keyed on the day of
+    // the year: unique across the year, identical on every device, and stable from year to year so
+    // a saved bookmark keeps its meaning. See src/utils/dailyInspiration.ts.
+    const dailyInspiration = getInspirationForDate(date);
 
     return {
         title: missalDay.feastName,
         body: `Today we celebrate ${missalDay.feastName}. Amidst the busyness of life, take a moment to rest in the Word.`,
         heroVerse: { text: heroText, reference: heroRef },
         reflections,
-        saintQuote,
+        dailyVerse: dailyInspiration
+            ? {
+                  text: dailyInspiration.text,
+                  reference: dailyInspiration.reference,
+                  translation: dailyInspiration.translation,
+                  id: dailyInspiration.id,
+              }
+            : // Unreachable for a well-formed ISO date, but the card must never render `undefined`.
+              { text: heroText, reference: heroRef, translation: '', id: `inspiration-${date}` },
         sourceReadings: missalDay.readings,
     };
 };

@@ -57,6 +57,117 @@ export function parseVerses(text: string): string[] {
 }
 
 /**
+ * Splits a hymn into STANZAS, each returned as a string whose lines are `\n`-separated.
+ *
+ * Hymns are metrical poetry and their stanza breaks are meaningful. `cleanDivineOfficeText` strips
+ * blank lines, and `parseVerses` then returns one entry PER LINE — so the renderer received a flat
+ * list of lines with no idea where a stanza began or ended. This runs on the RAW text so blank-line
+ * stanza breaks survive, and only then applies the noise cleaning line-by-line.
+ *
+ * When the source has no blank lines (some scraped hymns run continuously) the whole hymn is
+ * returned as a single stanza. That is deliberate: inventing stanza boundaries by counting lines
+ * would be guessing at liturgical structure, and a well-spaced single block reads correctly anyway.
+ */
+/**
+ * A recording-credit line, not a line of the hymn.
+ *
+ * Mirrors the detection in scripts/clean-hymn-attribution.mjs. That script fixes the bundled data;
+ * this is the runtime safety net for anything it has not reached — a freshly scraped record, or a
+ * key added before the script is next run. Two independent signals are required so a genuine line
+ * of verse containing a colon is never mistaken for a credit.
+ */
+const CREDIT_FIELD = /\b(Title|Text|Tune|Author|Translator|Translation|Artist|Composer|Arranger|Melody|Setting|Meter|Source):/;
+const CREDIT_RIGHTS = /\b(Recording copyright|Copyright|\(c\)\s*\d{4}|©|Used with permission|All rights reserved|Surgeworks)\b/i;
+const CREDIT_OPENER = /^["“"].+["”"]\s+by\s+\S/;
+
+const isHymnCreditLine = (line: string): boolean => {
+    const trimmed = line.trim();
+    if (!trimmed) return false;
+    const signals = [
+        trimmed.includes('•'),
+        CREDIT_FIELD.test(trimmed),
+        CREDIT_RIGHTS.test(trimmed),
+        CREDIT_OPENER.test(trimmed),
+    ].filter(Boolean).length;
+    return signals >= 2;
+};
+
+/**
+ * Remove trailing credit lines from a hymn.
+ *
+ * Trailing only: credits are always appended by the scraper, and deleting text from the middle of
+ * sung poetry would be a far worse failure than leaving a stray line at the bottom.
+ */
+export function stripHymnCredits(rawText: string): string {
+    const lines = rawText.split('\n');
+    while (lines.length > 0) {
+        const last = lines[lines.length - 1];
+        if (last.trim() === '') {
+            lines.pop();
+            continue;
+        }
+        if (!isHymnCreditLine(last)) break;
+        lines.pop();
+    }
+    // If every line looked like a credit the detection was wrong for this record; keep the original
+    // rather than rendering an empty hymn.
+    const result = lines.join('\n');
+    return result.trim() ? result : rawText;
+}
+
+export function parseHymnStanzas(rawText: string): string[] {
+    if (!rawText || !rawText.trim()) return [];
+
+    const stanzas = stripHymnCredits(rawText)
+        .split(/\n\s*\n/)
+        .map((stanza) =>
+            // Clean each stanza on its own so noise-stripping cannot merge stanzas together.
+            cleanDivineOfficeText(stanza)
+                .split('\n')
+                .map((line) => line.trim())
+                .filter(Boolean)
+        )
+        .filter((lines) => lines.length > 0);
+
+    // If the hymn was parsed as a single monolithic block but has many lines,
+    // apply a heuristic to break it into stanzas.
+    if (stanzas.length === 1 && stanzas[0].length >= 8) {
+        const lines = stanzas[0];
+        const newStanzas: string[][] = [];
+        
+        // 1. Try breaking by terminal punctuation (., !, ?) at reasonable intervals
+        let currentStanza: string[] = [];
+        for (let i = 0; i < lines.length; i++) {
+            currentStanza.push(lines[i]);
+            const isTerminal = /[.!?:](?:\s*Amen\.?)?$/.test(lines[i]);
+            // A typical stanza is 4-8 lines. Break if we hit terminal punctuation and we have at least 3 lines.
+            if ((isTerminal && currentStanza.length >= 3) || i === lines.length - 1) {
+                // Prevent an orphaned tiny stanza at the end
+                if (i < lines.length - 1 && lines.length - 1 - i <= 2) {
+                    continue;
+                }
+                newStanzas.push(currentStanza);
+                currentStanza = [];
+            }
+        }
+        
+        // 2. If the punctuation heuristic failed (still 1 block) and it's perfectly divisible by 4, chunk by 4
+        if (newStanzas.length <= 1 && lines.length % 4 === 0) {
+            newStanzas.length = 0; // reset
+            for (let i = 0; i < lines.length; i += 4) {
+                newStanzas.push(lines.slice(i, i + 4));
+            }
+        }
+
+        if (newStanzas.length > 1) {
+            return newStanzas.map(s => s.join('\n'));
+        }
+    }
+
+    return stanzas.map(lines => lines.join('\n'));
+}
+
+/**
  * Transforms raw DivineOfficeParts into clean, structured PrayerBlocks.
  */
 export function parseDivineOffice(parts: DivineOfficeParts): PrayerBlock[] {
@@ -133,7 +244,14 @@ export function parseDivineOffice(parts: DivineOfficeParts): PrayerBlock[] {
                 case 'hymn':
                     if (t) {
                         push({ type: 'heading', text: 'Hymn' });
-                        push({ type: 'hymn', verses: parseVerses(t) });
+                        // Parse from RAW text so blank-line stanza breaks survive (see parseHymnStanzas).
+                        push({
+                            type: 'hymn',
+                            verses: parseHymnStanzas(rawText),
+                            // Split out of the hymn text by scripts/clean-hymn-attribution.mjs;
+                            // `stripHymnCredits` catches any record the script has not reached.
+                            attribution: (b as { attribution?: string }).attribution,
+                        });
                     }
                     break;
                 case 'psalmody':
@@ -346,10 +464,11 @@ export function parseDivineOffice(parts: DivineOfficeParts): PrayerBlock[] {
     }
 
     if (parts.hymn?.text) {
-        const text = cleanDivineOfficeText(parts.hymn.text);
-        if (text) {
+        // Stanza-aware parse from the RAW text (see parseHymnStanzas).
+        const stanzas = parseHymnStanzas(parts.hymn.text);
+        if (stanzas.length > 0) {
             blocks.push({ type: 'heading', text: 'Hymn' });
-            blocks.push({ type: 'hymn', verses: parseVerses(text) });
+            blocks.push({ type: 'hymn', verses: stanzas, attribution: parts.hymn.attribution });
         }
     }
 

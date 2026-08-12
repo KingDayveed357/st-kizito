@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge-custom"
 import { Button } from "@/components/ui/button-custom"
 import { Skeleton } from "@/components/ui/skeleton"
 import type { ActivityItem } from "@/lib/admin-dashboard"
+import { formatRelativeTime, formatDateTime } from "@/lib/format-time"
 
 interface RecentActivityProps {
   items: ActivityItem[]
@@ -28,18 +29,6 @@ const statusTone = (status?: string) => {
   if (normalized === 'rejected') return 'bg-rose-100 text-rose-700 border-rose-200'
   if (normalized === 'pending') return 'bg-amber-100 text-amber-700 border-amber-200'
   return 'bg-surface-container-low text-foreground/70 border-outline/20'
-}
-
-const formatRelativeTime = (isoString: string) => {
-  const now = Date.now()
-  const at = new Date(isoString).getTime()
-  const diffMin = Math.max(1, Math.floor((now - at) / 60000))
-
-  if (diffMin < 60) return `${diffMin}m ago`
-  const diffHour = Math.floor(diffMin / 60)
-  if (diffHour < 24) return `${diffHour}h ago`
-  const diffDay = Math.floor(diffHour / 24)
-  return `${diffDay}d ago`
 }
 
 export function RecentActivity({
@@ -112,7 +101,9 @@ export function RecentActivity({
                   </div>
 
                   <div className="flex-shrink-0 text-right">
-                    <p className="text-xs text-foreground/55">{formatRelativeTime(item.timestamp)}</p>
+                    <p className="text-xs text-foreground/55" title={formatDateTime(item.timestamp)}>
+                      {formatRelativeTime(item.timestamp)}
+                    </p>
                     {item.status ? (
                       <span className={`mt-2 inline-flex rounded-full border px-2 py-1 text-[10px] font-medium capitalize ${statusTone(item.status)}`}>
                         {item.status}

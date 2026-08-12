@@ -9,6 +9,7 @@ import { useThemeStore, LineSpacing, ThemeMode } from '../../src/store/useThemeS
 import { PreferenceThemeCard } from '../../src/components/more/PreferenceThemeCard';
 import { useNotifications } from '../../src/hooks/useNotifications';
 import { shareApp } from '../../src/utils/shareApp';
+import { useOnboardingStore } from '../../src/store/useOnboardingStore';
 
 const APPEARANCE_OPTIONS: Array<{
     key: ThemeMode;
@@ -50,6 +51,8 @@ export default function SettingsScreen() {
     const router = useRouter();
     const { setMode, setTextScale, setLineSpacing } = useThemeStore();
     const { preferences, setNotificationPreference } = useNotifications();
+    // Lets a parishioner watch the welcome guide again at any time.
+    const replayGuide = useOnboardingStore((state) => state.replayGuide);
 
     const activeTextScaleLabel = useMemo(() => {
         if (textScale <= 0.95) return 'Small';
@@ -279,6 +282,40 @@ export default function SettingsScreen() {
                         </View>
                         <Ionicons name="chevron-forward" size={18} color={colors.textMuted} />
                     </TouchableOpacity>
+
+                    {/*
+                      The app collects names, phone numbers, intentions and transfer receipts, and
+                      had no privacy disclosure anywhere — which is both a Play Data Safety
+                      requirement and simply owed to the parishioner.
+                    */}
+                    <TouchableOpacity
+                        activeOpacity={0.86}
+                        accessibilityRole="button"
+                        accessibilityLabel="Your data and privacy"
+                        onPress={() => router.push('/settings/privacy')}
+                        style={{
+                            marginTop: 12,
+                            borderRadius: 16,
+                            borderWidth: 1,
+                            borderColor: colors.border,
+                            backgroundColor: colors.surfaceElevated,
+                            paddingHorizontal: 14,
+                            paddingVertical: 12,
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                        }}
+                    >
+                        <View style={{ flex: 1, paddingRight: 10 }}>
+                            <Text style={{ color: colors.textPrimary }} className="font-sans text-[14px] font-semibold">
+                                Your Data & Privacy
+                            </Text>
+                            <Text style={{ color: colors.textSecondary }} className="font-sans text-[12px] mt-1">
+                                What the parish stores, and how to have it removed.
+                            </Text>
+                        </View>
+                        <Ionicons name="chevron-forward" size={18} color={colors.textMuted} />
+                    </TouchableOpacity>
                 </View>
 
                 <Text style={{ color: colors.accent, marginTop: 20 }} className="font-sans text-[11px] font-bold uppercase tracking-[2px]">
@@ -299,18 +336,31 @@ export default function SettingsScreen() {
                     }}
                 >
                     {[
+                        // Replaying the guide is listed first: it is the entry a confused user goes
+                        // looking for, and it must be findable without scrolling past everything else.
+                        { icon: 'help-buoy-outline', label: 'How to use this app' },
                         { icon: 'library-outline', label: 'Parish History' },
                         { icon: 'star-outline', label: 'Rate the App' },
                         { icon: 'share-social-outline', label: 'Share with Friends' },
                     ].map((item, index, array) => {
+                        const isHistoryAction = item.label === 'Parish History';
                         const isShareAction = item.label === 'Share with Friends';
+                        const isGuideAction = item.label === 'How to use this app';
+                        const isInteractive = isHistoryAction || isShareAction || isGuideAction;
+                        const handlePress = isHistoryAction
+                            ? () => router.push('/history')
+                            : isShareAction
+                              ? shareApp
+                              : isGuideAction
+                                ? replayGuide
+                                : undefined;
 
                         return (
                             <TouchableOpacity
                                 key={item.label}
-                                activeOpacity={isShareAction ? 0.75 : 1}
-                                disabled={!isShareAction}
-                                onPress={isShareAction ? shareApp : undefined}
+                                activeOpacity={isInteractive ? 0.75 : 1}
+                                disabled={!isInteractive}
+                                onPress={handlePress}
                                 style={{
                                     flexDirection: 'row',
                                     gap: 12,

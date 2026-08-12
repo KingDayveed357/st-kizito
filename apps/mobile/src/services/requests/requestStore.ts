@@ -12,6 +12,12 @@ export interface RequestDetails {
     note?: string;
     purpose?: string | null;
     message?: string | null;
+    // Mass-booking range details (date-range bookings, ₦500/Mass/day).
+    range?: string;
+    days?: number;
+    amount?: number;
+    massTime?: string | null;
+    receiptAttached?: boolean;
 }
 
 export interface RequestHistoryItem {

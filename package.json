@@ -12,13 +12,23 @@
     "mobile:ios": "npm --prefix apps/mobile run ios",
     "web:dev": "npm --prefix apps/web run dev",
     "web:build": "npm --prefix apps/web run build",
-    "web:start": "npm --prefix apps/web run start"
+    "web:start": "npm --prefix apps/web run start",
+    "typecheck:mobile": "npm --prefix apps/mobile run typecheck",
+    "typecheck:web": "npm --prefix apps/web run typecheck",
+    "test:mobile": "npm --prefix apps/mobile test",
+    "lint:web": "npm --prefix apps/web run lint",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "dependencies": {
-    "framer-motion": "^12.38.0",
     "expo": "~55.0.11",
+    "framer-motion": "^12.38.0",
     "react": "19.2.0",
     "react-native": "0.83.4"
   },
-  "version": "1.0.0"
+  "version": "1.0.0",
+  "devDependencies": {
+    "expo-atlas": "^0.4.3",
+    "prettier": "^3.9.6"
+  }
 }

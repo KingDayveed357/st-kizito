@@ -74,7 +74,7 @@ export const refreshSacramentRequests = async (): Promise<SacramentRequestRecord
             return [...items].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
         }
 
-        const remote = new Map(data.map((row: any) => [normalizeId(row.client_request_id), row]));
+        const remote = new Map(data.map((row: any): [string, any] => [normalizeId(row.client_request_id), row]));
         let changed = false;
         const next = items.map((local) => {
             const row = remote.get(normalizeId(local.clientRequestId));

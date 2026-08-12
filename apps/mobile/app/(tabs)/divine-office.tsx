@@ -12,19 +12,21 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAppStore } from '../../src/store/useAppStore';
 import { getCalendar, getDailyInspiration, getDatePresentation, getDivineOfficePrayer, getTodayIso } from '../../src/services/liturgicalData';
 import { useTabBarClearance } from '../../src/hooks/useTabBarClearance';
+import { DivineOfficeSkeleton } from '../../src/components/liturgical/LiturgicalSkeletons';
+import { EmptyState } from '../../src/components/ui/EmptyState';
 
 export default function DivineOfficeScreen() {
     const { colors, allColors } = useTheme();
     const tabBarClearance = useTabBarClearance();
     const router = useRouter();
-    const { selectedDate, setSource, setLiturgicalContext } = useAppStore();
+    const { selectedDate, setSource, setLiturgicalContext, setSelectedDate } = useAppStore();
     const effectiveDate = getCalendar(selectedDate) ? selectedDate : getTodayIso();
     const { data, isLoading } = useDivineOffice(effectiveDate);
     const presentation = getDatePresentation(effectiveDate);
     const morningPrayer = getDivineOfficePrayer(effectiveDate, 'morningPrayer');
     const inspiration = getDailyInspiration(effectiveDate);
 
-    if (isLoading) return <View style={{ flex: 1, backgroundColor: colors.background }} />;
+    if (isLoading) return <DivineOfficeSkeleton />;
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
@@ -59,13 +61,38 @@ export default function DivineOfficeScreen() {
                     </View>
                     <View className="flex-1">
                         <Text style={{ color: colors.textPrimary }} className="font-serif font-bold text-lg mb-1">Morning Prayer</Text>
-                        <Text style={{ color: colors.textSecondary }} className="font-serif italic text-sm">
-                            {morningPrayer?.parts?.reading?.text?.slice(0, 120) ?? '"O Lord, open my lips, and my mouth shall declare your praise."'}
+                        {/* Line-based truncation (was `slice(0, 120)`, which cut mid-word). */}
+                        <Text
+                            numberOfLines={3}
+                            ellipsizeMode="tail"
+                            style={{ color: colors.textSecondary }}
+                            className="font-serif italic text-sm"
+                        >
+                            {morningPrayer?.parts?.reading?.text ?? '"O Lord, open my lips, and my mouth shall declare your praise."'}
                         </Text>
                     </View>
                 </View>
 
                 <View className="mb-6">
+                    {/*
+                      The hours come from the bundled Divine Office corpus, which is keyed by
+                      liturgical position rather than by date — a key the calendar engine has not
+                      covered yields nothing. This branch previously rendered an empty `View`, so
+                      the screen showed its header and the Daily Manna card with a silent gap where
+                      the seven hours belong, and no way to tell that anything was wrong.
+                    */}
+                    {!data || data.length === 0 ? (
+                        <EmptyState
+                            icon={<Ionicons name="book-outline" size={38} color={colors.textMuted} />}
+                            title="The hours aren't available for this day"
+                            subtitle="The Liturgy of the Hours could not be resolved for the date you have selected. Choose another date, or return to today."
+                            actionLabel="Go to today"
+                            onAction={() => {
+                                setSelectedDate(getTodayIso());
+                            }}
+                        />
+                    ) : null}
+
                     {data?.map((prayer: any) => {
                         const isCurrent = prayer.isCurrent;
                         return (
@@ -102,16 +129,24 @@ export default function DivineOfficeScreen() {
                 {/* Daily Manna */}
                 <View style={{ backgroundColor: colors.background }} className="rounded-3xl border border-gray-100 overflow-hidden mb-8 shadow-sm">
                     <Image
-                        source={{ uri: 'https://images.unsplash.com/photo-1548625361-ec853f65e4ff?q=80&w=600&auto=format&fit=crop' }}
+                        // Bundled parish image — offline-first (was a remote Unsplash URL that broke
+                        // the card with no network and added an external dependency). See audit NEW-3.
+                        source={require('../../assets/st-kizito.jpg')}
                         className="w-full h-40"
                         contentFit="cover"
+                        transition={200}
                     />
                     <View className="p-6 pb-8 bg-[#EFEEE8]">
                         <View style={{ backgroundColor: '#e2f2e7' }} className="self-start px-2 py-1 rounded-md mb-3">
                             <Text style={{ color: allColors.liturgical.ordinaryTime }} className="font-sans font-bold text-[9px] tracking-wider uppercase">DAILY MANNA</Text>
                         </View>
                         <Text style={{ color: colors.textPrimary }} className="font-serif font-bold text-xl mb-2">Meditation of the Day</Text>
-                        <Text style={{ color: colors.textSecondary }} className="font-sans italic text-sm mb-6 leading-relaxed">
+                        <Text
+                            numberOfLines={4}
+                            ellipsizeMode="tail"
+                            style={{ color: colors.textSecondary }}
+                            className="font-sans italic text-sm mb-6 leading-relaxed"
+                        >
                             {`"${inspiration?.body ?? 'The Divine Office is the voice of the Church, publicly praising God.'}"`}
                         </Text>
                         <Button

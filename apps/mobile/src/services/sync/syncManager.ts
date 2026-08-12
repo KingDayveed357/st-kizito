@@ -1,3 +1,4 @@
+import { devLog } from '../../utils/logger';
 import { AppState, AppStateStatus } from 'react-native';
 import { useAppStore } from '../../store/useAppStore';
 import { syncPendingSubmissions, syncPaymentDetails } from '../offline/syncService';
@@ -14,14 +15,14 @@ const startSync = async () => {
     }
 
     isSyncing = true;
-    console.log('[Sync] Starting background sync...');
+    devLog('Sync', 'Starting background sync...');
 
     try {
         await syncPendingSubmissions();
         await syncPaymentDetails(false);
 
         useAppStore.getState().setLastSyncTime(Date.now());
-        console.log('[Sync] Sync complete.');
+        devLog('Sync', 'Sync complete.');
     } catch (err) {
         console.error('[Sync] Sync failed:', err);
     } finally {

@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import { cn } from "@/lib/utils"
+import { CommandPalette } from "@/components/admin/command-palette"
 
 interface NavbarProps {
   title?: string
@@ -38,8 +39,11 @@ export function Navbar({ title, subtitle, actions, onMenuClick, className }: Nav
         </div>
       </div>
 
-      {/* Actions */}
-      {actions && <div className="flex items-center gap-3 flex-shrink-0">{actions}</div>}
+      {/* Search + actions */}
+      <div className="flex items-center gap-3 flex-shrink-0">
+        <CommandPalette />
+        {actions}
+      </div>
     </nav>
   )
 }

@@ -35,27 +35,51 @@ const refreshStatus = async () => {
     return refreshInFlight;
 };
 
+/** How often to re-check connectivity while the app is in the foreground. */
+const POLL_INTERVAL_MS = 15000;
+
+const startPolling = () => {
+    if (intervalId) return;
+    intervalId = setInterval(() => {
+        refreshStatus();
+    }, POLL_INTERVAL_MS);
+};
+
+const stopPolling = () => {
+    if (!intervalId) return;
+    clearInterval(intervalId);
+    intervalId = null;
+};
+
 const ensureMonitoring = () => {
     if (monitoringStarted) return;
     monitoringStarted = true;
 
     refreshStatus();
-    intervalId = setInterval(() => {
-        refreshStatus();
-    }, 15000);
+    startPolling();
+
     appStateSub = AppState.addEventListener('change', (nextState) => {
         if (nextState === 'active') {
+            // Coming back to the foreground is the moment the answer is most likely to have
+            // changed, so check immediately rather than waiting out the interval.
             refreshStatus();
+            startPolling();
+            return;
         }
+
+        // Backgrounded: stop polling.
+        //
+        // The interval previously kept running while the app was in the background, firing a
+        // network request every 15 seconds until the OS froze the process. On Android that is real
+        // battery and — for parishioners on metered data — real money, spent answering a question
+        // nobody is on screen to see the answer to.
+        stopPolling();
     });
 };
 
 const teardownMonitoring = () => {
     if (listeners.size > 0) return;
-    if (intervalId) {
-        clearInterval(intervalId);
-        intervalId = null;
-    }
+    stopPolling();
     if (appStateSub) {
         appStateSub.remove();
         appStateSub = null;

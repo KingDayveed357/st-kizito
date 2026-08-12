@@ -69,7 +69,13 @@ export const PrayerBlockRenderer: React.FC<PrayerBlockRendererProps> = ({ blocks
                     case 'hymn':
                         return renderWrappedBlock(idx, 'hymn',
                             <View>
-                                {block.verses && <HymnBlock verses={block.verses} accentColor={accentColor} />}
+                                {block.verses && (
+                                    <HymnBlock
+                                        verses={block.verses}
+                                        accentColor={accentColor}
+                                        attribution={block.attribution}
+                                    />
+                                )}
                                 <SectionDivider color={accentColor} />
                             </View>
                         );
