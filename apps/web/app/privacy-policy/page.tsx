@@ -108,11 +108,14 @@ export default function PrivacyPolicyPage() {
           <article className="space-y-12 max-w-3xl">
             <Section id="who-we-are" title="Who we are">
               <p>
-                The app and this website are operated by <strong>Aniago, Uche Camminus</strong> on behalf of St. Kizito
-                Parish, Eligbolo (&ldquo;the parish&rdquo;, &ldquo;we&rdquo;, &ldquo;us&rdquo;). We decide how the
+                The app and this website are operated by <strong>David Aniago</strong> on behalf of St. Kizito Parish,
+                Eligbolo (&ldquo;the parish&rdquo;, &ldquo;we&rdquo;, &ldquo;us&rdquo;). We decide how the
                 information described here is used and are responsible for protecting it.
               </p>
-              <p>Privacy questions and requests: {mail}.</p>
+              <p>
+                Parish address: Brainfield Avenue, along East&ndash;West Road, Eligbolo, Port Harcourt, Rivers State,
+                Nigeria. Privacy questions and requests: {mail}.
+              </p>
             </Section>
 
             <Section id="scope" title="What this policy covers">
@@ -232,7 +235,8 @@ export default function PrivacyPolicyPage() {
                 <li><strong>Google Play and Apple App Store</strong>: app distribution, under their own privacy policies.</li>
               </ul>
               <p>
-                These providers may store or process data on servers outside Nigeria. We disclose information to anyone
+                We choose providers that are bound by data-protection terms giving your information the same or
+                equal protection as this policy. These providers may store or process data on servers outside Nigeria. We disclose information to anyone
                 else only if the law requires it.
               </p>
             </Section>
@@ -309,7 +313,9 @@ export default function PrivacyPolicyPage() {
 
             <Section id="contact" title="Contact us">
               <p>
-                Aniago, Uche Camminus, for St. Kizito Parish, Eligbolo
+                David Aniago, for St. Kizito Parish, Eligbolo
+                <br />
+                Brainfield Avenue, along East&ndash;West Road, Eligbolo, Port Harcourt, Rivers State, Nigeria
                 <br />
                 Email: {mail}
               </p>

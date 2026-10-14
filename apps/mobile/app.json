@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "st-kizito",
+    "name": "St. Kizito",
     "slug": "st-kizito",
     "scheme": "st-kizito",
     "version": "1.0.0",
@@ -13,7 +13,7 @@
       "backgroundColor": "#061328"
     },
     "ios": {
-      "supportsTablet": true,
+      "supportsTablet": false,
       "bundleIdentifier": "com.dave.js.stkizito",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
