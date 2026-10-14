@@ -23,6 +23,8 @@ import { useParishContacts } from '../../src/hooks/useParishContacts';
  * This screen is the in-app disclosure, not a substitute for that. See docs/APP-MAINTENANCE.md.
  */
 
+const PRIVACY_POLICY_URL = 'https://stkizitoparisheligbolo.org/privacy-policy';
+
 interface Section {
     heading: string;
     body: string;
@@ -155,6 +157,30 @@ export default function PrivacyScreen() {
                         </Text>
                     )}
                 </View>
+
+                {/* The hosted policy is the canonical, store-listed version; this screen is the summary. */}
+                <TouchableOpacity
+                    accessibilityRole="link"
+                    accessibilityLabel="Read the full privacy policy on the parish website"
+                    activeOpacity={0.85}
+                    onPress={() => Linking.openURL(PRIVACY_POLICY_URL)}
+                    style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: 8,
+                        minHeight: 48,
+                        borderRadius: 14,
+                        borderWidth: 1,
+                        borderColor: `${accent}55`,
+                        marginTop: 16,
+                    }}
+                >
+                    <Ionicons name="document-text-outline" size={17} color={accent} />
+                    <Text style={{ color: accent, fontSize: 14, fontWeight: '700' }}>
+                        Read the full privacy policy
+                    </Text>
+                </TouchableOpacity>
             </ScrollView>
         </SafeAreaView>
     );
